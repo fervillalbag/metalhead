@@ -1,0 +1,17 @@
+{
+  "name": "metalhead",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Fernando Villalba",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "app",
+    "api"
+  ],
+  "scripts": {
+    "web": "npm run dev --workspace=app",
+    "api": "npm run dev --workspace=api",
+    "dev": "npm run dev --workspace=api && npm run web"
+  }
+}
