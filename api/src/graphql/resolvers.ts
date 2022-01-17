@@ -1,6 +1,6 @@
 import headerHome from "../controllers/headerHome";
 import userController from "../controllers/user";
-import growthController from "../controllers/growth";
+import growthController from "../controllers/growthInfo";
 import reviewController from "../controllers/review";
 import aboutController from "../controllers/about";
 import productController from "../controllers/product";
