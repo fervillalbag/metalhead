@@ -56,36 +56,40 @@ const Product: React.FC<ProductIprops> = ({ dataProduct }) => {
             />
           </div>
           <div className="px-3 lg:p-0">
-            <h3 className="font-bold text-VeryDarkBlue text-2xl lg:text-4xl">
+            <h3 className="font-bold text-VeryDarkBlue text-2xl">
               {productDataPage?.name}
             </h3>
             <div className="flex items-center mt-1">
-              <span className="block text-DarkGrayishBlue font-bold mr-2">
+              <span className="block text-DarkGrayishBlue text-sm font-regular mr-1">
                 Code:
               </span>
-              <span className="block text-DarkGrayishBlue font-bold">
+              <span className="block text-DarkGrayishBlue text-sm font-regular">
                 {productDataPage?.code}
               </span>
             </div>
-            {productDataPage?.description.map((item: any) => (
-              <span
-                key={item.id}
-                className="block text-DarkGrayishBlue lg:w-9/12 mt-3"
-              >
-                {item?.text}
-              </span>
-            ))}
+
             <div>
-              <span className="block text-3xl font-bold mt-3">
+              <span className="block text-DarkBlue text-3xl font-bold mt-3">
                 ${productDataPage?.price}
               </span>
+            </div>
+
+            <div className="py-4">
+              {productDataPage?.description.map((item: any) => (
+                <span
+                  key={item.id}
+                  className="block text-DarkGrayishBlue lg:w-9/12 mt-3"
+                >
+                  {item?.text}
+                </span>
+              ))}
             </div>
 
             <div className="flex items-center">
               <button className="bg-DarkBlue inline-block text-VeryPaleRed py-3 px-8 rounded-full font-medium mt-4 text-sm mr-3">
                 Buy now
               </button>
-              <button className="bg-BrightRed inline-block text-VeryPaleRed py-3 px-8 rounded-full font-medium mt-4 text-xl">
+              <button className="border-BrightRed border inline-block text-BrightRed py-3 px-8 rounded-full font-medium mt-4 text-xl">
                 <RiShoppingCartFill />
               </button>
             </div>
