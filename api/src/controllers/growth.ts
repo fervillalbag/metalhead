@@ -1,4 +1,4 @@
-import GrowthModel from "../models/growth";
+import GrowthModel from "../models/growthInfo";
 
 const getGrowthHome = async () => {
   try {

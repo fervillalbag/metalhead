@@ -39,10 +39,15 @@ const typeDefs = gql`
     description: [Description]
   }
 
-  type GrowthHome {
+  type GrowthInfoHome {
     id: ID
     title: String
     description: [Description]
+    createdAt: String
+  }
+
+  type GrowthHome {
+    id: ID
     items: [GrowthItem]
     createdAt: String
   }
@@ -115,14 +120,18 @@ const typeDefs = gql`
   }
 
   input GrowthItemInput {
-    id: String
+    id: ID
     title: String
     description: [DescriptionInput]
   }
 
-  input GrowthHomeInput {
+  input GrowthHomeInfoInput {
     title: String
     description: [DescriptionInput]
+  }
+
+  input GrowthInfoHomeInput {
+    id: ID
     items: [GrowthItemInput]
   }
 
@@ -177,7 +186,7 @@ const typeDefs = gql`
     getHeaderHome: HeaderHome
 
     # Growth
-    getGrowthHome: GrowthHome
+    getGrowthInfoHome: GrowthInfoHome
 
     # Review
     getReviewHome: [Review]
@@ -203,8 +212,10 @@ const typeDefs = gql`
     updateHeaderHome(input: HeaderHomeInput): MutationResponse
 
     # Growth
-    createGrowthHome(input: GrowthHomeInput!): MutationResponse
-    updateGrowthHome(input: GrowthHomeInput): MutationResponse
+    createGrowthInfoHome(
+      input: GrowthHomeInfoInput!
+    ): MutationResponse
+    updateGrowthInfoHome(input: GrowthHomeInfoInput): MutationResponse
 
     # Review
     createReviewHomeInfo(

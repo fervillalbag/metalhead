@@ -9,14 +9,10 @@ const GrowthSchema = new Schema({
     type: Array,
     required: true,
   },
-  items: {
-    type: Array,
-    required: true,
-  },
   createdAt: {
     type: Date,
     default: Date.now(),
   },
 });
 
-export default model("Growth", GrowthSchema);
+export default model("GrowthInfo", GrowthSchema);

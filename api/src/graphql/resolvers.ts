@@ -18,7 +18,7 @@ const resolvers = {
     getHeaderHome: () => headerHome.getHeaderHome(),
 
     // Growth
-    getGrowthHome: () => growthController.getGrowthHome(),
+    getGrowthInfoHome: () => growthController.getGrowthHome(),
 
     // Review
     getReviewHome: () => reviewController.getReviewHome(),
@@ -48,9 +48,9 @@ const resolvers = {
       headerHome.updateHeaderHome(input),
 
     // Growth
-    createGrowthHome: (_: any, { input }: { input: any }) =>
+    createGrowthInfoHome: (_: any, { input }: { input: any }) =>
       growthController.createGrowthHome(input),
-    updateGrowthHome: (_: any, { input }: { input: any }) =>
+    updateGrowthInfoHome: (_: any, { input }: { input: any }) =>
       growthController.updateGrowthHome(input),
 
     // Review
