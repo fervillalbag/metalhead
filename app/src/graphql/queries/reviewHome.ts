@@ -4,15 +4,11 @@ export const GET_REVIEW_HOME = gql`
   query getReviewHome {
     getReviewHome {
       id
-      title
-      reviews {
+      name
+      avatar
+      description {
         id
-        name
-        avatar
-        description {
-          id
-          text
-        }
+        text
       }
     }
   }

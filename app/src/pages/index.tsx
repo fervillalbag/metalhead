@@ -1,19 +1,21 @@
 import React from "react";
-import { GetStaticProps } from "next";
 import Link from "next/link";
+import { GetStaticProps } from "next";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 
-import client from "@/config/apollo";
 import Layout from "@/layout";
+import client from "@/config/apollo";
+import Loading from "@/components/Loading";
 import { GET_HEADER_HOME } from "@/graphql/queries/headerHome";
 import { GET_GROWTH_HOME } from "@/graphql/queries/growthHome";
 import { GET_REVIEW_HOME } from "@/graphql/queries/reviewHome";
-import Loading from "@/components/Loading";
+import { GET_REVIEW_INFO } from "@/graphql/queries/reviewInfo";
 
 interface HomeIprops {
   headerData: any;
   growthData: any;
   reviewData: any;
+  reviewInfoData: any;
 }
 
 export const getStaticProps: GetStaticProps = async () => {
@@ -29,22 +31,39 @@ export const getStaticProps: GetStaticProps = async () => {
     query: GET_REVIEW_HOME,
   });
 
+  const { data: reviewInfoData } = await client.query({
+    query: GET_REVIEW_INFO,
+  });
+
   return {
     props: {
       headerData,
       growthData,
       reviewData,
+      reviewInfoData,
     },
-    revalidate: 1,
+    revalidate: 60,
   };
 };
 
-const Home: React.FC<HomeIprops> = ({ headerData, growthData, reviewData }) => {
+const Home: React.FC<HomeIprops> = ({
+  headerData,
+  growthData,
+  reviewData,
+  reviewInfoData,
+}) => {
   const headerHomeData = headerData?.getHeaderHome;
   const growthHomeData = growthData?.getGrowthHome;
   const reviewHomeData = reviewData?.getReviewHome;
+  const reviewInfoHomeData = reviewInfoData?.getReviewInfoHome;
 
-  if (!headerHomeData || !growthHomeData || !reviewHomeData) return <Loading />;
+  if (
+    !headerHomeData ||
+    !growthHomeData ||
+    !reviewHomeData ||
+    !reviewInfoHomeData
+  )
+    return <Loading />;
 
   return (
     <div>
@@ -113,10 +132,10 @@ const Home: React.FC<HomeIprops> = ({ headerData, growthData, reviewData }) => {
         </section>
 
         <section className="max-w-6xl w-11/12 mx-auto text-2xl lg:text-4xl font-bold text-DarkBlue py-8">
-          <h3 className="text-center">{reviewHomeData?.title}</h3>
+          <h3 className="text-center">{reviewInfoHomeData?.title}</h3>
 
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-10 gap-y-20 mt-20">
-            {reviewHomeData?.reviews.map((item: any) => (
+            {reviewHomeData.map((item: any) => (
               <article key={item.id} className="rounded-xl bg-gray p-4">
                 <div className="grid place-items-center py-4">
                   <img src={item?.avatar} alt="" className="w-32 mt-[-80px]" />

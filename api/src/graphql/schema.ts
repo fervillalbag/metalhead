@@ -48,6 +48,7 @@ const typeDefs = gql`
   }
 
   type ReviewInfo {
+    id: ID
     title: String
     description: [Description]
     createdAt: String
