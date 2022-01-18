@@ -1,6 +1,7 @@
 import headerHome from "../controllers/headerHome";
 import userController from "../controllers/user";
-import growthController from "../controllers/growthInfo";
+import growthInfoController from "../controllers/growthInfo";
+import growthController from "../controllers/growth";
 import reviewController from "../controllers/review";
 import aboutController from "../controllers/about";
 import productController from "../controllers/product";
@@ -18,7 +19,8 @@ const resolvers = {
     getHeaderHome: () => headerHome.getHeaderHome(),
 
     // Growth
-    getGrowthInfoHome: () => growthController.getGrowthHome(),
+    getGrowthInfoHome: () => growthInfoController.getGrowthHome(),
+    getGrowthHome: () => growthController.getGrowthHome(),
 
     // Review
     getReviewHome: () => reviewController.getReviewHome(),
@@ -49,9 +51,16 @@ const resolvers = {
 
     // Growth
     createGrowthInfoHome: (_: any, { input }: { input: any }) =>
-      growthController.createGrowthHome(input),
+      growthInfoController.createGrowthHome(input),
     updateGrowthInfoHome: (_: any, { input }: { input: any }) =>
+      growthInfoController.updateGrowthHome(input),
+
+    createGrowthHome: (_: any, { input }: { input: any }) =>
+      growthController.createGrowthHome(input),
+    updateGrowthHome: (_: any, { input }: { input: any }) =>
       growthController.updateGrowthHome(input),
+    deleteGrowthHome: (_: any, { id }: { id: string }) =>
+      growthController.deleteGrowthHome(id),
 
     // Review
     createReviewHomeInfo: (_: any, { input }: { input: any }) =>
