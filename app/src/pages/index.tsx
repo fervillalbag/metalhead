@@ -7,6 +7,7 @@ import Layout from "@/layout";
 import client from "@/config/apollo";
 import Loading from "@/components/Loading";
 import { GET_HEADER_HOME } from "@/graphql/queries/headerHome";
+import { GET_GROWTH_INFO_HOME } from "@/graphql/queries/growthInfo";
 import { GET_GROWTH_HOME } from "@/graphql/queries/growthHome";
 import { GET_REVIEW_HOME } from "@/graphql/queries/reviewHome";
 import { GET_REVIEW_INFO } from "@/graphql/queries/reviewInfo";
@@ -16,6 +17,7 @@ interface HomeIprops {
   growthData: any;
   reviewData: any;
   reviewInfoData: any;
+  growthHome: any;
 }
 
 export const getStaticProps: GetStaticProps = async () => {
@@ -24,7 +26,7 @@ export const getStaticProps: GetStaticProps = async () => {
   });
 
   const { data: growthData } = await client.query({
-    query: GET_GROWTH_HOME,
+    query: GET_GROWTH_INFO_HOME,
   });
 
   const { data: reviewData } = await client.query({
@@ -35,12 +37,17 @@ export const getStaticProps: GetStaticProps = async () => {
     query: GET_REVIEW_INFO,
   });
 
+  const { data: growthHome } = await client.query({
+    query: GET_GROWTH_HOME,
+  });
+
   return {
     props: {
       headerData,
       growthData,
       reviewData,
       reviewInfoData,
+      growthHome,
     },
     revalidate: 60,
   };
@@ -51,17 +58,20 @@ const Home: React.FC<HomeIprops> = ({
   growthData,
   reviewData,
   reviewInfoData,
+  growthHome,
 }) => {
   const headerHomeData = headerData?.getHeaderHome;
-  const growthHomeData = growthData?.getGrowthHome;
+  const growthHomeData = growthData?.getGrowthInfoHome;
   const reviewHomeData = reviewData?.getReviewHome;
   const reviewInfoHomeData = reviewInfoData?.getReviewInfoHome;
+  const growthItemsHomeData = growthHome?.getGrowthHome;
 
   if (
     !headerHomeData ||
     !growthHomeData ||
     !reviewHomeData ||
-    !reviewInfoHomeData
+    !reviewInfoHomeData ||
+    !growthItemsHomeData
   )
     return <Loading />;
 
@@ -102,7 +112,7 @@ const Home: React.FC<HomeIprops> = ({
             <h3 className="text-2xl lg:text-4xl font-bold text-DarkBlue">
               {growthHomeData?.title}
             </h3>
-            {growthHomeData.description.map((item: any) => (
+            {growthHomeData?.description.map((item: any) => (
               <p
                 key={item.id}
                 className="w-full lg:w-8/12 text-DarkGrayishBlue mt-6"
@@ -112,13 +122,13 @@ const Home: React.FC<HomeIprops> = ({
             ))}
           </div>
           <div className="flex-1 mt-8">
-            {growthHomeData.items.map((item: any) => (
+            {growthItemsHomeData.map((item: any, index: number) => (
               <article
                 key={item.id}
                 className="grid grid-cols-[60px_1fr] items-center mb-10 gap-x-4"
               >
                 <div className="bg-BrightRed text-white py-2 px-4 rounded-2xl text-center text-xs font-bold">
-                  0{item.id}
+                  0{index + 1}
                 </div>
                 <div className="text-DarkBlue font-semibold">{item.title}</div>
                 <div className="col-start-1 lg:col-start-2 col-end-5 mt-3 text-DarkGrayishBlue">
