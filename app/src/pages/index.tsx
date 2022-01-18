@@ -11,13 +11,26 @@ import { GET_GROWTH_INFO_HOME } from "@/graphql/queries/growthInfo";
 import { GET_GROWTH_HOME } from "@/graphql/queries/growthHome";
 import { GET_REVIEW_HOME } from "@/graphql/queries/reviewHome";
 import { GET_REVIEW_INFO } from "@/graphql/queries/reviewInfo";
+import { HeaderInfo } from "types/header";
+import { GrowthData, GrowthInfo } from "types/growth";
+import { ReviewData, ReviewInfo } from "types/review";
 
 interface HomeIprops {
-  headerData: any;
-  growthData: any;
-  reviewData: any;
-  reviewInfoData: any;
-  growthHome: any;
+  headerData: {
+    getHeaderHome: HeaderInfo;
+  };
+  growthData: {
+    getGrowthInfoHome: GrowthInfo;
+  };
+  reviewData: {
+    getReviewHome: ReviewData[];
+  };
+  reviewInfoData: {
+    getReviewInfoHome: ReviewInfo;
+  };
+  growthHome: {
+    getGrowthHome: GrowthData[];
+  };
 }
 
 export const getStaticProps: GetStaticProps = async () => {
