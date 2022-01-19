@@ -1,4 +1,5 @@
 import ReviewInfoModel from "../models/reviewInfo";
+import { ReviewInfo } from "../types/review";
 
 const getReviewInfoHome = async () => {
   try {
@@ -10,7 +11,7 @@ const getReviewInfoHome = async () => {
   }
 };
 
-const createReviewHomeInfo = async (input: any) => {
+const createReviewHomeInfo = async (input: ReviewInfo) => {
   try {
     const reviewInfo = new ReviewInfoModel(input);
     reviewInfo.save();
@@ -29,7 +30,7 @@ const createReviewHomeInfo = async (input: any) => {
   }
 };
 
-const updateReviewHomeInfo = async (input: any) => {
+const updateReviewHomeInfo = async (input: ReviewInfo) => {
   try {
     await ReviewInfoModel.findOneAndUpdate({ _id: input.id }, input);
 

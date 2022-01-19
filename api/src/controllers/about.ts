@@ -1,4 +1,5 @@
 import AboutModel from "../models/about";
+import { AboutInfo } from "../types/about";
 
 const getAboutPage = async () => {
   try {
@@ -10,7 +11,7 @@ const getAboutPage = async () => {
   }
 };
 
-const createAboutPage = async (input: any) => {
+const createAboutPage = async (input: AboutInfo) => {
   try {
     const aboutData = await new AboutModel(input);
     await aboutData.save();
@@ -25,7 +26,7 @@ const createAboutPage = async (input: any) => {
   }
 };
 
-const updateAboutPage = async (input: any) => {
+const updateAboutPage = async (input: AboutInfo) => {
   try {
     await AboutModel.findOneAndUpdate(input);
     return {

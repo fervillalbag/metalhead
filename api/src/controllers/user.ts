@@ -1,4 +1,5 @@
 import UserModel from "../models/user";
+import { User } from "../types/user";
 
 const getUsers = async () => {
   try {
@@ -20,7 +21,7 @@ const getUser = async (id: string) => {
   }
 };
 
-const createUser = (input: any) => {
+const createUser = (input: User) => {
   const newUser = input;
 
   newUser.email = newUser.email.toLowerCase();

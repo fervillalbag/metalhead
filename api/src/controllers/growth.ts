@@ -1,4 +1,5 @@
 import GrowthModel from "../models/growth";
+import { GrowthHome } from "../types/growth";
 
 const getGrowthHome = async () => {
   try {
@@ -10,7 +11,7 @@ const getGrowthHome = async () => {
   }
 };
 
-const updateGrowthHome = async (input: any) => {
+const updateGrowthHome = async (input: GrowthHome) => {
   try {
     await GrowthModel.findOneAndUpdate({ _id: input.id }, input);
     return {
@@ -27,7 +28,7 @@ const updateGrowthHome = async (input: any) => {
   }
 };
 
-const createGrowthHome = async (input: any) => {
+const createGrowthHome = async (input: GrowthHome) => {
   try {
     const growth = new GrowthModel(input);
     growth.save();

@@ -8,6 +8,14 @@ import productController from "../controllers/product";
 import planController from "../controllers/plan";
 import reviewInfoController from "../controllers/reviewInfo";
 
+import { AboutInfo } from "../types/about";
+import { ReviewHome, ReviewInfo } from "../types/review";
+import { GrowthHome, GrowthInfo } from "../types/growth";
+import { HeaderInfo } from "../types/header";
+import { User } from "../types/user";
+import { Products } from "../types/products";
+import { Plan } from "../types/plan";
+
 const resolvers = {
   Query: {
     // Users
@@ -40,58 +48,66 @@ const resolvers = {
 
   Mutation: {
     // Users
-    createUser: (_: any, { input }: any) =>
+    createUser: (_: any, { input }: { input: User }) =>
       userController.createUser(input),
 
     // Header Home
-    createHeaderHome: (_: any, { input }: { input: any }) =>
+    createHeaderHome: (_: any, { input }: { input: HeaderInfo }) =>
       headerHome.createHeaderHome(input),
-    updateHeaderHome: (_: any, { input }: { input: any }) =>
+    updateHeaderHome: (_: any, { input }: { input: HeaderInfo }) =>
       headerHome.updateHeaderHome(input),
 
     // Growth
-    createGrowthInfoHome: (_: any, { input }: { input: any }) =>
-      growthInfoController.createGrowthHome(input),
-    updateGrowthInfoHome: (_: any, { input }: { input: any }) =>
-      growthInfoController.updateGrowthHome(input),
+    createGrowthInfoHome: (
+      _: any,
+      { input }: { input: GrowthInfo }
+    ) => growthInfoController.createGrowthHome(input),
+    updateGrowthInfoHome: (
+      _: any,
+      { input }: { input: GrowthInfo }
+    ) => growthInfoController.updateGrowthHome(input),
 
-    createGrowthHome: (_: any, { input }: { input: any }) =>
+    createGrowthHome: (_: any, { input }: { input: GrowthHome }) =>
       growthController.createGrowthHome(input),
-    updateGrowthHome: (_: any, { input }: { input: any }) =>
+    updateGrowthHome: (_: any, { input }: { input: GrowthHome }) =>
       growthController.updateGrowthHome(input),
     deleteGrowthHome: (_: any, { id }: { id: string }) =>
       growthController.deleteGrowthHome(id),
 
     // Review
-    createReviewHomeInfo: (_: any, { input }: { input: any }) =>
-      reviewInfoController.createReviewHomeInfo(input),
-    updateReviewHomeInfo: (_: any, { input }: { input: any }) =>
-      reviewInfoController.updateReviewHomeInfo(input),
-    createReviewHome: (_: any, { input }: { input: any }) =>
+    createReviewHomeInfo: (
+      _: any,
+      { input }: { input: ReviewInfo }
+    ) => reviewInfoController.createReviewHomeInfo(input),
+    updateReviewHomeInfo: (
+      _: any,
+      { input }: { input: ReviewInfo }
+    ) => reviewInfoController.updateReviewHomeInfo(input),
+    createReviewHome: (_: any, { input }: { input: ReviewHome }) =>
       reviewController.createReviewHome(input),
-    updateReviewHome: (_: any, { input }: { input: any }) =>
+    updateReviewHome: (_: any, { input }: { input: ReviewHome }) =>
       reviewController.updateReviewHome(input),
-    deleteReviewHome: (_: any, { id }: { id: any }) =>
+    deleteReviewHome: (_: any, { id }: { id: string }) =>
       reviewController.deleteReviewHome(id),
 
     // About
-    createAboutPage: (_: any, { input }: { input: any }) =>
+    createAboutPage: (_: any, { input }: { input: AboutInfo }) =>
       aboutController.createAboutPage(input),
-    updateAboutPage: (_: any, { input }: { input: any }) =>
+    updateAboutPage: (_: any, { input }: { input: AboutInfo }) =>
       aboutController.updateAboutPage(input),
 
     // Product
-    createProduct: (_: any, { input }: { input: any }) =>
+    createProduct: (_: any, { input }: { input: Products }) =>
       productController.createProduct(input),
-    updateProduct: (_: any, { input }: { input: any }) =>
+    updateProduct: (_: any, { input }: { input: Products }) =>
       productController.updateProduct(input),
-    deleteProduct: (_: any, { id }: { id: any }) =>
+    deleteProduct: (_: any, { id }: { id: string }) =>
       productController.deleteProduct(id),
 
     // Product
-    createPlan: (_: any, { input }: { input: any }) =>
+    createPlan: (_: any, { input }: { input: Plan }) =>
       planController.createPlan(input),
-    updatePlan: (_: any, { input }: { input: any }) =>
+    updatePlan: (_: any, { input }: { input: Plan }) =>
       planController.updatePlan(input),
     deletePlan: (_: any, { id }: { id: string }) =>
       planController.deletePlan(id),

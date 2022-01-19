@@ -1,4 +1,5 @@
 import PlanModel from "../models/plan";
+import { Plan } from "../types/plan";
 
 const getPlans = async () => {
   try {
@@ -10,7 +11,7 @@ const getPlans = async () => {
   }
 };
 
-const createPlan = async (input: any) => {
+const createPlan = async (input: Plan) => {
   try {
     const plan = new PlanModel(input);
     plan.save();
@@ -29,7 +30,7 @@ const createPlan = async (input: any) => {
   }
 };
 
-const updatePlan = async (input: any) => {
+const updatePlan = async (input: Plan) => {
   try {
     await PlanModel.findOneAndUpdate(input);
 

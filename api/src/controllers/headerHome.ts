@@ -1,4 +1,5 @@
 import HeaderHomeModel from "../models/headerHome";
+import { HeaderInfo } from "../types/header";
 
 const getHeaderHome = async () => {
   try {
@@ -10,7 +11,7 @@ const getHeaderHome = async () => {
   }
 };
 
-const createHeaderHome = async (input: any) => {
+const createHeaderHome = async (input: HeaderInfo) => {
   try {
     const headerHomeData = new HeaderHomeModel(input);
     headerHomeData.save();
@@ -27,7 +28,7 @@ const createHeaderHome = async (input: any) => {
   }
 };
 
-const updateHeaderHome = async (input: any) => {
+const updateHeaderHome = async (input: HeaderInfo) => {
   try {
     await HeaderHomeModel.findOneAndUpdate(input);
     return {

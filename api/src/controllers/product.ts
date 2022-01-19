@@ -1,4 +1,5 @@
 import ProductModel from "../models/product";
+import { Products } from "../types/products";
 
 const getProducts = async () => {
   try {
@@ -20,7 +21,7 @@ const getProduct = async (id: string) => {
   }
 };
 
-const createProduct = async (input: any) => {
+const createProduct = async (input: Products) => {
   try {
     const product = await new ProductModel(input);
     await product.save();
@@ -38,9 +39,9 @@ const createProduct = async (input: any) => {
   }
 };
 
-const updateProduct = async (input: any) => {
+const updateProduct = async (input: Products) => {
   try {
-    await ProductModel.findOneAndUpdate(input);
+    await ProductModel.findOneAndUpdate({ _id: input.id }, input);
 
     return {
       message: "Actualizado correctamente",
