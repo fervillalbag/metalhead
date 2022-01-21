@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 import { FaTimes, FaBars } from "react-icons/fa";
 
@@ -16,7 +17,7 @@ const Navbar: React.FC = () => {
       <div>
         <Link href="/">
           <a>
-            <img src="/logo.svg" alt="" />
+            <LazyLoadImage src="/logo.svg" placeholderSrc="/logo.svg" alt="" />
           </a>
         </Link>
       </div>

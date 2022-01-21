@@ -42,6 +42,7 @@ const Products: React.FC<ProductsIprops> = ({ dataProducts }) => {
                     <LazyLoadImage
                       src={item?.image}
                       alt=""
+                      placeholderSrc="/imageload.png"
                       className="w-full object-cover align-top"
                     />
                   </div>

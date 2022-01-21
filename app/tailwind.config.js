@@ -1,10 +1,5 @@
 module.exports = {
-  // mode: "jit",
-  purge: {
-    enabled: true,
-    content: ["./src/pages/**/*.tsx", "./src/components/**/*.tsx"],
-  },
-  content: [],
+  content: ["./src/pages/**/*.{tsx,ts}", "./src/components/**/*.{tsx,ts}"],
   theme: {
     extend: {
       colors: {
