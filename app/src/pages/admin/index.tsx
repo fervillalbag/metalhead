@@ -1,12 +1,12 @@
 import React from "react";
-import { HeaderInfo } from "types/header";
-import { Description } from "types/description";
 import { useMutation } from "@apollo/client";
 import { v4 as uuidv4 } from "uuid";
 
 import client from "@/config/apollo";
 import { GET_HEADER_HOME } from "@/graphql/queries/headerHome";
 import { UPDATE_HEADER_INFO } from "@/graphql/mutation/header";
+import { HeaderInfo } from "@/types/header";
+import { Description } from "@/types/description";
 
 const AdminHome: React.FC = () => {
   const [data, setData] = React.useState<HeaderInfo | null>(null);

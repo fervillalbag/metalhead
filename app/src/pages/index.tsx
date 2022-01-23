@@ -11,9 +11,9 @@ import { GET_GROWTH_INFO_HOME } from "@/graphql/queries/growthInfo";
 import { GET_GROWTH_HOME } from "@/graphql/queries/growthHome";
 import { GET_REVIEW_HOME } from "@/graphql/queries/reviewHome";
 import { GET_REVIEW_INFO } from "@/graphql/queries/reviewInfo";
-import { HeaderInfo } from "types/header";
-import { GrowthData, GrowthInfo } from "types/growth";
-import { ReviewData, ReviewInfo } from "types/review";
+import { HeaderInfo } from "@/types/header";
+import { GrowthData, GrowthInfo } from "@/types/growth";
+import { ReviewData, ReviewInfo } from "@/types/review";
 
 interface HomeIprops {
   headerData: {

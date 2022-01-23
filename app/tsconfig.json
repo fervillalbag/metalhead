@@ -6,7 +6,8 @@
       "@/config/*": ["config/*"],
       "@/layout": ["layout"],
       "@/components/*": ["components/*"],
-      "@/styles/*": ["styles/*"]
+      "@/styles/*": ["styles/*"],
+      "@/types/*": ["types/*"]
     },
     "allowJs": true,
     "allowUnreachableCode": false,
