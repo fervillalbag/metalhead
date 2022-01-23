@@ -31,7 +31,7 @@ const createGrowthHome = async (input: GrowthInfo) => {
 
 const updateGrowthHome = async (input: GrowthInfo) => {
   try {
-    await GrowthModel.findOneAndUpdate(input);
+    await GrowthModel.findOneAndUpdate({ _id: input.id }, input);
     return {
       message: "Actualizado correctamente",
       success: true,

@@ -122,6 +122,7 @@ const typeDefs = gql`
   }
 
   input GrowthHomeInfoInput {
+    id: String
     title: String
     description: [DescriptionInput]
   }
