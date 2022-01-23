@@ -30,7 +30,7 @@ const createHeaderHome = async (input: HeaderInfo) => {
 
 const updateHeaderHome = async (input: HeaderInfo) => {
   try {
-    await HeaderHomeModel.findOneAndUpdate(input);
+    await HeaderHomeModel.findOneAndUpdate({ _id: input.id }, input);
     return {
       message: "Actualizado correctamente.",
       success: true,

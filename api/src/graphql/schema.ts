@@ -104,11 +104,12 @@ const typeDefs = gql`
   }
 
   input DescriptionInput {
-    id: ID
+    id: String
     text: String
   }
 
   input HeaderHomeInput {
+    id: ID
     title: String
     description: [DescriptionInput]
     image: String
