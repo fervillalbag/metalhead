@@ -93,6 +93,13 @@ const typeDefs = gql`
     createdAt: String
   }
 
+  type ProductInfo {
+    id: String
+    title: String
+    description: [Description]
+    createdAt: String
+  }
+
   # Inputs
 
   input CreateUser {
@@ -168,6 +175,12 @@ const typeDefs = gql`
     items: [PlansItemInput]
   }
 
+  input ProductInfoInput {
+    id: String
+    title: String
+    description: [DescriptionInput]
+  }
+
   # Query
 
   type Query {
@@ -192,6 +205,8 @@ const typeDefs = gql`
     getAboutPage: AboutPage
 
     # Product
+    getProductInfo: ProductInfo
+
     getProducts: [Product]
     getProduct(id: ID!): Product
 
@@ -232,6 +247,9 @@ const typeDefs = gql`
     updateAboutPage(input: AboutPageInput): MutationResponse
 
     # Product
+    createProductInfo(input: ProductInfoInput!): MutationResponse
+    updateProductInfo(input: ProductInfoInput): MutationResponse
+
     createProduct(input: ProductInput!): MutationResponse
     updateProduct(input: ProductInput): MutationResponse
     deleteProduct(id: ID!): MutationResponse

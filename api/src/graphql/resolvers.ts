@@ -7,6 +7,7 @@ import aboutController from "../controllers/about";
 import productController from "../controllers/product";
 import planController from "../controllers/plan";
 import reviewInfoController from "../controllers/reviewInfo";
+import productInfoController from "../controllers/productInfo";
 
 import { AboutInfo } from "../types/about";
 import { ReviewHome, ReviewInfo } from "../types/review";
@@ -42,6 +43,8 @@ const resolvers = {
     getAboutPage: () => aboutController.getAboutPage(),
 
     // Product
+    getProductInfo: () => productInfoController.getProductInfo(),
+
     getProducts: () => productController.getProducts(),
     getProduct: (_: any, { id }: { id: string }) =>
       productController.getProduct(id),
@@ -101,6 +104,11 @@ const resolvers = {
       aboutController.updateAboutPage(input),
 
     // Product
+    createProductInfo: (_: any, { input }: { input: any }) =>
+      productInfoController.createProductInfo(input),
+    updateProductInfo: (_: any, { input }: { input: any }) =>
+      productInfoController.updateProductInfo(input),
+
     createProduct: (_: any, { input }: { input: Products }) =>
       productController.createProduct(input),
     updateProduct: (_: any, { input }: { input: Products }) =>
