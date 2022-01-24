@@ -13,3 +13,17 @@ export const GET_GROWTH_HOME = gql`
     }
   }
 `;
+
+export const GET_GROWTH_ITEM = gql`
+  query getGrowthHomeItem($id: String!) {
+    getGrowthHomeItem(id: $id) {
+      id
+      title
+      description {
+        id
+        text
+      }
+      createdAt
+    }
+  }
+`;

@@ -180,6 +180,7 @@ const typeDefs = gql`
     # Growth
     getGrowthInfoHome: GrowthInfoHome
     getGrowthHome: [GrowthHome]
+    getGrowthHomeItem(id: String!): GrowthHome
 
     # Review
     getReviewHome: [Review]

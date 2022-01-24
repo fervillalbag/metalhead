@@ -1,6 +1,16 @@
 import GrowthModel from "../models/growth";
 import { GrowthHome } from "../types/growth";
 
+const getGrowthHomeItem = async (id: string) => {
+  try {
+    const growthItem = await GrowthModel.findOne({ _id: id });
+    return growthItem;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
+
 const getGrowthHome = async () => {
   try {
     const growths = await GrowthModel.find();
@@ -66,6 +76,7 @@ const deleteGrowthHome = async (id: string) => {
 };
 
 export default {
+  getGrowthHomeItem,
   getGrowthHome,
   createGrowthHome,
   updateGrowthHome,

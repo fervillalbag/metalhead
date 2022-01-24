@@ -1,13 +1,18 @@
 import React from "react";
 import { v4 as uuidv4 } from "uuid";
+import { useRouter } from "next/router";
 
 import client from "@/config/apollo";
 import { GET_GROWTH_INFO_HOME } from "@/graphql/queries/growthInfo";
 import { useMutation } from "@apollo/client";
 import { UPDATE_GROWTH_INFO } from "@/graphql/mutation/growth";
+import { GET_GROWTH_HOME } from "@/graphql/queries/growthHome";
 
 const GrowthAdmin: React.FC = () => {
+  const router = useRouter();
+
   const [data, setData] = React.useState<any>(null);
+  const [dataItems, setDataItems] = React.useState<any>(null);
   const [descriptionArray, setDescriptionArray] = React.useState<any>([]);
 
   const [updateGrowthInfoHome] = useMutation(UPDATE_GROWTH_INFO);
@@ -17,8 +22,14 @@ const GrowthAdmin: React.FC = () => {
       const { data: growthData } = await client.query({
         query: GET_GROWTH_INFO_HOME,
       });
+
+      const { data: growthDataItems } = await client.query({
+        query: GET_GROWTH_HOME,
+      });
+
       setData(growthData?.getGrowthInfoHome);
       setDescriptionArray(growthData?.getGrowthInfoHome?.description);
+      setDataItems(growthDataItems?.getGrowthHome);
     })();
   }, []);
 
@@ -63,7 +74,7 @@ const GrowthAdmin: React.FC = () => {
     }
   };
 
-  if (!data || !descriptionArray) return null;
+  if (!data || !dataItems || !descriptionArray) return null;
 
   return (
     <div className="p-4">
@@ -107,6 +118,27 @@ const GrowthAdmin: React.FC = () => {
       <button onClick={handleUpdate} className="block p-2 border">
         actualizar
       </button>
+
+      <div className="grid grid-cols-3 mt-8 gap-x-6">
+        {dataItems.map((item: any) => (
+          <div className="border p-3" key={item.id}>
+            <span className="block">{item.title}</span>
+
+            <button
+              className="border p-2 block mt-2"
+              onClick={() => router.push(`/admin/growth/${item.id}`)}
+            >
+              Editar
+            </button>
+            <button
+              className="border p-2 block mt-2"
+              onClick={() => console.log("eliminar")}
+            >
+              Eliminar
+            </button>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

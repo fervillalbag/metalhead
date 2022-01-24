@@ -29,6 +29,8 @@ const resolvers = {
     // Growth
     getGrowthInfoHome: () => growthInfoController.getGrowthHome(),
     getGrowthHome: () => growthController.getGrowthHome(),
+    getGrowthHomeItem: (_: any, { id }: { id: string }) =>
+      growthController.getGrowthHomeItem(id),
 
     // Review
     getReviewHome: () => reviewController.getReviewHome(),
