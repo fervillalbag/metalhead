@@ -3,7 +3,7 @@ import { HeaderInfo } from "../types/header";
 
 const getHeaderHome = async () => {
   try {
-    const headerHomeData = await HeaderHomeModel.find({});
+    const headerHomeData = await HeaderHomeModel.findOne({});
     return headerHomeData;
   } catch (error) {
     console.log(error);
