@@ -7,6 +7,7 @@ import { GET_GROWTH_INFO_HOME } from "@/graphql/queries/growthInfo";
 import { useMutation } from "@apollo/client";
 import { UPDATE_GROWTH_INFO } from "@/graphql/mutation/growthInfo";
 import { GET_GROWTH_HOME } from "@/graphql/queries/growthHome";
+import Loading from "@/components/Loading";
 
 const GrowthAdmin: React.FC = () => {
   const router = useRouter();
@@ -74,7 +75,7 @@ const GrowthAdmin: React.FC = () => {
     }
   };
 
-  if (!data || !dataItems || !descriptionArray) return null;
+  if (!data || !dataItems || !descriptionArray) return <Loading />;
 
   return (
     <div className="p-4">

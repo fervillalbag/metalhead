@@ -7,6 +7,7 @@ import { GET_HEADER_HOME } from "@/graphql/queries/headerHome";
 import { UPDATE_HEADER_INFO } from "@/graphql/mutation/header";
 import { HeaderInfo } from "@/types/header";
 import { Description } from "@/types/description";
+import Loading from "@/components/Loading";
 
 const HeaderAdmin: React.FC = () => {
   const [data, setData] = React.useState<HeaderInfo | null>(null);
@@ -91,7 +92,7 @@ const HeaderAdmin: React.FC = () => {
     }
   };
 
-  if (!data || !descriptionArray) return null;
+  if (!data || !descriptionArray) return <Loading />;
 
   return (
     <div className="p-4">

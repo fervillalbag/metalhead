@@ -8,6 +8,8 @@ import { UPDATE_REVIEW_INFO } from "@/graphql/mutation/reviewInfo";
 import Loading from "@/components/Loading";
 import { GET_REVIEW_HOME } from "@/graphql/queries/reviewHome";
 import { useRouter } from "next/router";
+import Modal from "@/components/Modal";
+import { DELETE_REVIEW_HOME_ITEM } from "@/graphql/mutation/reviewHome";
 
 const ReviewInfoAdmin = () => {
   const router = useRouter();
@@ -15,24 +17,29 @@ const ReviewInfoAdmin = () => {
   const [data, setData] = React.useState<any>(null);
   const [descriptionArray, setDescriptionArray] = React.useState<any>([]);
   const [dataItems, setDataItems] = React.useState<any>(null);
+  const [showModal, setShowModal] = React.useState<boolean>(false);
+  const [itemDelete, setItemDelete] = React.useState<string>("");
 
   const [updateReviewHomeInfo] = useMutation(UPDATE_REVIEW_INFO);
+  const [deleteReviewHome] = useMutation(DELETE_REVIEW_HOME_ITEM);
 
   React.useEffect(() => {
     (async () => {
       const { data: reviewInfo } = await client.query({
         query: GET_REVIEW_INFO,
+        fetchPolicy: "network-only",
       });
 
       const { data: reviewItems } = await client.query({
         query: GET_REVIEW_HOME,
+        fetchPolicy: "network-only",
       });
 
       setData(reviewInfo?.getReviewInfoHome);
       setDataItems(reviewItems?.getReviewHome);
       setDescriptionArray(reviewInfo?.getReviewInfoHome?.description);
     })();
-  }, []);
+  }, [data, dataItems]);
 
   const newDescription = {
     id: uuidv4(),
@@ -46,6 +53,20 @@ const ReviewInfoAdmin = () => {
   const handleDeleteInputDescription = (id: string) => {
     const newValue = descriptionArray.filter((item: any) => item.id !== id);
     setDescriptionArray(newValue);
+  };
+
+  const handleDeleteReviewItem = async (id: string) => {
+    try {
+      const response = await deleteReviewHome({
+        variables: {
+          id,
+        },
+      });
+      console.log(response);
+      router.reload();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleUpdate = async () => {
@@ -115,6 +136,33 @@ const ReviewInfoAdmin = () => {
         ))}
       </div>
 
+      <Modal showModal={showModal}>
+        <div className="flex flex-col justify-center h-full items-center">
+          <h1>¿Desea eliminar?</h1>
+
+          <div className="grid grid-cols-2 gap-x-4">
+            <button
+              className="block p-2 border"
+              onClick={() => {
+                handleDeleteReviewItem(itemDelete);
+                setShowModal(false);
+              }}
+            >
+              Si
+            </button>
+            <button
+              className="block p-2 border"
+              onClick={() => {
+                setShowModal(false);
+                setItemDelete("");
+              }}
+            >
+              No
+            </button>
+          </div>
+        </div>
+      </Modal>
+
       <button
         className="block border p-2 mb-3"
         onClick={handleAddInputDescription}
@@ -135,6 +183,15 @@ const ReviewInfoAdmin = () => {
               onClick={() => router.push(`/admin/review/${item.id}`)}
             >
               Editar
+            </button>
+            <button
+              className="block border p-2 mt-4"
+              onClick={() => {
+                setShowModal(true);
+                setItemDelete(item.id);
+              }}
+            >
+              Eliminar
             </button>
           </div>
         ))}

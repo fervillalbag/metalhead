@@ -8,3 +8,12 @@ export const UPDATE_REVIEW_HOME_ITEM = gql`
     }
   }
 `;
+
+export const DELETE_REVIEW_HOME_ITEM = gql`
+  mutation deleteReviewHome($id: ID!) {
+    deleteReviewHome(id: $id) {
+      message
+      success
+    }
+  }
+`;

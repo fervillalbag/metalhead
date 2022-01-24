@@ -5,6 +5,7 @@ import { GET_GROWTH_ITEM } from "@/graphql/queries/growthHome";
 import { v4 as uuidv4 } from "uuid";
 import { useMutation } from "@apollo/client";
 import { UPDATE_GROWTH_ITEM } from "@/graphql/mutation/growthHome";
+import Loading from "@/components/Loading";
 
 const GrowthId = () => {
   const router = useRouter();
@@ -69,7 +70,7 @@ const GrowthId = () => {
     }
   };
 
-  if (!data) return null;
+  if (!data || !descriptionArray) return <Loading />;
 
   return (
     <div className="p-4">
