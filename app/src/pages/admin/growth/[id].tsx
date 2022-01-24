@@ -3,6 +3,8 @@ import { useRouter } from "next/router";
 import client from "@/config/apollo";
 import { GET_GROWTH_ITEM } from "@/graphql/queries/growthHome";
 import { v4 as uuidv4 } from "uuid";
+import { useMutation } from "@apollo/client";
+import { UPDATE_GROWTH_ITEM } from "@/graphql/mutation/growthHome";
 
 const GrowthId = () => {
   const router = useRouter();
@@ -10,6 +12,8 @@ const GrowthId = () => {
   const [data, setData] = React.useState<any>(null);
   const [descriptionArray, setDescriptionArray] = React.useState<any>([]);
   const queryId = router.query.id;
+
+  const [updateGrowthHome] = useMutation(UPDATE_GROWTH_ITEM);
 
   React.useEffect(() => {
     (async () => {
@@ -41,7 +45,28 @@ const GrowthId = () => {
   };
 
   const handleUpdate = async () => {
-    console.log(descriptionArray);
+    const newDescriptionArray = descriptionArray.map((description: any) => {
+      return {
+        id: description.id,
+        text: description.text,
+      };
+    });
+
+    try {
+      const response = await updateGrowthHome({
+        variables: {
+          input: {
+            id: data?.id,
+            title: data?.title,
+            description: newDescriptionArray,
+          },
+        },
+      });
+
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   if (!data) return null;
