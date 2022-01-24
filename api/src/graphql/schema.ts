@@ -141,6 +141,7 @@ const typeDefs = gql`
   }
 
   input AboutPageInput {
+    id: String
     title: String
     description: [DescriptionInput]
     image: String

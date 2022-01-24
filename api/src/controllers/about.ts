@@ -28,7 +28,7 @@ const createAboutPage = async (input: AboutInfo) => {
 
 const updateAboutPage = async (input: AboutInfo) => {
   try {
-    await AboutModel.findOneAndUpdate(input);
+    await AboutModel.findOneAndUpdate({ _id: input.id }, input);
     return {
       message: "Actualizado correctamente",
       success: true,
