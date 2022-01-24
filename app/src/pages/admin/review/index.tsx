@@ -6,10 +6,15 @@ import { GET_REVIEW_INFO } from "@/graphql/queries/reviewInfo";
 import { useMutation } from "@apollo/client";
 import { UPDATE_REVIEW_INFO } from "@/graphql/mutation/reviewInfo";
 import Loading from "@/components/Loading";
+import { GET_REVIEW_HOME } from "@/graphql/queries/reviewHome";
+import { useRouter } from "next/router";
 
 const ReviewInfoAdmin = () => {
+  const router = useRouter();
+
   const [data, setData] = React.useState<any>(null);
   const [descriptionArray, setDescriptionArray] = React.useState<any>([]);
+  const [dataItems, setDataItems] = React.useState<any>(null);
 
   const [updateReviewHomeInfo] = useMutation(UPDATE_REVIEW_INFO);
 
@@ -18,7 +23,13 @@ const ReviewInfoAdmin = () => {
       const { data: reviewInfo } = await client.query({
         query: GET_REVIEW_INFO,
       });
+
+      const { data: reviewItems } = await client.query({
+        query: GET_REVIEW_HOME,
+      });
+
       setData(reviewInfo?.getReviewInfoHome);
+      setDataItems(reviewItems?.getReviewHome);
       setDescriptionArray(reviewInfo?.getReviewInfoHome?.description);
     })();
   }, []);
@@ -62,7 +73,7 @@ const ReviewInfoAdmin = () => {
     }
   };
 
-  if (!data || !descriptionArray) return <Loading />;
+  if (!data || !descriptionArray || !dataItems) return <Loading />;
 
   return (
     <div className="p-4">
@@ -113,6 +124,21 @@ const ReviewInfoAdmin = () => {
       <button className="border block p-2" onClick={handleUpdate}>
         actualizar
       </button>
+
+      <div className="grid grid-cols-3 gap-x-10 mt-8">
+        {dataItems.map((item: any) => (
+          <div key={item.id} className="border p-3">
+            <span className="block">{item.name}</span>
+
+            <button
+              className="block border p-2 mt-4"
+              onClick={() => router.push(`/admin/review/${item.id}`)}
+            >
+              Editar
+            </button>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

@@ -1,6 +1,16 @@
 import ReviewModel from "../models/review";
 import { ReviewHome } from "../types/review";
 
+const getReviewHomeItem = async (id: string) => {
+  try {
+    const reviewItem = await ReviewModel.findOne({ _id: id });
+    return reviewItem;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
+
 const getReviewHome = async () => {
   try {
     const review = await ReviewModel.find({});
@@ -63,6 +73,7 @@ const deleteReviewHome = async (id: string) => {
 };
 
 export default {
+  getReviewHomeItem,
   updateReviewHome,
   getReviewHome,
   createReviewHome,

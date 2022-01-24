@@ -185,6 +185,7 @@ const typeDefs = gql`
     # Review
     getReviewHome: [Review]
     getReviewInfoHome: ReviewInfo
+    getReviewHomeItem(id: String): Review
 
     # About
     getAboutPage: AboutPage

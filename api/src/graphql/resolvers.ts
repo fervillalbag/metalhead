@@ -35,6 +35,8 @@ const resolvers = {
     // Review
     getReviewHome: () => reviewController.getReviewHome(),
     getReviewInfoHome: () => reviewInfoController.getReviewInfoHome(),
+    getReviewHomeItem: (_: any, { id }: { id: string }) =>
+      reviewController.getReviewHomeItem(id),
 
     // About
     getAboutPage: () => aboutController.getAboutPage(),
