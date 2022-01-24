@@ -1,13 +1,15 @@
 import React from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useRouter } from "next/router";
+import { useMutation } from "@apollo/client";
 
 import client from "@/config/apollo";
+import Loading from "@/components/Loading";
+import Modal from "@/components/Modal";
 import { GET_GROWTH_INFO_HOME } from "@/graphql/queries/growthInfo";
-import { useMutation } from "@apollo/client";
 import { UPDATE_GROWTH_INFO } from "@/graphql/mutation/growthInfo";
 import { GET_GROWTH_HOME } from "@/graphql/queries/growthHome";
-import Loading from "@/components/Loading";
+import { DELETE_GROWTH_ITEM } from "@/graphql/mutation/growthHome";
 
 const GrowthAdmin: React.FC = () => {
   const router = useRouter();
@@ -15,8 +17,11 @@ const GrowthAdmin: React.FC = () => {
   const [data, setData] = React.useState<any>(null);
   const [dataItems, setDataItems] = React.useState<any>(null);
   const [descriptionArray, setDescriptionArray] = React.useState<any>([]);
+  const [showModal, setShowModal] = React.useState<boolean>(false);
+  const [itemDelete, setItemDelete] = React.useState<string>("");
 
   const [updateGrowthInfoHome] = useMutation(UPDATE_GROWTH_INFO);
+  const [deleteGrowthHome] = useMutation(DELETE_GROWTH_ITEM);
 
   React.useEffect(() => {
     (async () => {
@@ -48,6 +53,20 @@ const GrowthAdmin: React.FC = () => {
       (description: any) => description.id !== id
     );
     setDescriptionArray(newValue);
+  };
+
+  const handleDeleteReviewItem = async (id: string) => {
+    try {
+      const response = await deleteGrowthHome({
+        variables: {
+          id,
+        },
+      });
+      console.log(response);
+      router.reload();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleUpdate = async () => {
@@ -113,6 +132,33 @@ const GrowthAdmin: React.FC = () => {
         </div>
       ))}
 
+      <Modal showModal={showModal}>
+        <div className="flex flex-col justify-center h-full items-center">
+          <h1>¿Desea eliminar?</h1>
+
+          <div className="grid grid-cols-2 gap-x-4">
+            <button
+              className="block p-2 border"
+              onClick={() => {
+                handleDeleteReviewItem(itemDelete);
+                setShowModal(false);
+              }}
+            >
+              Si
+            </button>
+            <button
+              className="block p-2 border"
+              onClick={() => {
+                setShowModal(false);
+                setItemDelete("");
+              }}
+            >
+              No
+            </button>
+          </div>
+        </div>
+      </Modal>
+
       <button className="block" onClick={handleAddNewInputDescription}>
         agregar campo
       </button>
@@ -133,7 +179,10 @@ const GrowthAdmin: React.FC = () => {
             </button>
             <button
               className="border p-2 block mt-2"
-              onClick={() => console.log("eliminar")}
+              onClick={() => {
+                setShowModal(true);
+                setItemDelete(item.id);
+              }}
             >
               Eliminar
             </button>

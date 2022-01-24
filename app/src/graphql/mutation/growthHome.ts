@@ -8,3 +8,12 @@ export const UPDATE_GROWTH_ITEM = gql`
     }
   }
 `;
+
+export const DELETE_GROWTH_ITEM = gql`
+  mutation deleteGrowthHome($id: ID!) {
+    deleteGrowthHome(id: $id) {
+      message
+      success
+    }
+  }
+`;

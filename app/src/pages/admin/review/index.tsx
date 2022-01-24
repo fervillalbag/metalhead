@@ -1,14 +1,14 @@
 import React from "react";
+import { useRouter } from "next/router";
 import { v4 as uuidv4 } from "uuid";
+import { useMutation } from "@apollo/client";
 
 import client from "@/config/apollo";
-import { GET_REVIEW_INFO } from "@/graphql/queries/reviewInfo";
-import { useMutation } from "@apollo/client";
-import { UPDATE_REVIEW_INFO } from "@/graphql/mutation/reviewInfo";
 import Loading from "@/components/Loading";
-import { GET_REVIEW_HOME } from "@/graphql/queries/reviewHome";
-import { useRouter } from "next/router";
 import Modal from "@/components/Modal";
+import { GET_REVIEW_INFO } from "@/graphql/queries/reviewInfo";
+import { UPDATE_REVIEW_INFO } from "@/graphql/mutation/reviewInfo";
+import { GET_REVIEW_HOME } from "@/graphql/queries/reviewHome";
 import { DELETE_REVIEW_HOME_ITEM } from "@/graphql/mutation/reviewHome";
 
 const ReviewInfoAdmin = () => {
