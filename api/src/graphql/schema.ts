@@ -155,6 +155,7 @@ const typeDefs = gql`
   }
 
   input ProductInput {
+    id: String
     name: String
     code: Int
     price: Int
