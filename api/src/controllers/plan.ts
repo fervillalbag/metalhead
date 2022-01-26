@@ -1,6 +1,18 @@
 import PlanModel from "../models/plan";
 import { Plan } from "../types/plan";
 
+const getPlan = async (id: string, slug: string) => {
+  try {
+    let plan;
+    if (id) plan = await PlanModel.findOne({ _id: id });
+    if (slug) plan = await PlanModel.findOne({ slug });
+    return plan;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
+
 const getPlans = async () => {
   try {
     const plans = await PlanModel.find({});
@@ -66,6 +78,7 @@ const deletePlan = async (id: string) => {
 };
 
 export default {
+  getPlan,
   createPlan,
   getPlans,
   updatePlan,

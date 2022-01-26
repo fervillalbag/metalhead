@@ -86,6 +86,7 @@ const typeDefs = gql`
 
   type Plan {
     id: ID
+    slug: String
     name: String
     url: String
     price: Int
@@ -170,6 +171,8 @@ const typeDefs = gql`
   }
 
   input PlanInput {
+    id: String
+    slug: String
     name: String
     url: String
     price: Int
@@ -213,6 +216,7 @@ const typeDefs = gql`
 
     # Plan
     getPlans: [Plan]
+    getPlan(id: String, slug: String): Plan
   }
 
   type Mutation {

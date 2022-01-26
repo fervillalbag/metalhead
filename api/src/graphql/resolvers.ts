@@ -50,6 +50,8 @@ const resolvers = {
       productController.getProduct(id),
 
     // Plans
+    getPlan: (_: any, { id, slug }: { id: string; slug: string }) =>
+      planController.getPlan(id, slug),
     getPlans: () => planController.getPlans(),
   },
 
