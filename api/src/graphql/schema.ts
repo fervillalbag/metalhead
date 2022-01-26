@@ -94,6 +94,13 @@ const typeDefs = gql`
     createdAt: String
   }
 
+  type PlanInfo {
+    id: ID
+    title: String
+    description: [Description]
+    createdAt: String
+  }
+
   type ProductInfo {
     id: String
     title: String
@@ -185,6 +192,12 @@ const typeDefs = gql`
     description: [DescriptionInput]
   }
 
+  input PlanInfoInput {
+    id: String
+    title: String
+    description: [DescriptionInput]
+  }
+
   # Query
 
   type Query {
@@ -215,6 +228,8 @@ const typeDefs = gql`
     getProduct(id: ID!): Product
 
     # Plan
+    getPlanInfo: PlanInfo
+
     getPlans: [Plan]
     getPlan(id: String, slug: String): Plan
   }
@@ -260,6 +275,9 @@ const typeDefs = gql`
     deleteProduct(id: ID!): MutationResponse
 
     # Plan
+    createPlanInfo(input: PlanInfoInput!): MutationResponse
+    updatePlanInfo(input: PlanInfoInput): MutationResponse
+
     createPlan(input: PlanInput!): MutationResponse
     updatePlan(input: PlanInput): MutationResponse
     deletePlan(id: ID!): MutationResponse

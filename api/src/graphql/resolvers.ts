@@ -6,6 +6,7 @@ import reviewController from "../controllers/review";
 import aboutController from "../controllers/about";
 import productController from "../controllers/product";
 import planController from "../controllers/plan";
+import planInfoController from "../controllers/planInfo";
 import reviewInfoController from "../controllers/reviewInfo";
 import productInfoController from "../controllers/productInfo";
 
@@ -50,6 +51,8 @@ const resolvers = {
       productController.getProduct(id),
 
     // Plans
+    getPlanInfo: () => planInfoController.getPlanInfo(),
+
     getPlan: (_: any, { id, slug }: { id: string; slug: string }) =>
       planController.getPlan(id, slug),
     getPlans: () => planController.getPlans(),
@@ -118,7 +121,12 @@ const resolvers = {
     deleteProduct: (_: any, { id }: { id: string }) =>
       productController.deleteProduct(id),
 
-    // Product
+    // Plan
+    createPlanInfo: (_: any, { input }: { input: any }) =>
+      planInfoController.createPlanInfo(input),
+    updatePlanInfo: (_: any, { input }: { input: any }) =>
+      planInfoController.updatePlanInfo(input),
+
     createPlan: (_: any, { input }: { input: Plan }) =>
       planController.createPlan(input),
     updatePlan: (_: any, { input }: { input: Plan }) =>
