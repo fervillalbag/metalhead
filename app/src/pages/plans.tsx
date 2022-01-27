@@ -1,94 +1,97 @@
 import React from "react";
 import Link from "next/link";
+import { GetStaticProps } from "next";
 
 import Layout from "@/layout";
+import client from "@/config/apollo";
+import { GET_PLANS } from "@/graphql/queries/plan";
+import { GET_PLAN_INFO } from "@/graphql/queries/planInfo";
 
-const Plans: React.FC = () => {
+interface PlansIprops {
+  dataPlans: any;
+  dataInfo: any;
+}
+
+export const getStaticProps: GetStaticProps = async () => {
+  const { data: dataPlans } = await client.query({
+    query: GET_PLANS,
+  });
+
+  const { data: dataInfo } = await client.query({
+    query: GET_PLAN_INFO,
+  });
+
+  return {
+    props: {
+      dataPlans,
+      dataInfo,
+    },
+    revalidate: 60,
+  };
+};
+
+const Plans: React.FC<PlansIprops> = ({ dataPlans, dataInfo }) => {
+  const dataHomePlans = dataPlans?.getPlans;
+  const dataHomePlanInfo = dataInfo?.getPlanInfo;
+
+  console.log(dataHomePlanInfo);
+
   return (
     <Layout>
       <div className="w-11/12 max-w-6xl mx-auto">
-        <span className="block lg:mt-4 text-DarkGrayishBlue font-regular text-sm text-center lg:w-9/12 mx-auto">
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Enim, sunt
-          vero ea ex suscipit quo! Quae temporibus asperiores maiores? Deserunt
-          voluptates error tenetur atque saepe amet odio quae voluptatibus, qui,
-          animi ipsum ut hic autem!
-        </span>
+        <h3 className="text-2xl lg:text-4xl font-bold text-DarkBlue text-center">
+          {dataHomePlanInfo?.title}
+        </h3>
+
+        {dataHomePlanInfo?.description.map((description: any) => (
+          <span
+            key={description.id}
+            className="block mt-4 text-DarkGrayishBlue font-regular text-sm text-center lg:w-9/12 mx-auto"
+          >
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Enim, sunt
+            vero ea ex suscipit quo! Quae temporibus asperiores maiores?
+            Deserunt voluptates error tenetur atque saepe amet odio quae
+            voluptatibus, qui, animi ipsum ut hic autem!
+          </span>
+        ))}
 
         <div className="grid md:grid-cols-2 lg:grid-cols-[repeat(2,_370px)] gap-x-6 gap-y-10 justify-center pt-10 pb-20">
-          <article className="border border-solid border-DarkGrayishBlue bg-gray rounded px-6 py-8">
-            <span className="block text-center font-bold text-VeryDarkBlue text-xl">
-              Free
-            </span>
+          {dataHomePlans.map((plan: any) => (
+            <article
+              key={plan.id}
+              className={`border border-solid border-DarkGrayishBlue rounded px-6 py-8 ${
+                plan.slug === "pro" && "bg-gray"
+              }`}
+            >
+              <span className="block text-center font-bold text-VeryDarkBlue text-xl">
+                {plan.name}
+              </span>
 
-            <div className="flex items-center justify-center mt-4">
-              <span className="block mr-1">$</span>
-              <span className="block text-4xl">0</span>
-            </div>
+              <div className="flex items-center justify-center mt-4">
+                <span className="block mr-1">$</span>
+                <span className="block text-4xl">{plan.price}</span>
+              </div>
 
-            <Link href="/plans">
-              <a className="bg-white py-3 block text-center mt-4 rounded border border-DarkGrayishBlue border-solid">
-                Get Started
-              </a>
-            </Link>
+              <Link href="/plans">
+                <a className="bg-white py-3 block text-center mt-4 rounded border border-DarkGrayishBlue border-solid">
+                  Get Started
+                </a>
+              </Link>
 
-            <ul className="mt-6">
-              <li className="text-sm font-regular text-DarkGrayishBlue mb-4">
-                30.000+ graphic & animated templates
-              </li>
-              <li className="text-sm font-regular text-DarkGrayishBlue mb-4">
-                Instant access to 140 million stock images
-              </li>
-              <li className="text-sm font-regular text-DarkGrayishBlue mb-4">
-                Upload your own fonts & images
-              </li>
-              <li className="text-sm font-regular mb-4 text-[rgba(0,0,0,0.2)] line-through">
-                Upload your own fonts & images
-              </li>
-              <li className="text-sm font-regular mb-4 text-[rgba(0,0,0,0.2)] line-through">
-                Upload your own fonts & images
-              </li>
-              <li className="text-sm font-regular mb-4 text-[rgba(0,0,0,0.2)] line-through">
-                Upload your own fonts & images
-              </li>
-            </ul>
-          </article>
-          <article className="border border-solid border-DarkGrayishBlue bg-white rounded px-6 py-8">
-            <span className="block text-center font-bold text-VeryDarkBlue text-xl">
-              Pro
-            </span>
-
-            <div className="flex items-center justify-center mt-4">
-              <span className="block mr-1">$</span>
-              <span className="block text-4xl">7,99</span>
-            </div>
-
-            <Link href="/plans">
-              <a className="bg-DarkGrayishBlue text-white py-3 block text-center mt-4 rounded border border-DarkGrayishBlue border-solid">
-                Get Started
-              </a>
-            </Link>
-
-            <ul className="mt-6">
-              <li className="text-sm font-regular text-DarkGrayishBlue mb-4">
-                30.000+ graphic & animated templates
-              </li>
-              <li className="text-sm font-regular text-DarkGrayishBlue mb-4">
-                Instant access to 140 million stock images
-              </li>
-              <li className="text-sm font-regular text-DarkGrayishBlue mb-4">
-                Upload your own fonts & images
-              </li>
-              <li className="text-sm font-regular text-DarkGrayishBlue mb-4">
-                Upload your own fonts & images
-              </li>
-              <li className="text-sm font-regular text-DarkGrayishBlue mb-4">
-                Upload your own fonts & images
-              </li>
-              <li className="text-sm font-regular text-DarkGrayishBlue mb-4">
-                Upload your own fonts & images
-              </li>
-            </ul>
-          </article>
+              <ul className="mt-6">
+                {plan.items.map((item: any) => (
+                  <li
+                    key={item.id}
+                    className={`text-sm font-regular text-DarkGrayishBlue mb-4 ${
+                      !item.status && "text-[rgba(0,0,0,0.2)] line-through"
+                    }`}
+                  >
+                    {item.text}
+                  </li>
+                ))}
+              </ul>
+            </article>
+          ))}
         </div>
       </div>
     </Layout>
