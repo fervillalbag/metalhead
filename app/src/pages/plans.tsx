@@ -34,8 +34,6 @@ const Plans: React.FC<PlansIprops> = ({ dataPlans, dataInfo }) => {
   const dataHomePlans = dataPlans?.getPlans;
   const dataHomePlanInfo = dataInfo?.getPlanInfo;
 
-  console.log(dataHomePlanInfo);
-
   return (
     <Layout>
       <div className="w-11/12 max-w-6xl mx-auto">
