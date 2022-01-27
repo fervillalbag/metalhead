@@ -89,6 +89,7 @@ const typeDefs = gql`
     slug: String
     name: String
     url: String
+    status: Boolean
     price: Int
     items: [PlansItem]
     createdAt: String
@@ -181,6 +182,7 @@ const typeDefs = gql`
     id: String
     slug: String
     name: String
+    status: Boolean
     url: String
     price: Int
     items: [PlansItemInput]

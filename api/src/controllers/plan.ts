@@ -44,7 +44,7 @@ const createPlan = async (input: Plan) => {
 
 const updatePlan = async (input: Plan) => {
   try {
-    await PlanModel.findOneAndUpdate(input);
+    await PlanModel.findOneAndUpdate({ _id: input.id }, input);
 
     return {
       message: "Actualizado correctamente",

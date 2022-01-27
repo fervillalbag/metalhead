@@ -13,6 +13,10 @@ const planSchema = new Schema({
     type: String,
     required: true,
   },
+  status: {
+    type: Boolean,
+    required: true,
+  },
   price: {
     type: Number,
     required: true,
