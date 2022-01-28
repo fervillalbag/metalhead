@@ -199,7 +199,7 @@ const ReviewInfoAdmin = () => {
 
       <button
         className="border p-2 mt-8"
-        onClick={() => router.push("/admin/crear/review")}
+        onClick={() => router.push("/admin/create/review")}
       >
         agregar nueva review
       </button>

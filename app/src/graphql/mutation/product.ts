@@ -17,3 +17,12 @@ export const DELETE_PRODUCT_ITEM = gql`
     }
   }
 `;
+
+export const CREATE_PRODUCT_ITEM = gql`
+  mutation createProduct($input: ProductInput!) {
+    createProduct(input: $input) {
+      message
+      success
+    }
+  }
+`;

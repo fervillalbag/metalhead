@@ -5,7 +5,7 @@ import { useMutation } from "@apollo/client";
 import { CREATE_REVIEW_HOME } from "@/graphql/mutation/reviewHome";
 import Loading from "@/components/Loading";
 
-const CreateReviewAdmin = () => {
+const CreateReviewAdmin: React.FC = () => {
   const [data, setData] = React.useState<any>({
     name: "",
     avatar: "",

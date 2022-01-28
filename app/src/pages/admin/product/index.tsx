@@ -199,6 +199,13 @@ const ProductAdmin = () => {
           </div>
         ))}
       </div>
+
+      <button
+        className="border p-2 mt-8"
+        onClick={() => router.push("/admin/create/product")}
+      >
+        agregar nuevo producto
+      </button>
     </div>
   );
 };
