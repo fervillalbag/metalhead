@@ -14,6 +14,10 @@ const HeaderAdmin: React.FC = () => {
   const [descriptionArray, setDescriptionArray] = React.useState<any>([]);
   const [showHeaderImage, setShowHeaderImage] = React.useState<any>(null);
   const [fileHeader, setFileHeader] = React.useState<any>(null);
+  const [error, setError] = React.useState<any>({
+    type: "",
+    status: false,
+  });
 
   const [updateHeaderHome] = useMutation(UPDATE_HEADER_INFO);
 
@@ -55,6 +59,14 @@ const HeaderAdmin: React.FC = () => {
         text: item.text,
       };
     });
+
+    if (data?.title === "" || newDescriptionArray.length === 0) {
+      setError({
+        type: "Todos los campos son requeridos",
+        status: true,
+      });
+      return;
+    }
 
     if (fileHeader) {
       const url = "https://api.cloudinary.com/v1_1/dbp9am0cx/image/upload";
@@ -154,6 +166,8 @@ const HeaderAdmin: React.FC = () => {
         <button onClick={handleUpdate} className="block border p-3">
           Actualizar
         </button>
+
+        {error.status && <span className="block">{error.type}</span>}
       </section>
       <hr />
     </div>
