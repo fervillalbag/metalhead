@@ -17,3 +17,12 @@ export const DELETE_REVIEW_HOME_ITEM = gql`
     }
   }
 `;
+
+export const CREATE_REVIEW_HOME = gql`
+  mutation createReviewHome($input: ReviewInput!) {
+    createReviewHome(input: $input) {
+      message
+      success
+    }
+  }
+`;
