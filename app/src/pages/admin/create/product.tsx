@@ -21,6 +21,10 @@ const CreateProductAdmin: React.FC = () => {
   ]);
   const [showProductImage, setShowProductImage] = React.useState<any>(null);
   const [fileProduct, setFileProduct] = React.useState<any>(null);
+  const [error, setError] = React.useState<any>({
+    type: "",
+    status: false,
+  });
 
   const [createProduct] = useMutation(CREATE_PRODUCT_ITEM);
 
@@ -49,10 +53,6 @@ const CreateProductAdmin: React.FC = () => {
     setFileProduct(file);
   };
 
-  const alertError = () => {
-    return <span className="block">Agregar imagen!!!</span>;
-  };
-
   const handleCreateProduct = async () => {
     if (fileProduct) {
       const url = "https://api.cloudinary.com/v1_1/dbp9am0cx/image/upload";
@@ -76,7 +76,7 @@ const CreateProductAdmin: React.FC = () => {
 
       console.log(responseApi?.data);
     } else {
-      alertError();
+      setError({ type: "La imagen es obligatoria", status: true });
     }
   };
 
@@ -112,7 +112,7 @@ const CreateProductAdmin: React.FC = () => {
         />
       </div>
 
-      {alertError}
+      {error.status && <span className="block">{error.type}</span>}
 
       <div className="py-4">
         <input type="file" onChange={handleHeaderFileChange} />

@@ -18,6 +18,10 @@ const CreateReviewAdmin: React.FC = () => {
   ]);
   const [showAvatarImage, setShowAvatarImage] = React.useState<any>("");
   const [fileAvatar, setFileAvatar] = React.useState<any>(null);
+  const [error, setError] = React.useState<any>({
+    type: "",
+    status: false,
+  });
 
   const [createReviewHome] = useMutation(CREATE_REVIEW_HOME);
 
@@ -67,17 +71,10 @@ const CreateReviewAdmin: React.FC = () => {
 
       console.log(responseApi?.data);
     } else {
-      const responseApi = await createReviewHome({
-        variables: {
-          input: {
-            name: data?.name,
-            description: descriptionArray,
-            avatar: data?.image,
-          },
-        },
+      setError({
+        type: "La imagen es obligatoria",
+        status: true,
       });
-
-      console.log(responseApi?.data);
     }
   };
 
@@ -92,6 +89,8 @@ const CreateReviewAdmin: React.FC = () => {
         onChange={(e) => setData({ ...data, name: e.target.value })}
         placeholder="Introducir nombre"
       />
+
+      {error.status && <span className="block">{error.type}</span>}
 
       <div className="py-4">
         <input type="file" onChange={handleHeaderFileChange} />
