@@ -8,6 +8,7 @@ import { UPDATE_HEADER_INFO } from "@/graphql/mutation/header";
 import { HeaderInfo } from "@/types/header";
 import { Description } from "@/types/description";
 import Loading from "@/components/Loading";
+import NavbarDashboard from "@/components/admin/Navbar";
 
 const HeaderAdmin: React.FC = () => {
   const [data, setData] = React.useState<HeaderInfo | null>(null);
@@ -109,72 +110,76 @@ const HeaderAdmin: React.FC = () => {
     });
   };
 
-  if (!data || !descriptionArray) return <Loading />;
-
   return (
-    <div className="p-4">
-      <h1>Admin Page</h1>
+    <div className="flex">
+      <NavbarDashboard />
 
-      <hr />
-      <section className="py-16">
-        <span className="block">Header</span>
+      <div className="p-10 w-full">
+        <h1 className="text-3xl">Header Section</h1>
 
-        <input
-          type="text"
-          value={data.title}
-          className="w-11/12 border p-2"
-          onChange={(e: any) => setData({ ...data, title: e.target.value })}
-        />
+        {!data || !descriptionArray ? (
+          <Loading />
+        ) : (
+          <section className="py-8">
+            <input
+              type="text"
+              value={data.title}
+              className="w-full block border p-2"
+              onChange={(e: any) => setData({ ...data, title: e.target.value })}
+            />
 
-        <div className="pt-4 flex flex-col">
-          <input type="file" onChange={handleHeaderFileChange} />
+            <div className="pt-4 flex flex-col">
+              <input type="file" onChange={handleHeaderFileChange} />
 
-          <div className="pt-4">
-            {!showHeaderImage ? (
-              <img src={data?.image} width={100} alt="" />
-            ) : (
-              <img src={showHeaderImage} width={100} alt="" />
-            )}
-          </div>
-        </div>
-
-        <div className="pt-4">
-          {descriptionArray.map((item: Description) => (
-            <div className="flex items-center" key={item.id}>
-              <textarea
-                value={item.text}
-                className="w-11/12 border h-32 p-2"
-                onChange={(e) =>
-                  setDescriptionArray((currentDescription: any) =>
-                    currentDescription?.map((x: any) =>
-                      x.id === item.id
-                        ? {
-                            ...x,
-                            text: e.target.value,
-                          }
-                        : x
-                    )
-                  )
-                }
-              ></textarea>
-              <button
-                onClick={() => handleDeleteInputDescription(item.id)}
-                className="block p-2 border"
-              >
-                delete
-              </button>
+              <div className="pt-4">
+                {!showHeaderImage ? (
+                  <img src={data?.image} width={100} alt="" />
+                ) : (
+                  <img src={showHeaderImage} width={100} alt="" />
+                )}
+              </div>
             </div>
-          ))}
-        </div>
 
-        <button onClick={handleAddNewInputDescription}>agregar campo</button>
-        <button onClick={handleUpdate} className="block border p-3">
-          Actualizar
-        </button>
+            <div className="pt-4">
+              {descriptionArray.map((item: Description) => (
+                <div className="flex items-center" key={item.id}>
+                  <textarea
+                    value={item.text}
+                    className="w-full block border h-32 p-2"
+                    onChange={(e) =>
+                      setDescriptionArray((currentDescription: any) =>
+                        currentDescription?.map((x: any) =>
+                          x.id === item.id
+                            ? {
+                                ...x,
+                                text: e.target.value,
+                              }
+                            : x
+                        )
+                      )
+                    }
+                  ></textarea>
+                  <button
+                    onClick={() => handleDeleteInputDescription(item.id)}
+                    className="block p-2 border"
+                  >
+                    delete
+                  </button>
+                </div>
+              ))}
+            </div>
 
-        {error.status && <span className="block">{error.type}</span>}
-      </section>
-      <hr />
+            <button onClick={handleAddNewInputDescription}>
+              agregar campo
+            </button>
+            <button onClick={handleUpdate} className="block border p-3">
+              Actualizar
+            </button>
+
+            {error.status && <span className="block">{error.type}</span>}
+          </section>
+        )}
+      </div>
     </div>
   );
 };

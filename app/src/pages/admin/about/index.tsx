@@ -6,6 +6,7 @@ import client from "@/config/apollo";
 import { GET_ABOUT_PAGE } from "@/graphql/queries/aboutPage";
 import { useMutation } from "@apollo/client";
 import { UPDATE_ABOUT_INFO } from "@/graphql/mutation/about";
+import NavbarDashboard from "@/components/admin/Navbar";
 
 const AboutPageAdmin: React.FC = () => {
   const [data, setData] = React.useState<any>(null);
@@ -90,67 +91,73 @@ const AboutPageAdmin: React.FC = () => {
     }
   };
 
-  if (!data || !descriptionArray) return <Loading />;
-
   return (
-    <div className="p-4">
-      <input
-        type="text"
-        className="w-11/12 border p-2"
-        value={data?.title}
-        onChange={(e) => setData({ ...data, title: e.target.value })}
-      />
+    <div className="flex">
+      <NavbarDashboard />
 
-      <div className="py-4">
-        <input type="file" onChange={handleHeaderFileChange} />
+      {!data || !descriptionArray ? (
+        <Loading />
+      ) : (
+        <div className="p-10 w-full">
+          <input
+            type="text"
+            className="w-11/12 border p-2"
+            value={data?.title}
+            onChange={(e) => setData({ ...data, title: e.target.value })}
+          />
 
-        <div className="pt-4">
-          {!showAboutImage ? (
-            <img src={data?.image} width={160} alt="" />
-          ) : (
-            <img src={showAboutImage} width={160} alt="" />
-          )}
-        </div>
-      </div>
+          <div className="py-4">
+            <input type="file" onChange={handleHeaderFileChange} />
 
-      <div>
-        {descriptionArray.map((description: any) => (
-          <div key={description.id} className="flex py-4">
-            <textarea
-              className="w-11/12 border p-2 h-32"
-              value={description.text}
-              onChange={(e) =>
-                setDescriptionArray((currentDescription: any) =>
-                  currentDescription.map((x: any) =>
-                    x.id === description.id
-                      ? {
-                          ...x,
-                          text: e.target.value,
-                        }
-                      : x
-                  )
-                )
-              }
-            ></textarea>
-            <button
-              className="block p-2 border"
-              onClick={() => handleDeleteInputDescription(description.id)}
-            >
-              delete
-            </button>
+            <div className="pt-4">
+              {!showAboutImage ? (
+                <img src={data?.image} width={160} alt="" />
+              ) : (
+                <img src={showAboutImage} width={160} alt="" />
+              )}
+            </div>
           </div>
-        ))}
-      </div>
 
-      <button
-        className="border block p-2 mb-4"
-        onClick={handleAddInputDescription}
-      >
-        agregar campo
-      </button>
-      <button className="border block p-2" onClick={handleUpdate}>
-        actualizar
-      </button>
+          <div>
+            {descriptionArray.map((description: any) => (
+              <div key={description.id} className="flex py-4">
+                <textarea
+                  className="w-11/12 border p-2 h-32"
+                  value={description.text}
+                  onChange={(e) =>
+                    setDescriptionArray((currentDescription: any) =>
+                      currentDescription.map((x: any) =>
+                        x.id === description.id
+                          ? {
+                              ...x,
+                              text: e.target.value,
+                            }
+                          : x
+                      )
+                    )
+                  }
+                ></textarea>
+                <button
+                  className="block p-2 border"
+                  onClick={() => handleDeleteInputDescription(description.id)}
+                >
+                  delete
+                </button>
+              </div>
+            ))}
+          </div>
+
+          <button
+            className="border block p-2 mb-4"
+            onClick={handleAddInputDescription}
+          >
+            agregar campo
+          </button>
+          <button className="border block p-2" onClick={handleUpdate}>
+            actualizar
+          </button>
+        </div>
+      )}
     </div>
   );
 };
