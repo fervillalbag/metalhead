@@ -20,6 +20,10 @@ const PlanAdmin: React.FC = () => {
   const [showModal, setShowModal] = React.useState<boolean>(false);
   const [itemDelete, setItemDelete] = React.useState<string>("");
   const [descriptionArray, setDescriptionArray] = React.useState<any>([]);
+  const [error, setError] = React.useState<any>({
+    type: "",
+    status: false,
+  });
 
   const [deletePlan] = useMutation(DELETE_PLAN_ITEM);
   const [updatePlanInfo] = useMutation(UPDATE_PLAN_INFO);
@@ -78,6 +82,19 @@ const PlanAdmin: React.FC = () => {
         id: description.id,
         text: description.text,
       };
+    });
+
+    if (!data || data?.title === "") {
+      setError({
+        type: "El título es obligatorio",
+        status: true,
+      });
+      return;
+    }
+
+    setError({
+      type: "",
+      status: false,
     });
 
     try {
@@ -141,6 +158,8 @@ const PlanAdmin: React.FC = () => {
       <button className="block mb-4 border p-2" onClick={handleUpdate}>
         actualizar
       </button>
+
+      {error.status && <span className="block">{error.type}</span>}
 
       <Modal showModal={showModal}>
         <div className="flex flex-col justify-center h-full items-center">

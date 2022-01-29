@@ -93,6 +93,11 @@ const CreateProductAdmin: React.FC = () => {
     } else {
       setError({ type: "La imagen es obligatoria", status: true });
     }
+
+    setError({
+      type: "",
+      status: false,
+    });
   };
 
   if (!data || !descriptionArray) return <Loading />;

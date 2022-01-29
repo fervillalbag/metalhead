@@ -51,31 +51,45 @@ const CreateReviewAdmin: React.FC = () => {
   };
 
   const handleCreateReview = async () => {
-    if (fileAvatar) {
-      const url = "https://api.cloudinary.com/v1_1/dbp9am0cx/image/upload";
-      const formData = new FormData();
-      formData.append("file", fileAvatar);
-      formData.append("upload_preset", "reviewItem");
-      const res = await fetch(url, { method: "post", body: formData });
-      const imageData = await res.json();
-
-      const responseApi = await createReviewHome({
-        variables: {
-          input: {
-            name: data?.name,
-            description: descriptionArray,
-            avatar: imageData?.secure_url,
-          },
-        },
+    if (!data?.name || data?.name === "") {
+      setError({
+        type: "El nombre es obligatorio",
+        status: true,
       });
+      return;
+    }
 
-      console.log(responseApi?.data);
-    } else {
+    if (!fileAvatar) {
       setError({
         type: "La imagen es obligatoria",
         status: true,
       });
+      return;
     }
+
+    setError({
+      type: "",
+      status: false,
+    });
+
+    const url = "https://api.cloudinary.com/v1_1/dbp9am0cx/image/upload";
+    const formData = new FormData();
+    formData.append("file", fileAvatar);
+    formData.append("upload_preset", "reviewItem");
+    const res = await fetch(url, { method: "post", body: formData });
+    const imageData = await res.json();
+
+    const responseApi = await createReviewHome({
+      variables: {
+        input: {
+          name: data?.name,
+          description: descriptionArray,
+          avatar: imageData?.secure_url,
+        },
+      },
+    });
+
+    console.log(responseApi?.data);
   };
 
   if (!data || !descriptionArray) return <Loading />;
@@ -89,8 +103,6 @@ const CreateReviewAdmin: React.FC = () => {
         onChange={(e) => setData({ ...data, name: e.target.value })}
         placeholder="Introducir nombre"
       />
-
-      {error.status && <span className="block">{error.type}</span>}
 
       <div className="py-4">
         <input type="file" onChange={handleHeaderFileChange} />
@@ -134,6 +146,8 @@ const CreateReviewAdmin: React.FC = () => {
       <button className="block border p-2 mb-4" onClick={handleCreateReview}>
         crear
       </button>
+
+      {error.status && <span className="block">{error.type}</span>}
     </div>
   );
 };

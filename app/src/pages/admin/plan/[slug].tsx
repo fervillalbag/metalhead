@@ -15,6 +15,10 @@ const SlugPlanAdmin: React.FC = () => {
 
   const [data, setData] = React.useState<any>(null);
   const [dataItems, setDataItems] = React.useState<any>(null);
+  const [error, setError] = React.useState<any>({
+    type: "",
+    status: false,
+  });
 
   const [updatePlan] = useMutation(UPDATE_PLAN_ITEM);
 
@@ -56,6 +60,25 @@ const SlugPlanAdmin: React.FC = () => {
       };
     });
 
+    if (
+      !data?.name ||
+      data?.name === "" ||
+      data?.price === "" ||
+      !data?.url ||
+      data?.url === ""
+    ) {
+      setError({
+        type: "Todos los campos son obligatorios",
+        status: true,
+      });
+      return;
+    }
+
+    setError({
+      type: "",
+      status: false,
+    });
+
     try {
       const res = await updatePlan({
         variables: {
@@ -92,6 +115,15 @@ const SlugPlanAdmin: React.FC = () => {
           className="border p-2 w-11/12"
           value={data?.price}
           onChange={(e) => setData({ ...data, price: e.target.value })}
+        />
+      </div>
+
+      <div className="mt-6">
+        <input
+          type="text"
+          className="border p-2 w-11/12"
+          value={data?.url}
+          onChange={(e) => setData({ ...data, url: e.target.value })}
         />
       </div>
 
@@ -143,6 +175,8 @@ const SlugPlanAdmin: React.FC = () => {
       <button className="block border p-2" onClick={handleUpdate}>
         actualizar
       </button>
+
+      {error.status && <span className="block">{error.type}</span>}
     </div>
   );
 };

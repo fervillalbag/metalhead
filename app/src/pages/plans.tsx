@@ -46,10 +46,7 @@ const Plans: React.FC<PlansIprops> = ({ dataPlans, dataInfo }) => {
             key={description.id}
             className="block mt-4 text-DarkGrayishBlue font-regular text-sm text-center lg:w-9/12 mx-auto"
           >
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Enim, sunt
-            vero ea ex suscipit quo! Quae temporibus asperiores maiores?
-            Deserunt voluptates error tenetur atque saepe amet odio quae
-            voluptatibus, qui, animi ipsum ut hic autem!
+            {description.text}
           </span>
         ))}
 

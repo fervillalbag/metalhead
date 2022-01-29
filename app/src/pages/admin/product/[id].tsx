@@ -125,6 +125,11 @@ const ProductItemAdmin: React.FC = () => {
 
       console.log(responseApi?.data);
     }
+
+    setError({
+      type: "",
+      status: false,
+    });
   };
 
   if (!data || !descriptionArray) return <Loading />;

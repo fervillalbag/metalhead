@@ -102,6 +102,11 @@ const HeaderAdmin: React.FC = () => {
 
       console.log(responseApi?.data?.updateHeaderHome?.message);
     }
+
+    setError({
+      type: "",
+      status: false,
+    });
   };
 
   if (!data || !descriptionArray) return <Loading />;

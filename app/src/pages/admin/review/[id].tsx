@@ -16,6 +16,10 @@ const ReviewItemId = () => {
   const [descriptionArray, setDescriptionArray] = React.useState<any>([]);
   const [showHeaderImage, setShowHeaderImage] = React.useState<any>();
   const [fileHeader, setFileHeader] = React.useState<any>();
+  const [error, setError] = React.useState<any>({
+    type: "",
+    status: false,
+  });
 
   const [updateReviewHome] = useMutation(UPDATE_REVIEW_HOME_ITEM);
 
@@ -62,6 +66,20 @@ const ReviewItemId = () => {
         id: description.id,
         text: description.text,
       };
+    });
+
+    if (!data?.name || data?.name === "") {
+      setError({
+        type: "El nombre es obligatorio",
+        status: true,
+      });
+
+      return;
+    }
+
+    setError({
+      type: "",
+      status: false,
     });
 
     if (fileHeader) {
@@ -155,6 +173,8 @@ const ReviewItemId = () => {
       <button className="block p-2 border" onClick={handleUpdate}>
         Actualizar
       </button>
+
+      {error.status && <span className="block">{error.type}</span>}
     </div>
   );
 };

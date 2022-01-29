@@ -19,6 +19,10 @@ const ReviewInfoAdmin = () => {
   const [dataItems, setDataItems] = React.useState<any>(null);
   const [showModal, setShowModal] = React.useState<boolean>(false);
   const [itemDelete, setItemDelete] = React.useState<string>("");
+  const [error, setError] = React.useState<any>({
+    type: "",
+    status: false,
+  });
 
   const [updateReviewHomeInfo] = useMutation(UPDATE_REVIEW_INFO);
   const [deleteReviewHome] = useMutation(DELETE_REVIEW_HOME_ITEM);
@@ -39,7 +43,7 @@ const ReviewInfoAdmin = () => {
       setDataItems(reviewItems?.getReviewHome);
       setDescriptionArray(reviewInfo?.getReviewInfoHome?.description);
     })();
-  }, [data, dataItems]);
+  }, []);
 
   const newDescription = {
     id: uuidv4(),
@@ -77,6 +81,14 @@ const ReviewInfoAdmin = () => {
       };
     });
 
+    if (!data || data?.title === "") {
+      setError({
+        type: "El título es obligatorio",
+        status: true,
+      });
+      return;
+    }
+
     try {
       const response = await updateReviewHomeInfo({
         variables: {
@@ -92,6 +104,11 @@ const ReviewInfoAdmin = () => {
     } catch (error) {
       console.log(error);
     }
+
+    setError({
+      type: "",
+      status: false,
+    });
   };
 
   if (!data || !descriptionArray || !dataItems) return <Loading />;
@@ -172,6 +189,8 @@ const ReviewInfoAdmin = () => {
       <button className="border block p-2" onClick={handleUpdate}>
         actualizar
       </button>
+
+      {error.status && <span className="block">{error.type}</span>}
 
       <div className="grid grid-cols-3 gap-x-10 mt-8">
         {dataItems.map((item: any) => (

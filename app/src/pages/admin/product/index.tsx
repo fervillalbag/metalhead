@@ -106,6 +106,11 @@ const ProductAdmin = () => {
     } catch (error) {
       console.log(error);
     }
+
+    setError({
+      type: "",
+      status: false,
+    });
   };
 
   if (!data || !descriptionArray || !dataItems) return <Loading />;
