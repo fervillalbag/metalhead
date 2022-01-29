@@ -17,3 +17,12 @@ export const DELETE_PLAN_ITEM = gql`
     }
   }
 `;
+
+export const CREATE_PLAN_ITEM = gql`
+  mutation createPlan($input: PlanInput!) {
+    createPlan(input: $input) {
+      message
+      success
+    }
+  }
+`;

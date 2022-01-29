@@ -213,6 +213,13 @@ const PlanAdmin: React.FC = () => {
           </div>
         ))}
       </div>
+
+      <button
+        className="block mt-8 border p-2"
+        onClick={() => router.push("/admin/create/plan")}
+      >
+        agregar nuevo plan
+      </button>
     </div>
   );
 };
