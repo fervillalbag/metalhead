@@ -7,7 +7,7 @@ const AdminHome: React.FC = () => {
     <div className="flex">
       <NavbarDashboard />
 
-      <div className="p-10 w-full">
+      <div className="p-10 w-full h-screen overflow-y-auto no-scrollbar">
         <h1 className="text-3xl">Hello Fernando!</h1>
       </div>
     </div>

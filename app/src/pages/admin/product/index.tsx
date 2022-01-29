@@ -11,6 +11,7 @@ import { UPDATE_PRODUCT_INFO } from "@/graphql/mutation/productInfo";
 import { GET_PRODUCTS } from "@/graphql/queries/products";
 import Modal from "@/components/Modal";
 import { DELETE_PRODUCT_ITEM } from "@/graphql/mutation/product";
+import NavbarDashboard from "@/components/admin/Navbar";
 
 const ProductAdmin = () => {
   const router = useRouter();
@@ -113,118 +114,130 @@ const ProductAdmin = () => {
     });
   };
 
-  if (!data || !descriptionArray || !dataItems) return <Loading />;
-
   return (
-    <div className="p-4">
-      <input
-        type="text"
-        value={data?.title}
-        onChange={(e) => setData({ ...data, title: e.target.value })}
-        className="p-2 border w-11/12"
-      />
+    <div className="flex">
+      <NavbarDashboard />
 
-      <div>
-        {descriptionArray.map((description: any, index: number) => (
-          <div key={description.id} className="flex py-4">
-            <textarea
-              className="p-2 border w-11/12"
-              value={description.text}
-              onChange={(e) => {
-                const text = e.target.value;
-                setDescriptionArray((currentDescripton: any) =>
-                  produce(currentDescripton, (v: any) => {
-                    v[index].text = text;
-                  })
-                );
-              }}
-            ></textarea>
-            <button
-              className="block p-2 border"
-              onClick={() => handleDeleteInputDescription(description.id)}
-            >
-              delete
-            </button>
-          </div>
-        ))}
-      </div>
+      <section className="p-10 w-full h-screen overflow-y-auto no-scrollbar">
+        <h1 className="text-3xl">Product Page</h1>
 
-      <button
-        className="border block p-2 mb-4"
-        onClick={handleAddInputDescription}
-      >
-        agregar campo
-      </button>
-      <button className="border block p-2" onClick={handleUpdate}>
-        actualizar
-      </button>
+        {!data || !descriptionArray || !dataItems ? (
+          <Loading />
+        ) : (
+          <div className="py-4">
+            <input
+              type="text"
+              value={data?.title}
+              onChange={(e) => setData({ ...data, title: e.target.value })}
+              className="p-2 border w-full"
+            />
 
-      {error.status && <span className="block">{error.type}</span>}
-
-      <Modal showModal={showModal}>
-        <div className="flex flex-col justify-center h-full items-center">
-          <h1>¿Desea eliminar?</h1>
-
-          <div className="grid grid-cols-2 gap-x-4">
-            <button
-              className="block p-2 border"
-              onClick={() => {
-                handleDeleteReviewItem(itemDelete);
-                setShowModal(false);
-              }}
-            >
-              Si
-            </button>
-            <button
-              className="block p-2 border"
-              onClick={() => {
-                setShowModal(false);
-                setItemDelete("");
-              }}
-            >
-              No
-            </button>
-          </div>
-        </div>
-      </Modal>
-
-      <h3 className="my-4">Lista de productos</h3>
-
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {dataItems.map((product: any) => (
-          <div key={product.id} className="border p-2">
             <div>
-              <img src={product.image} alt="" className="w-full" />
+              {descriptionArray.map((description: any, index: number) => (
+                <div key={description.id} className="flex py-4">
+                  <textarea
+                    className="p-2 border w-full"
+                    value={description.text}
+                    onChange={(e) => {
+                      const text = e.target.value;
+                      setDescriptionArray((currentDescripton: any) =>
+                        produce(currentDescripton, (v: any) => {
+                          v[index].text = text;
+                        })
+                      );
+                    }}
+                  ></textarea>
+                  <button
+                    className="block p-2 border"
+                    onClick={() => handleDeleteInputDescription(description.id)}
+                  >
+                    delete
+                  </button>
+                </div>
+              ))}
             </div>
-            <span className="block py-2">{product.name}</span>
 
-            <div className="grid grid-cols-2 gap-x-3">
-              <button
-                className="border p-2 block w-full"
-                onClick={() => router.push(`/admin/product/${product.id}`)}
-              >
-                Editar
-              </button>
-              <button
-                className="border p-2 block w-full"
-                onClick={() => {
-                  setItemDelete(product.id);
-                  setShowModal(true);
-                }}
-              >
-                Eliminar
-              </button>
+            <button
+              className="border block p-2 mb-4"
+              onClick={handleAddInputDescription}
+            >
+              agregar campo
+            </button>
+            <button className="border block p-2" onClick={handleUpdate}>
+              actualizar
+            </button>
+
+            {error.status && <span className="block">{error.type}</span>}
+
+            <Modal showModal={showModal}>
+              <div className="flex flex-col justify-center h-full items-center">
+                <h1>¿Desea eliminar?</h1>
+
+                <div className="grid grid-cols-2 gap-x-4">
+                  <button
+                    className="block p-2 border"
+                    onClick={() => {
+                      handleDeleteReviewItem(itemDelete);
+                      setShowModal(false);
+                    }}
+                  >
+                    Si
+                  </button>
+                  <button
+                    className="block p-2 border"
+                    onClick={() => {
+                      setShowModal(false);
+                      setItemDelete("");
+                    }}
+                  >
+                    No
+                  </button>
+                </div>
+              </div>
+            </Modal>
+
+            <h3 className="my-4">Lista de productos</h3>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+              {dataItems.map((product: any) => (
+                <div key={product.id} className="border p-2">
+                  <div>
+                    <img src={product.image} alt="" className="w-full" />
+                  </div>
+                  <span className="block py-2">{product.name}</span>
+
+                  <div className="grid grid-cols-2 gap-x-3">
+                    <button
+                      className="border p-2 block w-full"
+                      onClick={() =>
+                        router.push(`/admin/product/${product.id}`)
+                      }
+                    >
+                      Editar
+                    </button>
+                    <button
+                      className="border p-2 block w-full"
+                      onClick={() => {
+                        setItemDelete(product.id);
+                        setShowModal(true);
+                      }}
+                    >
+                      Eliminar
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
+
+            <button
+              className="border p-2 mt-8"
+              onClick={() => router.push("/admin/create/product")}
+            >
+              agregar nuevo producto
+            </button>
           </div>
-        ))}
-      </div>
-
-      <button
-        className="border p-2 mt-8"
-        onClick={() => router.push("/admin/create/product")}
-      >
-        agregar nuevo producto
-      </button>
+        )}
+      </section>
     </div>
   );
 };

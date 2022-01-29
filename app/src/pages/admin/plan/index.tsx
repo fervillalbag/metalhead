@@ -11,6 +11,7 @@ import { GET_PLANS } from "@/graphql/queries/plan";
 import { GET_PLAN_INFO } from "@/graphql/queries/planInfo";
 import { DELETE_PLAN_ITEM } from "@/graphql/mutation/plan";
 import { UPDATE_PLAN_INFO } from "@/graphql/mutation/planInfo";
+import NavbarDashboard from "@/components/admin/Navbar";
 
 const PlanAdmin: React.FC = () => {
   const router = useRouter();
@@ -113,113 +114,123 @@ const PlanAdmin: React.FC = () => {
     }
   };
 
-  if (!data || !dataItems || !descriptionArray) return <Loading />;
-
   return (
-    <div className="p-4">
-      <input
-        type="text"
-        className="p-2 border w-11/12"
-        value={data?.title}
-        onChange={(e) => setData({ ...data, title: e.target.value })}
-      />
+    <div className="flex">
+      <NavbarDashboard />
 
-      <div className="py-4">
-        {descriptionArray.map((description: any, index: number) => (
-          <div key={description.id} className="flex">
-            <textarea
-              className="border p-2 w-11/12"
-              value={description.text}
-              onChange={(e) => {
-                const text = e.target.value;
-                setDescriptionArray((currentDescription: any) =>
-                  produce(currentDescription, (v: any) => {
-                    v[index].text = text;
-                  })
-                );
-              }}
-            ></textarea>
-            <button
-              className="p-2 border"
-              onClick={() => handleDeleteInputDescription(description.id)}
-            >
-              delete
-            </button>
-          </div>
-        ))}
-      </div>
+      <section className="p-10 w-full h-screen overflow-y-auto no-scrollbar">
+        <h1 className="text-3xl">Product Page</h1>
 
-      <button
-        className="block mb-4 border p-2"
-        onClick={handleAddInputDescription}
-      >
-        agregar campo
-      </button>
-      <button className="block mb-4 border p-2" onClick={handleUpdate}>
-        actualizar
-      </button>
+        {!data || !dataItems || !descriptionArray ? (
+          <Loading />
+        ) : (
+          <div className="py-4">
+            <input
+              type="text"
+              className="p-2 border w-11/12"
+              value={data?.title}
+              onChange={(e) => setData({ ...data, title: e.target.value })}
+            />
 
-      {error.status && <span className="block">{error.type}</span>}
-
-      <Modal showModal={showModal}>
-        <div className="flex flex-col justify-center h-full items-center">
-          <h1>¿Desea eliminar?</h1>
-
-          <div className="grid grid-cols-2 gap-x-4">
-            <button
-              className="block p-2 border"
-              onClick={() => {
-                handleDeleteReviewItem(itemDelete);
-                setShowModal(false);
-              }}
-            >
-              Si
-            </button>
-            <button
-              className="block p-2 border"
-              onClick={() => {
-                setShowModal(false);
-                setItemDelete("");
-              }}
-            >
-              No
-            </button>
-          </div>
-        </div>
-      </Modal>
-
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mt-10">
-        {dataItems.map((plan: any, index: number) => (
-          <div key={plan.id} className="border p-4">
-            <span className="block mb-2">{plan.name}</span>
-
-            <div className="grid grid-cols-2 gap-x-3">
-              <button
-                className="block p-2 w-full border"
-                onClick={() => router.push(`/admin/plan/${plan.slug}`)}
-              >
-                Editar
-              </button>
-              <button
-                className="block p-2 w-full border"
-                onClick={() => {
-                  setShowModal(true);
-                  setItemDelete(plan.id);
-                }}
-              >
-                Eliminar
-              </button>
+            <div className="py-4">
+              {descriptionArray.map((description: any, index: number) => (
+                <div key={description.id} className="flex">
+                  <textarea
+                    className="border p-2 w-11/12"
+                    value={description.text}
+                    onChange={(e) => {
+                      const text = e.target.value;
+                      setDescriptionArray((currentDescription: any) =>
+                        produce(currentDescription, (v: any) => {
+                          v[index].text = text;
+                        })
+                      );
+                    }}
+                  ></textarea>
+                  <button
+                    className="p-2 border"
+                    onClick={() => handleDeleteInputDescription(description.id)}
+                  >
+                    delete
+                  </button>
+                </div>
+              ))}
             </div>
-          </div>
-        ))}
-      </div>
 
-      <button
-        className="block mt-8 border p-2"
-        onClick={() => router.push("/admin/create/plan")}
-      >
-        agregar nuevo plan
-      </button>
+            <button
+              className="block mb-4 border p-2"
+              onClick={handleAddInputDescription}
+            >
+              agregar campo
+            </button>
+            <button className="block mb-4 border p-2" onClick={handleUpdate}>
+              actualizar
+            </button>
+
+            {error.status && <span className="block">{error.type}</span>}
+
+            <Modal showModal={showModal}>
+              <div className="flex flex-col justify-center h-full items-center">
+                <h1>¿Desea eliminar?</h1>
+
+                <div className="grid grid-cols-2 gap-x-4">
+                  <button
+                    className="block p-2 border"
+                    onClick={() => {
+                      handleDeleteReviewItem(itemDelete);
+                      setShowModal(false);
+                    }}
+                  >
+                    Si
+                  </button>
+                  <button
+                    className="block p-2 border"
+                    onClick={() => {
+                      setShowModal(false);
+                      setItemDelete("");
+                    }}
+                  >
+                    No
+                  </button>
+                </div>
+              </div>
+            </Modal>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mt-10">
+              {dataItems.map((plan: any, index: number) => (
+                <div key={plan.id} className="border p-4">
+                  <span className="block mb-2">{plan.name}</span>
+
+                  <div className="grid grid-cols-2 gap-x-3">
+                    <button
+                      className="block p-2 w-full border"
+                      onClick={() => router.push(`/admin/plan/${plan.slug}`)}
+                    >
+                      Editar
+                    </button>
+                    <button
+                      className="block p-2 w-full border"
+                      onClick={() => {
+                        setShowModal(true);
+                        setItemDelete(plan.id);
+                      }}
+                    >
+                      Eliminar
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <button
+              className="block mt-8 border p-2"
+              onClick={() => router.push("/admin/create/plan")}
+            >
+              agregar nuevo plan
+            </button>
+          </div>
+        )}
+      </section>
     </div>
   );
 };

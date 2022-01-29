@@ -10,6 +10,7 @@ import { GET_GROWTH_INFO_HOME } from "@/graphql/queries/growthInfo";
 import { UPDATE_GROWTH_INFO } from "@/graphql/mutation/growthInfo";
 import { GET_GROWTH_HOME } from "@/graphql/queries/growthHome";
 import { DELETE_GROWTH_ITEM } from "@/graphql/mutation/growthHome";
+import NavbarDashboard from "@/components/admin/Navbar";
 
 const GrowthAdmin: React.FC = () => {
   const router = useRouter();
@@ -94,101 +95,111 @@ const GrowthAdmin: React.FC = () => {
     }
   };
 
-  if (!data || !dataItems || !descriptionArray) return <Loading />;
-
   return (
-    <div className="p-4">
-      <input
-        type="text"
-        value={data?.title}
-        onChange={(e: any) => setData({ ...data, title: e.target.value })}
-        className="w-11/12 border p-2"
-      />
+    <div className="flex">
+      <NavbarDashboard />
 
-      {descriptionArray.map((description: any) => (
-        <div className="flex py-4" key={description.id}>
-          <textarea
-            value={description.text}
-            onChange={(e: any) =>
-              setDescriptionArray((currentDescription: any) =>
-                currentDescription.map((x: any) =>
-                  x.id === description.id
-                    ? {
-                        ...x,
-                        text: e.target.value,
-                      }
-                    : x
-                )
-              )
-            }
-            className="w-11/12 border p-2"
-          ></textarea>
-          <button
-            className="block p-2 border"
-            onClick={() => handleDeleteInputDescription(description.id)}
-          >
-            delete
-          </button>
-        </div>
-      ))}
+      <section className="p-10 w-full h-screen overflow-y-auto no-scrollbar">
+        <h1 className="text-3xl">Growth Section</h1>
 
-      <Modal showModal={showModal}>
-        <div className="flex flex-col justify-center h-full items-center">
-          <h1>¿Desea eliminar?</h1>
+        {!data || !dataItems || !descriptionArray ? (
+          <Loading />
+        ) : (
+          <div className="py-6">
+            <input
+              type="text"
+              value={data?.title}
+              onChange={(e: any) => setData({ ...data, title: e.target.value })}
+              className="w-11/12 border p-2"
+            />
 
-          <div className="grid grid-cols-2 gap-x-4">
-            <button
-              className="block p-2 border"
-              onClick={() => {
-                handleDeleteReviewItem(itemDelete);
-                setShowModal(false);
-              }}
-            >
-              Si
+            {descriptionArray.map((description: any) => (
+              <div className="flex py-4" key={description.id}>
+                <textarea
+                  value={description.text}
+                  onChange={(e: any) =>
+                    setDescriptionArray((currentDescription: any) =>
+                      currentDescription.map((x: any) =>
+                        x.id === description.id
+                          ? {
+                              ...x,
+                              text: e.target.value,
+                            }
+                          : x
+                      )
+                    )
+                  }
+                  className="w-11/12 border p-2"
+                ></textarea>
+                <button
+                  className="block p-2 border"
+                  onClick={() => handleDeleteInputDescription(description.id)}
+                >
+                  delete
+                </button>
+              </div>
+            ))}
+
+            <Modal showModal={showModal}>
+              <div className="flex flex-col justify-center h-full items-center">
+                <h1>¿Desea eliminar?</h1>
+
+                <div className="grid grid-cols-2 gap-x-4">
+                  <button
+                    className="block p-2 border"
+                    onClick={() => {
+                      handleDeleteReviewItem(itemDelete);
+                      setShowModal(false);
+                    }}
+                  >
+                    Si
+                  </button>
+                  <button
+                    className="block p-2 border"
+                    onClick={() => {
+                      setShowModal(false);
+                      setItemDelete("");
+                    }}
+                  >
+                    No
+                  </button>
+                </div>
+              </div>
+            </Modal>
+
+            <button className="block" onClick={handleAddNewInputDescription}>
+              agregar campo
             </button>
-            <button
-              className="block p-2 border"
-              onClick={() => {
-                setShowModal(false);
-                setItemDelete("");
-              }}
-            >
-              No
+            <button onClick={handleUpdate} className="block p-2 border">
+              actualizar
             </button>
+
+            <div className="grid grid-cols-3 mt-8 gap-x-6">
+              {dataItems.map((item: any) => (
+                <div className="border p-3" key={item.id}>
+                  <span className="block">{item.title}</span>
+
+                  <button
+                    className="border p-2 block mt-2"
+                    onClick={() => router.push(`/admin/growth/${item.id}`)}
+                  >
+                    Editar
+                  </button>
+                  <button
+                    className="border p-2 block mt-2"
+                    onClick={() => {
+                      setShowModal(true);
+                      setItemDelete(item.id);
+                    }}
+                  >
+                    Eliminar
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      </Modal>
-
-      <button className="block" onClick={handleAddNewInputDescription}>
-        agregar campo
-      </button>
-      <button onClick={handleUpdate} className="block p-2 border">
-        actualizar
-      </button>
-
-      <div className="grid grid-cols-3 mt-8 gap-x-6">
-        {dataItems.map((item: any) => (
-          <div className="border p-3" key={item.id}>
-            <span className="block">{item.title}</span>
-
-            <button
-              className="border p-2 block mt-2"
-              onClick={() => router.push(`/admin/growth/${item.id}`)}
-            >
-              Editar
-            </button>
-            <button
-              className="border p-2 block mt-2"
-              onClick={() => {
-                setShowModal(true);
-                setItemDelete(item.id);
-              }}
-            >
-              Eliminar
-            </button>
-          </div>
-        ))}
-      </div>
+        )}
+      </section>
     </div>
   );
 };
