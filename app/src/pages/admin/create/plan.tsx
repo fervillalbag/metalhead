@@ -7,14 +7,6 @@ import { useMutation } from "@apollo/client";
 import { CREATE_PLAN_ITEM } from "@/graphql/mutation/plan";
 
 const CreatePlanAdmin: React.FC = () => {
-  /*
-    items: [{
-      id: "1",
-      status: true,
-      text: "Nombre del item",
-    }],
-  */
-
   const [data, setData] = React.useState<any>({
     slug: "",
     name: "",

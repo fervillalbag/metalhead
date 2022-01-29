@@ -1,25 +1,14 @@
 import React from "react";
-import Link from "next/link";
+
+import NavbarDashboard from "@/components/admin/Navbar";
 
 const AdminHome: React.FC = () => {
   return (
-    <div className="p-4">
-      <h1>Admin Page</h1>
+    <div className="flex">
+      <NavbarDashboard />
 
-      <hr />
-
-      <div className="py-4">
-        <Link href="/admin/header">
-          <a>Header</a>
-        </Link>
-      </div>
-
-      <hr />
-
-      <div className="py-4">
-        <Link href="/admin/growth">
-          <a>Growth</a>
-        </Link>
+      <div className="p-10">
+        <h1 className="text-3xl">Hello Fernando!</h1>
       </div>
     </div>
   );
