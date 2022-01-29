@@ -54,6 +54,21 @@ const CreateProductAdmin: React.FC = () => {
   };
 
   const handleCreateProduct = async () => {
+    if (
+      data?.name === "" ||
+      !data?.name ||
+      data?.code === "" ||
+      !data?.code ||
+      data?.price === "" ||
+      !data?.price
+    ) {
+      setError({
+        type: "Todos los campos son obligatorios",
+        status: true,
+      });
+      return;
+    }
+
     if (fileProduct) {
       const url = "https://api.cloudinary.com/v1_1/dbp9am0cx/image/upload";
       const formData = new FormData();
@@ -112,8 +127,6 @@ const CreateProductAdmin: React.FC = () => {
         />
       </div>
 
-      {error.status && <span className="block">{error.type}</span>}
-
       <div className="py-4">
         <input type="file" onChange={handleHeaderFileChange} />
       </div>
@@ -158,6 +171,8 @@ const CreateProductAdmin: React.FC = () => {
       <button className="border p-2 block mb-4" onClick={handleCreateProduct}>
         crear
       </button>
+
+      {error.status && <span className="block">{error.type}</span>}
     </div>
   );
 };

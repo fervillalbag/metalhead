@@ -20,6 +20,10 @@ const ProductAdmin = () => {
   const [descriptionArray, setDescriptionArray] = React.useState<any>([]);
   const [showModal, setShowModal] = React.useState<boolean>(false);
   const [itemDelete, setItemDelete] = React.useState<string>("");
+  const [error, setError] = React.useState<any>({
+    type: "",
+    status: false,
+  });
 
   const [updateProductInfo] = useMutation(UPDATE_PRODUCT_INFO);
   const [deleteProduct] = useMutation(DELETE_PRODUCT_ITEM);
@@ -78,6 +82,14 @@ const ProductAdmin = () => {
         text: description.text,
       };
     });
+
+    if (!data?.title) {
+      setError({
+        type: "Todos los campos son obligatorios",
+        status: true,
+      });
+      return;
+    }
 
     try {
       const response = await updateProductInfo({
@@ -141,6 +153,8 @@ const ProductAdmin = () => {
       <button className="border block p-2" onClick={handleUpdate}>
         actualizar
       </button>
+
+      {error.status && <span className="block">{error.type}</span>}
 
       <Modal showModal={showModal}>
         <div className="flex flex-col justify-center h-full items-center">

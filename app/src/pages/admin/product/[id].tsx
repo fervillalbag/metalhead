@@ -17,6 +17,10 @@ const ProductItemAdmin: React.FC = () => {
   const [showProductImage, setShowProductImage] = React.useState<any>(null);
   const [descriptionArray, setDescriptionArray] = React.useState<any>(null);
   const [fileProduct, setFileProduct] = React.useState<any>(null);
+  const [error, setError] = React.useState<any>({
+    type: "",
+    status: false,
+  });
 
   const [updateProduct] = useMutation(UPDATE_PRODUCT_ITEM);
 
@@ -67,6 +71,21 @@ const ProductItemAdmin: React.FC = () => {
         text: description.text,
       };
     });
+
+    if (
+      data?.name === "" ||
+      !data?.name ||
+      data?.code === "" ||
+      !data?.code ||
+      data?.price === "" ||
+      !data?.price
+    ) {
+      setError({
+        type: "Todos los campos son obligatorios",
+        status: true,
+      });
+      return;
+    }
 
     if (fileProduct) {
       const url = "https://api.cloudinary.com/v1_1/dbp9am0cx/image/upload";
@@ -182,6 +201,8 @@ const ProductItemAdmin: React.FC = () => {
       <button className="block border p-2" onClick={handleUpdate}>
         actualizar
       </button>
+
+      {error.status && <span className="block">{error.type}</span>}
     </div>
   );
 };

@@ -60,7 +60,7 @@ const HeaderAdmin: React.FC = () => {
       };
     });
 
-    if (data?.title === "" || newDescriptionArray.length === 0) {
+    if (data?.title === "") {
       setError({
         type: "Todos los campos son requeridos",
         status: true,
