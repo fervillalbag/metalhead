@@ -12,7 +12,7 @@ const NavbarDashboard: React.FC = () => {
   const router = useRouter();
 
   return (
-    <div className="w-80 h-screen border-r border-r-slate-200">
+    <div className="w-80 h-screen overflow-y-auto no-scrollbar border-r border-r-slate-200">
       <div className="py-12 px-8 flex">
         <div className="grid grid-cols-[5px_5px] gap-2">
           <div className="w-[5px] h-[5px] bg-DarkGrayishBlue"></div>
