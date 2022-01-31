@@ -1,6 +1,8 @@
 import React from "react";
 import { useMutation } from "@apollo/client";
 import { v4 as uuidv4 } from "uuid";
+import { BsTrash } from "react-icons/bs";
+import { produce } from "immer";
 
 import client from "@/config/apollo";
 import { GET_HEADER_HOME } from "@/graphql/queries/headerHome";
@@ -9,7 +11,6 @@ import { HeaderInfo } from "@/types/header";
 import { Description } from "@/types/description";
 import Loading from "@/components/Loading";
 import NavbarDashboard from "@/components/admin/Navbar";
-import { BsTrash } from "react-icons/bs";
 
 const HeaderAdmin: React.FC = () => {
   const [data, setData] = React.useState<HeaderInfo | null>(null);
@@ -170,23 +171,19 @@ const HeaderAdmin: React.FC = () => {
                   No description available
                 </span>
               ) : (
-                descriptionArray.map((item: Description) => (
+                descriptionArray.map((item: Description, index: number) => (
                   <div className="flex py-4" key={item.id}>
                     <textarea
                       value={item.text}
                       className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300 resize-none h-32"
-                      onChange={(e) =>
+                      onChange={(e) => {
+                        const text = e.target.value;
                         setDescriptionArray((currentDescription: any) =>
-                          currentDescription?.map((x: any) =>
-                            x.id === item.id
-                              ? {
-                                  ...x,
-                                  text: e.target.value,
-                                }
-                              : x
-                          )
-                        )
-                      }
+                          produce(currentDescription, (v: any) => {
+                            v[index].text = text;
+                          })
+                        );
+                      }}
                     ></textarea>
                     <button
                       onClick={() => handleDeleteInputDescription(item.id)}

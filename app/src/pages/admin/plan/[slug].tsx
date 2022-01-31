@@ -128,45 +128,49 @@ const SlugPlanAdmin: React.FC = () => {
       </div>
 
       <div className="py-4">
-        {dataItems.map((item: any, index: number) => (
-          <div key={item.id} className="flex py-4">
-            <input
-              type="text"
-              className="border p-2 w-11/12"
-              value={item?.text}
-              onChange={(e) => {
-                const text = e.target.value;
-                setDataItems((currentItem: any) =>
-                  produce(currentItem, (v: any) => {
-                    v[index].text = text;
-                  })
-                );
-              }}
-            />
-            <div className="w-32 flex items-center justify-center">
-              <button
-                className={`border p-2 block w-full ${
-                  item.status ? "bg-green-200" : "bg-red-200"
-                }`}
-                onClick={() => {
+        {dataItems.length === 0 ? (
+          <span className="block py-4 text-slate-900">No Items available</span>
+        ) : (
+          dataItems.map((item: any, index: number) => (
+            <div key={item.id} className="flex py-4">
+              <input
+                type="text"
+                className="border p-2 w-11/12"
+                value={item?.text}
+                onChange={(e) => {
+                  const text = e.target.value;
                   setDataItems((currentItem: any) =>
                     produce(currentItem, (v: any) => {
-                      v[index].status = !item.status;
+                      v[index].text = text;
                     })
                   );
                 }}
+              />
+              <div className="w-32 flex items-center justify-center">
+                <button
+                  className={`border p-2 block w-full ${
+                    item.status ? "bg-green-200" : "bg-red-200"
+                  }`}
+                  onClick={() => {
+                    setDataItems((currentItem: any) =>
+                      produce(currentItem, (v: any) => {
+                        v[index].status = !item.status;
+                      })
+                    );
+                  }}
+                >
+                  {item.status ? "on" : "off"}
+                </button>
+              </div>
+              <button
+                className="block border p-2"
+                onClick={() => handleDeleteInputItem(item.id)}
               >
-                {item.status ? "on" : "off"}
+                delete
               </button>
             </div>
-            <button
-              className="block border p-2"
-              onClick={() => handleDeleteInputItem(item.id)}
-            >
-              delete
-            </button>
-          </div>
-        ))}
+          ))
+        )}
       </div>
 
       <button className="block border p-2 mb-4" onClick={handleAddInputItem}>

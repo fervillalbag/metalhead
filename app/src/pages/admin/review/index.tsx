@@ -2,6 +2,7 @@ import React from "react";
 import { useRouter } from "next/router";
 import { v4 as uuidv4 } from "uuid";
 import { useMutation } from "@apollo/client";
+import { produce } from "immer";
 
 import client from "@/config/apollo";
 import Loading from "@/components/Loading";
@@ -125,32 +126,34 @@ const ReviewInfoAdmin = () => {
       </div>
 
       <div className="py-4">
-        {descriptionArray.map((description: any) => (
-          <div key={description.id} className="flex py-4">
-            <textarea
-              className="border w-11/12 p-2"
-              value={description.text}
-              onChange={(e) =>
-                setDescriptionArray((currentDescription: any) =>
-                  currentDescription.map((x: any) =>
-                    x.id === description.id
-                      ? {
-                          ...x,
-                          text: e.target.value,
-                        }
-                      : x
-                  )
-                )
-              }
-            ></textarea>
-            <button
-              className="block p-2 border"
-              onClick={() => handleDeleteInputDescription(description.id)}
-            >
-              delete
-            </button>
-          </div>
-        ))}
+        {descriptionArray.length === 0 ? (
+          <span className="block py-4 text-slate-900">
+            No description available
+          </span>
+        ) : (
+          descriptionArray.map((description: any, index: number) => (
+            <div key={description.id} className="flex py-4">
+              <textarea
+                className="border w-11/12 p-2"
+                value={description.text}
+                onChange={(e) => {
+                  const text = e.target.value;
+                  setDescriptionArray((currentDescription: any) =>
+                    produce(currentDescription, (v: any) => {
+                      v[index].text = text;
+                    })
+                  );
+                }}
+              ></textarea>
+              <button
+                className="block p-2 border"
+                onClick={() => handleDeleteInputDescription(description.id)}
+              >
+                delete
+              </button>
+            </div>
+          ))
+        )}
       </div>
 
       <Modal showModal={showModal}>

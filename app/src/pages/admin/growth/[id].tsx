@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useMutation } from "@apollo/client";
 import { UPDATE_GROWTH_ITEM } from "@/graphql/mutation/growthHome";
 import Loading from "@/components/Loading";
+import { produce } from "immer";
 
 const GrowthId = () => {
   const router = useRouter();
@@ -82,23 +83,19 @@ const GrowthId = () => {
       />
 
       <div className="py-4">
-        {descriptionArray.map((description: any) => (
+        {descriptionArray.map((description: any, index: number) => (
           <div key={description.id} className="flex py-4">
             <textarea
               className="border p-2 w-11/12"
               value={description.text}
-              onChange={(e: any) =>
+              onChange={(e) => {
+                const text = e.target.value;
                 setDescriptionArray((currentDescription: any) =>
-                  currentDescription.map((x: any) =>
-                    x.id === description.id
-                      ? {
-                          ...x,
-                          text: e.target.value,
-                        }
-                      : x
-                  )
-                )
-              }
+                  produce(currentDescription, (v: any) => {
+                    v[index].text = text;
+                  })
+                );
+              }}
             ></textarea>
             <button
               className="border p-2 block"

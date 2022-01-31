@@ -1,6 +1,7 @@
 import React from "react";
 import { useRouter } from "next/router";
 import { v4 as uuidv4 } from "uuid";
+import { produce } from "immer";
 
 import Loading from "@/components/Loading";
 import client from "@/config/apollo";
@@ -141,18 +142,19 @@ const ReviewItemId = () => {
       </div>
 
       <div className="py-4">
-        {descriptionArray.map((description: any) => (
+        {descriptionArray.map((description: any, index: number) => (
           <div key={description.id} className="flex">
             <textarea
               className="block w-11/12 border p-2"
               value={description.text}
-              onChange={(e: any) =>
+              onChange={(e) => {
+                const text = e.target.value;
                 setDescriptionArray((currentDescription: any) =>
-                  currentDescription.map((x: any) =>
-                    x.id === description.id ? { ...x, text: e.target.value } : x
-                  )
-                )
-              }
+                  produce(currentDescription, (v: any) => {
+                    v[index].text = text;
+                  })
+                );
+              }}
             ></textarea>
             <button
               className="block border p-2"

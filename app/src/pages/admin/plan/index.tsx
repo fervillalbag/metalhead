@@ -3,6 +3,7 @@ import { produce } from "immer";
 import { useRouter } from "next/router";
 import { useMutation } from "@apollo/client";
 import { v4 as uuidv4 } from "uuid";
+import { BsTrash } from "react-icons/bs";
 
 import Loading from "@/components/Loading";
 import Modal from "@/components/Modal";
@@ -12,7 +13,6 @@ import { GET_PLAN_INFO } from "@/graphql/queries/planInfo";
 import { DELETE_PLAN_ITEM } from "@/graphql/mutation/plan";
 import { UPDATE_PLAN_INFO } from "@/graphql/mutation/planInfo";
 import NavbarDashboard from "@/components/admin/Navbar";
-import { BsTrash } from "react-icons/bs";
 
 const PlanAdmin: React.FC = () => {
   const router = useRouter();

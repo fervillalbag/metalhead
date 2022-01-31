@@ -191,7 +191,7 @@ const ProductAdmin = () => {
                   <div>
                     <img
                       src={product.image}
-                      alt=""
+                      alt={product.name}
                       className="w-full h-32 object-contain"
                     />
                   </div>
