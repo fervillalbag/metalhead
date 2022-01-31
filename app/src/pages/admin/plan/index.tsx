@@ -136,9 +136,11 @@ const PlanAdmin: React.FC = () => {
               />
             </div>
 
-            <div className="py-4">
+            <div>
+              <h3 className="text-slate-600 mt-4">Description:</h3>
+
               {descriptionArray.map((description: any, index: number) => (
-                <div key={description.id} className="flex">
+                <div key={description.id} className="flex py-4">
                   <textarea
                     className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300 resize-none h-32"
                     value={description.text}
@@ -168,7 +170,45 @@ const PlanAdmin: React.FC = () => {
               Add input description
             </button>
 
-            <div className="border border-slate-200"></div>
+            <h1 className="text-2xl text-slate-600 mt-8 mb-6">List of Plans</h1>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6">
+              {dataItems.map((plan: any, index: number) => (
+                <div
+                  key={plan.id}
+                  className="shadow-lg rounded border border-slate-200 px-4 py-3 h-36 flex flex-col justify-between"
+                >
+                  <span className="block mb-2 text-slate-600">{plan.name}</span>
+
+                  <div className="grid grid-cols-2 gap-x-3">
+                    <button
+                      className="block w-full border border-slate-400 py-2 rounded"
+                      onClick={() => router.push(`/admin/plan/${plan.slug}`)}
+                    >
+                      Editar
+                    </button>
+                    <button
+                      className="block w-full bg-slate-500 py-2 rounded text-white"
+                      onClick={() => {
+                        setShowModal(true);
+                        setItemDelete(plan.id);
+                      }}
+                    >
+                      Eliminar
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <button
+              className="border border-slate-300 rounded block px-3 py-2 text-slate-500 mt-6"
+              onClick={() => router.push("/admin/create/plan")}
+            >
+              Add a new plan
+            </button>
+
+            <div className="border border-slate-200 mt-8"></div>
 
             <button
               className="bg-slate-700 text-white rounded block px-8 text-lg py-2 mt-8"
@@ -205,39 +245,6 @@ const PlanAdmin: React.FC = () => {
                 </div>
               </div>
             </Modal>
-
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mt-10">
-              {dataItems.map((plan: any, index: number) => (
-                <div key={plan.id} className="border p-4">
-                  <span className="block mb-2">{plan.name}</span>
-
-                  <div className="grid grid-cols-2 gap-x-3">
-                    <button
-                      className="block p-2 w-full border"
-                      onClick={() => router.push(`/admin/plan/${plan.slug}`)}
-                    >
-                      Editar
-                    </button>
-                    <button
-                      className="block p-2 w-full border"
-                      onClick={() => {
-                        setShowModal(true);
-                        setItemDelete(plan.id);
-                      }}
-                    >
-                      Eliminar
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <button
-              className="border border-slate-300 rounded block px-3 py-2 text-slate-500 mt-6"
-              onClick={() => router.push("/admin/create/plan")}
-            >
-              Add a new plan
-            </button>
           </div>
         )}
       </section>

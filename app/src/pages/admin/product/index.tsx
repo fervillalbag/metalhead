@@ -178,7 +178,60 @@ const ProductAdmin = () => {
               Add input description
             </button>
 
-            <div className="border border-slate-200"></div>
+            <h1 className="text-2xl text-slate-600 mt-8 mb-6">
+              List of products
+            </h1>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6">
+              {dataItems.map((product: any) => (
+                <div
+                  key={product.id}
+                  className="shadow-lg rounded border border-slate-200 px-4 py-3 h-72 flex flex-col justify-between"
+                >
+                  <div>
+                    <img
+                      src={product.image}
+                      alt=""
+                      className="w-full h-32 object-contain"
+                    />
+                  </div>
+
+                  <div>
+                    <span className="block mb-2 text-slate-600">
+                      {product.name}
+                    </span>
+                    <div className="grid grid-cols-2 gap-x-3 py-2">
+                      <button
+                        className="block w-full border border-slate-400 py-2 rounded"
+                        onClick={() =>
+                          router.push(`/admin/product/${product.id}`)
+                        }
+                      >
+                        Editar
+                      </button>
+                      <button
+                        className="block w-full bg-slate-500 py-2 rounded text-white"
+                        onClick={() => {
+                          setItemDelete(product.id);
+                          setShowModal(true);
+                        }}
+                      >
+                        Eliminar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <button
+              className="border border-slate-300 rounded block px-3 py-2 text-slate-500 mt-6"
+              onClick={() => router.push("/admin/create/product")}
+            >
+              Add new product
+            </button>
+
+            <div className="border border-slate-200 mt-8"></div>
 
             <button
               className="bg-slate-700 text-white rounded block px-8 text-lg py-2 mt-8"
@@ -215,48 +268,6 @@ const ProductAdmin = () => {
                 </div>
               </div>
             </Modal>
-
-            <h1 className="text-2xl text-slate-600 mt-8 mb-6">
-              List of products
-            </h1>
-
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-              {dataItems.map((product: any) => (
-                <div key={product.id} className="border p-2">
-                  <div>
-                    <img src={product.image} alt="" className="w-full" />
-                  </div>
-                  <span className="block py-2">{product.name}</span>
-
-                  <div className="grid grid-cols-2 gap-x-3">
-                    <button
-                      className="border p-2 block w-full"
-                      onClick={() =>
-                        router.push(`/admin/product/${product.id}`)
-                      }
-                    >
-                      Editar
-                    </button>
-                    <button
-                      className="border p-2 block w-full"
-                      onClick={() => {
-                        setItemDelete(product.id);
-                        setShowModal(true);
-                      }}
-                    >
-                      Eliminar
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <button
-              className="border border-slate-300 rounded block px-3 py-2 text-slate-500 mt-6"
-              onClick={() => router.push("/admin/create/product")}
-            >
-              Add new product
-            </button>
           </div>
         )}
       </section>

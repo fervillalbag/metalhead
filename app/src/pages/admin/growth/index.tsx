@@ -183,7 +183,40 @@ const GrowthAdmin: React.FC = () => {
               Add input description
             </button>
 
-            <div className="border border-slate-200"></div>
+            <h1 className="text-2xl text-slate-600 mt-8 mb-6">List of Items</h1>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6">
+              {dataItems.map((item: any) => (
+                <div
+                  className="shadow-lg rounded border border-slate-200 px-4 py-3 h-44 flex flex-col justify-between"
+                  key={item.id}
+                >
+                  <span className="block mb-2 text-slate-600">
+                    {item.title}
+                  </span>
+
+                  <div className="grid grid-cols-2 gap-x-3 py-2">
+                    <button
+                      className="block w-full border border-slate-400 py-2 rounded"
+                      onClick={() => router.push(`/admin/growth/${item.id}`)}
+                    >
+                      Editar
+                    </button>
+                    <button
+                      className="block w-full bg-slate-500 py-2 rounded text-white"
+                      onClick={() => {
+                        setShowModal(true);
+                        setItemDelete(item.id);
+                      }}
+                    >
+                      Eliminar
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="border border-slate-200 mt-8"></div>
 
             <button
               onClick={handleUpdate}
@@ -191,30 +224,6 @@ const GrowthAdmin: React.FC = () => {
             >
               Update
             </button>
-
-            <div className="grid grid-cols-3 mt-8 gap-x-6">
-              {dataItems.map((item: any) => (
-                <div className="border p-3" key={item.id}>
-                  <span className="block">{item.title}</span>
-
-                  <button
-                    className="border p-2 block mt-2"
-                    onClick={() => router.push(`/admin/growth/${item.id}`)}
-                  >
-                    Editar
-                  </button>
-                  <button
-                    className="border p-2 block mt-2"
-                    onClick={() => {
-                      setShowModal(true);
-                      setItemDelete(item.id);
-                    }}
-                  >
-                    Eliminar
-                  </button>
-                </div>
-              ))}
-            </div>
           </div>
         )}
       </section>
