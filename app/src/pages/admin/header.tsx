@@ -21,11 +21,16 @@ const HeaderAdmin: React.FC = () => {
     status: false,
   });
 
+  const inputFileRef = React.useRef<any>(null);
   const [updateHeaderHome] = useMutation(UPDATE_HEADER_INFO);
 
   const newDescription = {
     id: uuidv4(),
     text: "",
+  };
+
+  const handleChangeImage = () => {
+    inputFileRef.current.click();
   };
 
   const handleAddNewInputDescription = () => {
@@ -134,14 +139,25 @@ const HeaderAdmin: React.FC = () => {
               />
             </div>
 
-            <div className="pt-4 flex flex-col">
-              <input type="file" onChange={handleHeaderFileChange} />
+            <div className="pt-4">
+              <button
+                className="border border-slate-300 rounded block px-3 py-2 text-slate-500 mb-2"
+                onClick={handleChangeImage}
+              >
+                Change image
+              </button>
+              <input
+                ref={inputFileRef}
+                type="file"
+                onChange={handleHeaderFileChange}
+                className="hidden"
+              />
 
               <div className="pt-4">
                 {!showHeaderImage ? (
-                  <img src={data?.image} width={100} alt="" />
+                  <img src={data?.image} className="h-48" alt="" />
                 ) : (
-                  <img src={showHeaderImage} width={100} alt="" />
+                  <img src={showHeaderImage} className="h-48" alt="" />
                 )}
               </div>
             </div>

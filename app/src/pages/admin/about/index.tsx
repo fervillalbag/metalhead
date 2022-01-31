@@ -15,6 +15,8 @@ const AboutPageAdmin: React.FC = () => {
   const [fileAbout, setFileAbout] = React.useState<any>(null);
   const [descriptionArray, setDescriptionArray] = React.useState<any>([]);
 
+  const inputFileRef = React.useRef<any>(null);
+
   const [updateAboutPage] = useMutation(UPDATE_ABOUT_INFO);
 
   React.useEffect(() => {
@@ -37,6 +39,10 @@ const AboutPageAdmin: React.FC = () => {
   const newDescription = {
     id: uuidv4(),
     text: "",
+  };
+
+  const handleChangeImage = () => {
+    inputFileRef.current.click();
   };
 
   const handleAddInputDescription = () => {
@@ -114,13 +120,24 @@ const AboutPageAdmin: React.FC = () => {
             </div>
 
             <div className="py-4">
-              <input type="file" onChange={handleHeaderFileChange} />
+              <button
+                className="border border-slate-300 rounded block px-3 py-2 text-slate-500 mb-2"
+                onClick={handleChangeImage}
+              >
+                Change image
+              </button>
+              <input
+                ref={inputFileRef}
+                type="file"
+                onChange={handleHeaderFileChange}
+                className="hidden"
+              />
 
               <div className="pt-4">
                 {!showAboutImage ? (
-                  <img src={data?.image} width={160} alt="" />
+                  <img src={data?.image} className="h-48" alt="" />
                 ) : (
-                  <img src={showAboutImage} width={160} alt="" />
+                  <img src={showAboutImage} className="h-48" alt="" />
                 )}
               </div>
             </div>
