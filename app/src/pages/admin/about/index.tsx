@@ -128,32 +128,40 @@ const AboutPageAdmin: React.FC = () => {
             <div>
               <h3 className="text-slate-600 mt-4">Description:</h3>
 
-              {descriptionArray.map((description: any) => (
-                <div key={description.id} className="flex py-4">
-                  <textarea
-                    className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300 resize-none h-32"
-                    value={description.text}
-                    onChange={(e) =>
-                      setDescriptionArray((currentDescription: any) =>
-                        currentDescription.map((x: any) =>
-                          x.id === description.id
-                            ? {
-                                ...x,
-                                text: e.target.value,
-                              }
-                            : x
+              {descriptionArray.length === 0 ? (
+                <span className="block py-4 text-slate-900">
+                  No description available
+                </span>
+              ) : (
+                descriptionArray.map((description: any) => (
+                  <div key={description.id} className="flex py-4">
+                    <textarea
+                      className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300 resize-none h-32"
+                      value={description.text}
+                      onChange={(e) =>
+                        setDescriptionArray((currentDescription: any) =>
+                          currentDescription.map((x: any) =>
+                            x.id === description.id
+                              ? {
+                                  ...x,
+                                  text: e.target.value,
+                                }
+                              : x
+                          )
                         )
-                      )
-                    }
-                  ></textarea>
-                  <button
-                    className="block p-2 text-2xl px-5 text-red-500 bg-slate-100 ml-4 rounded"
-                    onClick={() => handleDeleteInputDescription(description.id)}
-                  >
-                    <BsTrash />
-                  </button>
-                </div>
-              ))}
+                      }
+                    ></textarea>
+                    <button
+                      className="block p-2 text-2xl px-5 text-red-500 bg-slate-100 ml-4 rounded"
+                      onClick={() =>
+                        handleDeleteInputDescription(description.id)
+                      }
+                    >
+                      <BsTrash />
+                    </button>
+                  </div>
+                ))
+              )}
             </div>
 
             <button
