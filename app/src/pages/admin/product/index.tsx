@@ -183,45 +183,51 @@ const ProductAdmin = () => {
             </h1>
 
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6">
-              {dataItems.map((product: any) => (
-                <div
-                  key={product.id}
-                  className="shadow-lg rounded border border-slate-200 px-4 py-3 h-72 flex flex-col justify-between"
-                >
-                  <div>
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="w-full h-32 object-contain"
-                    />
-                  </div>
+              {dataItems.length === 0 ? (
+                <span className="block py-4 text-slate-900">
+                  No products available
+                </span>
+              ) : (
+                dataItems.map((product: any) => (
+                  <div
+                    key={product.id}
+                    className="shadow-lg rounded border border-slate-200 px-4 py-3 h-72 flex flex-col justify-between"
+                  >
+                    <div>
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        className="w-full h-32 object-contain"
+                      />
+                    </div>
 
-                  <div>
-                    <span className="block mb-2 text-slate-600">
-                      {product.name}
-                    </span>
-                    <div className="grid grid-cols-2 gap-x-3 py-2">
-                      <button
-                        className="block w-full border border-slate-400 py-2 rounded"
-                        onClick={() =>
-                          router.push(`/admin/product/${product.id}`)
-                        }
-                      >
-                        Editar
-                      </button>
-                      <button
-                        className="block w-full bg-slate-500 py-2 rounded text-white"
-                        onClick={() => {
-                          setItemDelete(product.id);
-                          setShowModal(true);
-                        }}
-                      >
-                        Eliminar
-                      </button>
+                    <div>
+                      <span className="block mb-2 text-slate-600">
+                        {product.name}
+                      </span>
+                      <div className="grid grid-cols-2 gap-x-3 py-2">
+                        <button
+                          className="block w-full border border-slate-400 py-2 rounded"
+                          onClick={() =>
+                            router.push(`/admin/product/${product.id}`)
+                          }
+                        >
+                          Editar
+                        </button>
+                        <button
+                          className="block w-full bg-slate-500 py-2 rounded text-white"
+                          onClick={() => {
+                            setItemDelete(product.id);
+                            setShowModal(true);
+                          }}
+                        >
+                          Eliminar
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))
+              )}
             </div>
 
             <button
