@@ -12,6 +12,7 @@ import { GET_PLAN_INFO } from "@/graphql/queries/planInfo";
 import { DELETE_PLAN_ITEM } from "@/graphql/mutation/plan";
 import { UPDATE_PLAN_INFO } from "@/graphql/mutation/planInfo";
 import NavbarDashboard from "@/components/admin/Navbar";
+import { BsTrash } from "react-icons/bs";
 
 const PlanAdmin: React.FC = () => {
   const router = useRouter();
@@ -119,24 +120,27 @@ const PlanAdmin: React.FC = () => {
       <NavbarDashboard />
 
       <section className="p-10 w-full h-screen overflow-y-auto no-scrollbar">
-        <h1 className="text-3xl">Product Page</h1>
+        <h1 className="text-3xl text-slate-600">Plan Page</h1>
 
         {!data || !dataItems || !descriptionArray ? (
           <Loading />
         ) : (
           <div className="py-4">
-            <input
-              type="text"
-              className="p-2 border w-11/12"
-              value={data?.title}
-              onChange={(e) => setData({ ...data, title: e.target.value })}
-            />
+            <div>
+              <span className="block text-sm mb-2 text-slate-500">Title:</span>
+              <input
+                type="text"
+                className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300"
+                value={data?.title}
+                onChange={(e) => setData({ ...data, title: e.target.value })}
+              />
+            </div>
 
             <div className="py-4">
               {descriptionArray.map((description: any, index: number) => (
                 <div key={description.id} className="flex">
                   <textarea
-                    className="border p-2 w-11/12"
+                    className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300 resize-none h-32"
                     value={description.text}
                     onChange={(e) => {
                       const text = e.target.value;
@@ -148,23 +152,29 @@ const PlanAdmin: React.FC = () => {
                     }}
                   ></textarea>
                   <button
-                    className="p-2 border"
+                    className="block p-2 text-2xl px-5 text-red-500 bg-slate-100 ml-4 rounded"
                     onClick={() => handleDeleteInputDescription(description.id)}
                   >
-                    delete
+                    <BsTrash />
                   </button>
                 </div>
               ))}
             </div>
 
             <button
-              className="block mb-4 border p-2"
+              className="border border-slate-300 rounded block px-3 py-2 text-slate-500 mb-8"
               onClick={handleAddInputDescription}
             >
-              agregar campo
+              Add input description
             </button>
-            <button className="block mb-4 border p-2" onClick={handleUpdate}>
-              actualizar
+
+            <div className="border border-slate-200"></div>
+
+            <button
+              className="bg-slate-700 text-white rounded block px-8 text-lg py-2 mt-8"
+              onClick={handleUpdate}
+            >
+              Update Info
             </button>
 
             {error.status && <span className="block">{error.type}</span>}
@@ -223,10 +233,10 @@ const PlanAdmin: React.FC = () => {
             </div>
 
             <button
-              className="block mt-8 border p-2"
+              className="border border-slate-300 rounded block px-3 py-2 text-slate-500 mt-6"
               onClick={() => router.push("/admin/create/plan")}
             >
-              agregar nuevo plan
+              Add a new plan
             </button>
           </div>
         )}

@@ -8,7 +8,7 @@ const AdminHome: React.FC = () => {
       <NavbarDashboard />
 
       <div className="p-10 w-full h-screen overflow-y-auto no-scrollbar">
-        <h1 className="text-3xl">Hello Fernando!</h1>
+        <h1 className="text-3xl text-slate-600">Hello Fernando!</h1>
       </div>
     </div>
   );

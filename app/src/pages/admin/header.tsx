@@ -9,6 +9,7 @@ import { HeaderInfo } from "@/types/header";
 import { Description } from "@/types/description";
 import Loading from "@/components/Loading";
 import NavbarDashboard from "@/components/admin/Navbar";
+import { BsTrash } from "react-icons/bs";
 
 const HeaderAdmin: React.FC = () => {
   const [data, setData] = React.useState<HeaderInfo | null>(null);
@@ -115,18 +116,23 @@ const HeaderAdmin: React.FC = () => {
       <NavbarDashboard />
 
       <div className="p-10 w-full h-screen overflow-y-auto no-scrollbar">
-        <h1 className="text-3xl">Header Section</h1>
+        <h1 className="text-3xl text-slate-600">Header Section</h1>
 
         {!data || !descriptionArray ? (
           <Loading />
         ) : (
           <section className="py-8">
-            <input
-              type="text"
-              value={data.title}
-              className="w-full block border p-2"
-              onChange={(e: any) => setData({ ...data, title: e.target.value })}
-            />
+            <div>
+              <span className="block text-sm mb-2 text-slate-500">Title:</span>
+              <input
+                type="text"
+                value={data.title}
+                className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300"
+                onChange={(e: any) =>
+                  setData({ ...data, title: e.target.value })
+                }
+              />
+            </div>
 
             <div className="pt-4 flex flex-col">
               <input type="file" onChange={handleHeaderFileChange} />
@@ -140,12 +146,14 @@ const HeaderAdmin: React.FC = () => {
               </div>
             </div>
 
-            <div className="pt-4">
+            <div>
+              <h3 className="text-slate-600 mt-4">Description:</h3>
+
               {descriptionArray.map((item: Description) => (
-                <div className="flex items-center" key={item.id}>
+                <div className="flex py-4" key={item.id}>
                   <textarea
                     value={item.text}
-                    className="w-full block border h-32 p-2"
+                    className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300 resize-none h-32"
                     onChange={(e) =>
                       setDescriptionArray((currentDescription: any) =>
                         currentDescription?.map((x: any) =>
@@ -161,19 +169,28 @@ const HeaderAdmin: React.FC = () => {
                   ></textarea>
                   <button
                     onClick={() => handleDeleteInputDescription(item.id)}
-                    className="block p-2 border"
+                    className="block p-2 text-2xl px-5 text-red-500 bg-slate-100 ml-4 rounded"
                   >
-                    delete
+                    <BsTrash />
                   </button>
                 </div>
               ))}
             </div>
 
-            <button onClick={handleAddNewInputDescription}>
-              agregar campo
+            <button
+              onClick={handleAddNewInputDescription}
+              className="border border-slate-300 rounded block px-3 py-2 text-slate-500 mb-8"
+            >
+              Add input description
             </button>
-            <button onClick={handleUpdate} className="block border p-3">
-              Actualizar
+
+            <div className="border border-slate-200"></div>
+
+            <button
+              onClick={handleUpdate}
+              className="bg-slate-700 text-white rounded block px-8 text-lg py-2 mt-8"
+            >
+              Update
             </button>
 
             {error.status && <span className="block">{error.type}</span>}

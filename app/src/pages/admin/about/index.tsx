@@ -1,5 +1,6 @@
 import React from "react";
 import { v4 as uuidv4 } from "uuid";
+import { BsTrash } from "react-icons/bs";
 
 import Loading from "@/components/Loading";
 import client from "@/config/apollo";
@@ -96,18 +97,21 @@ const AboutPageAdmin: React.FC = () => {
       <NavbarDashboard />
 
       <section className="p-10 w-full h-screen overflow-y-auto no-scrollbar">
-        <h1 className="text-3xl">About Page</h1>
+        <h1 className="text-3xl text-slate-600">About Page</h1>
 
         {!data || !descriptionArray ? (
           <Loading />
         ) : (
           <div className="py-6">
-            <input
-              type="text"
-              className="w-11/12 border p-2"
-              value={data?.title}
-              onChange={(e) => setData({ ...data, title: e.target.value })}
-            />
+            <div>
+              <span className="block text-sm mb-2 text-slate-500">Title:</span>
+              <input
+                type="text"
+                className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300"
+                value={data?.title}
+                onChange={(e) => setData({ ...data, title: e.target.value })}
+              />
+            </div>
 
             <div className="py-4">
               <input type="file" onChange={handleHeaderFileChange} />
@@ -122,10 +126,12 @@ const AboutPageAdmin: React.FC = () => {
             </div>
 
             <div>
+              <h3 className="text-slate-600 mt-4">Description:</h3>
+
               {descriptionArray.map((description: any) => (
                 <div key={description.id} className="flex py-4">
                   <textarea
-                    className="w-11/12 border p-2 h-32"
+                    className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300 resize-none h-32"
                     value={description.text}
                     onChange={(e) =>
                       setDescriptionArray((currentDescription: any) =>
@@ -141,23 +147,29 @@ const AboutPageAdmin: React.FC = () => {
                     }
                   ></textarea>
                   <button
-                    className="block p-2 border"
+                    className="block p-2 text-2xl px-5 text-red-500 bg-slate-100 ml-4 rounded"
                     onClick={() => handleDeleteInputDescription(description.id)}
                   >
-                    delete
+                    <BsTrash />
                   </button>
                 </div>
               ))}
             </div>
 
             <button
-              className="border block p-2 mb-4"
+              className="border border-slate-300 rounded block px-3 py-2 text-slate-500 mb-8"
               onClick={handleAddInputDescription}
             >
-              agregar campo
+              Add input description
             </button>
-            <button className="border block p-2" onClick={handleUpdate}>
-              actualizar
+
+            <div className="border border-slate-200"></div>
+
+            <button
+              className="bg-slate-700 text-white rounded block px-8 text-lg py-2 mt-8"
+              onClick={handleUpdate}
+            >
+              Update
             </button>
           </div>
         )}
