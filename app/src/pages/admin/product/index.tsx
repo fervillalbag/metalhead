@@ -35,13 +35,14 @@ const ProductAdmin = () => {
       const { data: dataProductInfo } = await client.query({
         query: GET_PRODUCT_INFO,
       });
-      setData(dataProductInfo?.getProductInfo);
-      setDescriptionArray(dataProductInfo?.getProductInfo?.description);
 
       const { data: dataProducts } = await client.query({
         query: GET_PRODUCTS,
       });
+
+      setData(dataProductInfo?.getProductInfo);
       setDataItems(dataProducts?.getProducts);
+      setDescriptionArray(dataProductInfo?.getProductInfo?.description);
     })();
   }, []);
 
@@ -122,7 +123,7 @@ const ProductAdmin = () => {
       <section className="p-10 w-full h-screen overflow-y-auto no-scrollbar">
         <h1 className="text-3xl text-slate-600">Product Info</h1>
 
-        {!data || !descriptionArray || !dataItems ? (
+        {!data || !descriptionArray ? (
           <Loading />
         ) : (
           <div className="py-4">

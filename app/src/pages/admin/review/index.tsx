@@ -34,12 +34,10 @@ const ReviewInfoAdmin = () => {
     (async () => {
       const { data: reviewInfo } = await client.query({
         query: GET_REVIEW_INFO,
-        fetchPolicy: "network-only",
       });
 
       const { data: reviewItems } = await client.query({
         query: GET_REVIEW_HOME,
-        fetchPolicy: "network-only",
       });
 
       setData(reviewInfo?.getReviewInfoHome);
@@ -115,7 +113,7 @@ const ReviewInfoAdmin = () => {
   };
 
   return (
-    <div className="flex items-start">
+    <div className="flex">
       <NavbarDashboard />
 
       <div className="p-10 w-full h-screen overflow-y-auto no-scrollbar">
@@ -124,7 +122,7 @@ const ReviewInfoAdmin = () => {
         {!data || !descriptionArray ? (
           <Loading />
         ) : (
-          <section className="py-8">
+          <div className="py-8">
             <div>
               <span className="block text-sm mb-2 text-slate-500">Title:</span>
               <input
@@ -170,6 +168,76 @@ const ReviewInfoAdmin = () => {
               )}
             </div>
 
+            <button
+              className="border border-slate-300 rounded block px-3 py-2 text-slate-500 mb-8"
+              onClick={handleAddInputDescription}
+            >
+              Add input description
+            </button>
+
+            <h1 className="text-2xl text-slate-600 mt-8 mb-6">
+              List of Reviews
+            </h1>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6">
+              {!dataItems ? (
+                <span className="block py-4 text-slate-900">
+                  Ha ocurrido un error
+                </span>
+              ) : dataItems.length === 0 ? (
+                <span className="block py-4 text-slate-900">
+                  No reviews available
+                </span>
+              ) : (
+                dataItems.map((item: any) => (
+                  <div
+                    key={item.id}
+                    className="shadow-lg rounded border border-slate-200 px-4 py-3 h-36 flex flex-col justify-between"
+                  >
+                    <span className="block mb-2 text-slate-600">
+                      {item.name}
+                    </span>
+
+                    <div className="grid grid-cols-2 gap-x-3">
+                      <button
+                        className="block w-full border border-slate-400 py-2 rounded"
+                        onClick={() => router.push(`/admin/review/${item.id}`)}
+                      >
+                        Editar
+                      </button>
+                      <button
+                        className="block w-full bg-slate-500 py-2 rounded text-white"
+                        onClick={() => {
+                          setShowModal(true);
+                          setItemDelete(item.id);
+                        }}
+                      >
+                        Eliminar
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+
+            <button
+              className="border border-slate-300 rounded block px-3 py-2 text-slate-500 mt-6"
+              onClick={() => router.push("/admin/create/review")}
+            >
+              Add a new review
+            </button>
+
+            <div className="border border-slate-200 mt-8"></div>
+
+            <button
+              className="bg-slate-700 text-white rounded block px-8 text-lg py-2 mt-8"
+              onClick={handleUpdate}
+            >
+              Update
+            </button>
+
+            {error.status && <span className="block">{error.type}</span>}
+
             <Modal showModal={showModal}>
               <div className="flex flex-col justify-center h-full items-center">
                 <h1>¿Desea eliminar?</h1>
@@ -196,65 +264,7 @@ const ReviewInfoAdmin = () => {
                 </div>
               </div>
             </Modal>
-
-            <button
-              className="border border-slate-300 rounded block px-3 py-2 text-slate-500 mb-8"
-              onClick={handleAddInputDescription}
-            >
-              Add input description
-            </button>
-
-            <h1 className="text-2xl text-slate-600 mt-8 mb-6">
-              List of Reviews
-            </h1>
-
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6">
-              {dataItems.map((item: any) => (
-                <div
-                  key={item.id}
-                  className="shadow-lg rounded border border-slate-200 px-4 py-3 h-36 flex flex-col justify-between"
-                >
-                  <span className="block mb-2 text-slate-600">{item.name}</span>
-
-                  <div className="grid grid-cols-2 gap-x-3">
-                    <button
-                      className="block w-full border border-slate-400 py-2 rounded"
-                      onClick={() => router.push(`/admin/review/${item.id}`)}
-                    >
-                      Editar
-                    </button>
-                    <button
-                      className="block w-full bg-slate-500 py-2 rounded text-white"
-                      onClick={() => {
-                        setShowModal(true);
-                        setItemDelete(item.id);
-                      }}
-                    >
-                      Eliminar
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <button
-              className="border border-slate-300 rounded block px-3 py-2 text-slate-500 mt-6"
-              onClick={() => router.push("/admin/create/review")}
-            >
-              Add a new review
-            </button>
-
-            <div className="border border-slate-200 mt-8"></div>
-
-            <button
-              className="bg-slate-700 text-white rounded block px-8 text-lg py-2 mt-8"
-              onClick={handleUpdate}
-            >
-              Update
-            </button>
-
-            {error.status && <span className="block">{error.type}</span>}
-          </section>
+          </div>
         )}
       </div>
     </div>
