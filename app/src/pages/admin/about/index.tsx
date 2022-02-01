@@ -179,7 +179,7 @@ const AboutPageAdmin: React.FC = () => {
             </div>
 
             <button
-              className="border border-slate-300 rounded block px-3 py-2 text-slate-500 mb-8"
+              className="border border-slate-300 rounded block px-3 py-2 text-slate-500 mt-2 mb-8"
               onClick={handleAddInputDescription}
             >
               Add input description

@@ -227,6 +227,13 @@ const GrowthAdmin: React.FC = () => {
               )}
             </div>
 
+            <button
+              className="border border-slate-300 rounded block px-3 py-2 text-slate-500 mt-6"
+              onClick={() => router.push("/admin/create/growth")}
+            >
+              Add a new item
+            </button>
+
             <div className="border border-slate-200 mt-8"></div>
 
             <button
