@@ -17,3 +17,12 @@ export const DELETE_GROWTH_ITEM = gql`
     }
   }
 `;
+
+export const CREATE_GROWTH_ITEM = gql`
+  mutation createGrowthHome($input: GrowthInput!) {
+    createGrowthHome(input: $input) {
+      message
+      success
+    }
+  }
+`;

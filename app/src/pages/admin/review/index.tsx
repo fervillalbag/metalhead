@@ -179,7 +179,7 @@ const ReviewInfoAdmin = () => {
               List of Reviews
             </h1>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {!dataItems ? (
                 <span className="block py-4 text-slate-900">
                   Ha ocurrido un error

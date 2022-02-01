@@ -50,7 +50,7 @@ const Plans: React.FC<PlansIprops> = ({ dataPlans, dataInfo }) => {
           </span>
         ))}
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-[repeat(2,_370px)] gap-x-6 gap-y-10 justify-center pt-10 pb-20">
+        <div className="grid md:grid-cols-2 lg:grid-cols-[repeat(2,_370px)] gap-6 gap-y-10 justify-center pt-10 pb-20">
           {dataHomePlans.map((plan: any) => (
             <article
               key={plan.id}

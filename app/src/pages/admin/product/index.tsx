@@ -183,7 +183,7 @@ const ProductAdmin = () => {
               List of products
             </h1>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {dataItems.length === 0 ? (
                 <span className="block py-4 text-slate-900">
                   No products available

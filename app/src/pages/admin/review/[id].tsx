@@ -132,7 +132,7 @@ const ReviewItemId = () => {
       <div className="px-12 pt-10">
         <button
           className="border border-slate-300 rounded flex items-center justify-center px-3 py-2 text-slate-500 mb-8 w-32"
-          onClick={() => router.back()}
+          onClick={() => router.push("/admin/review")}
         >
           <span className="mr-2">
             <BsFillArrowLeftCircleFill />

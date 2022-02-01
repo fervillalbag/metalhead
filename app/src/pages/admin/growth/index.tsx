@@ -34,6 +34,7 @@ const GrowthAdmin: React.FC = () => {
 
       const { data: growthDataItems } = await client.query({
         query: GET_GROWTH_HOME,
+        fetchPolicy: "network-only",
       });
 
       setData(growthData?.getGrowthInfoHome);
@@ -190,7 +191,7 @@ const GrowthAdmin: React.FC = () => {
 
             <h1 className="text-2xl text-slate-600 mt-8 mb-6">List of Items</h1>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {dataItems.length === 0 ? (
                 <span className="block py-4 text-slate-900">
                   No items available

@@ -180,7 +180,7 @@ const PlanAdmin: React.FC = () => {
 
             <h1 className="text-2xl text-slate-600 mt-8 mb-6">List of Plans</h1>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {dataItems.map((plan: any, index: number) => (
                 <div
                   key={plan.id}

@@ -116,7 +116,7 @@ const CreateProductAdmin: React.FC = () => {
       <div className="px-12 pt-10">
         <button
           className="border border-slate-300 rounded flex items-center justify-center px-3 py-2 text-slate-500 mb-8 w-32"
-          onClick={() => router.back()}
+          onClick={() => router.push("/admin/product")}
         >
           <span className="mr-2">
             <BsFillArrowLeftCircleFill />
@@ -128,16 +128,17 @@ const CreateProductAdmin: React.FC = () => {
       <div className="p-10 w-full h-screen overflow-y-auto no-scrollbar">
         <h1 className="text-3xl text-slate-600">Create a new product</h1>
 
-        <div className="pt-8 pb-4">
+        <div className="pt-8 pb-3">
+          <span className="block text-sm mb-2 text-slate-500">Name:</span>
           <input
             type="text"
-            placeholder="Introduce nombre"
             value={data?.name}
             onChange={(e) => setData({ ...data, name: e.target.value })}
             className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300"
           />
         </div>
-        <div className="py-4">
+        <div className="py-3">
+          <span className="block text-sm mb-2 text-slate-500">Code:</span>
           <input
             type="number"
             placeholder="Introduce código"
@@ -146,7 +147,8 @@ const CreateProductAdmin: React.FC = () => {
             className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300"
           />
         </div>
-        <div className="py-4">
+        <div className="py-3">
+          <span className="block text-sm mb-2 text-slate-500">Price:</span>
           <input
             type="number"
             placeholder="Introduce precio"
@@ -156,7 +158,7 @@ const CreateProductAdmin: React.FC = () => {
           />
         </div>
 
-        <div className="pt-4">
+        <div className="pt-3">
           <button
             className="border border-slate-300 rounded block px-3 py-2 text-slate-500 mb-2"
             onClick={handleChangeImage}
