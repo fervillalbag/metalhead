@@ -31,6 +31,7 @@ const ReviewItemId = () => {
       if (queryId) {
         const { data: reviewItem } = await client.query({
           query: GET_REVIEW_HOME_ITEM,
+          fetchPolicy: "network-only",
           variables: {
             id: queryId,
           },

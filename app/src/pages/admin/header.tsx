@@ -47,6 +47,7 @@ const HeaderAdmin: React.FC = () => {
     (async () => {
       const { data: headerData } = await client.query({
         query: GET_HEADER_HOME,
+        fetchPolicy: "network-only",
       });
       setData(headerData?.getHeaderHome);
       setDescriptionArray(headerData?.getHeaderHome.description);

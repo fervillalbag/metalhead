@@ -29,6 +29,7 @@ const ProductItemAdmin: React.FC = () => {
       if (queryId) {
         const { data: productId } = await client.query({
           query: GET_PRODUCT,
+          fetchPolicy: "network-only",
           variables: {
             id: queryId,
           },

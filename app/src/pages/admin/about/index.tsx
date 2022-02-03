@@ -24,6 +24,7 @@ const AboutPageAdmin: React.FC = () => {
     (async () => {
       const { data: aboutData } = await client.query({
         query: GET_ABOUT_PAGE,
+        fetchPolicy: "network-only",
       });
       setData(aboutData?.getAboutPage);
       setDescriptionArray(aboutData?.getAboutPage?.description);

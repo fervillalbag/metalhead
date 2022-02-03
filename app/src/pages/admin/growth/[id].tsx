@@ -22,6 +22,7 @@ const GrowthId = () => {
       if (queryId) {
         const { data: dataGrowthItem } = await client.query({
           query: GET_GROWTH_ITEM,
+          fetchPolicy: "network-only",
           variables: {
             id: router.query.id,
           },

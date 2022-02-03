@@ -34,10 +34,12 @@ const ProductAdmin = () => {
     (async () => {
       const { data: dataProductInfo } = await client.query({
         query: GET_PRODUCT_INFO,
+        fetchPolicy: "network-only",
       });
 
       const { data: dataProducts } = await client.query({
         query: GET_PRODUCTS,
+        fetchPolicy: "network-only",
       });
 
       setData(dataProductInfo?.getProductInfo);

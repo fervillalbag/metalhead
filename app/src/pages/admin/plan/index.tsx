@@ -34,10 +34,12 @@ const PlanAdmin: React.FC = () => {
     (async () => {
       const { data: dataInfo } = await client.query({
         query: GET_PLAN_INFO,
+        fetchPolicy: "network-only",
       });
 
       const { data: dataPlans } = await client.query({
         query: GET_PLANS,
+        fetchPolicy: "network-only",
       });
 
       setData(dataInfo?.getPlanInfo);

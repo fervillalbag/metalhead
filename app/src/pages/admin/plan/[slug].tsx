@@ -26,6 +26,7 @@ const SlugPlanAdmin: React.FC = () => {
     (async () => {
       const { data: dataItem } = await client.query({
         query: GET_PLAN,
+        fetchPolicy: "network-only",
         variables: {
           slug,
         },

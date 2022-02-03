@@ -30,6 +30,7 @@ const GrowthAdmin: React.FC = () => {
     (async () => {
       const { data: growthData } = await client.query({
         query: GET_GROWTH_INFO_HOME,
+        fetchPolicy: "network-only",
       });
 
       const { data: growthDataItems } = await client.query({

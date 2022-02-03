@@ -34,10 +34,12 @@ const ReviewInfoAdmin = () => {
     (async () => {
       const { data: reviewInfo } = await client.query({
         query: GET_REVIEW_INFO,
+        fetchPolicy: "network-only",
       });
 
       const { data: reviewItems } = await client.query({
         query: GET_REVIEW_HOME,
+        fetchPolicy: "network-only",
       });
 
       setData(reviewInfo?.getReviewInfoHome);
