@@ -92,7 +92,7 @@ const GrowthId = () => {
       <section className="p-10 w-full h-screen overflow-y-auto no-scrollbar">
         <h1 className="text-3xl text-slate-600">Edit a growth item</h1>
 
-        <div className="py-4">
+        <div className="pt-8 pb-4">
           <div>
             <span className="block text-sm mb-2 text-slate-500">Title:</span>
             <input
@@ -104,28 +104,34 @@ const GrowthId = () => {
           </div>
 
           <div className="py-4">
-            {descriptionArray.map((description: any, index: number) => (
-              <div key={description.id} className="flex py-4">
-                <textarea
-                  className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300 resize-none h-32"
-                  value={description.text}
-                  onChange={(e) => {
-                    const text = e.target.value;
-                    setDescriptionArray((currentDescription: any) =>
-                      produce(currentDescription, (v: any) => {
-                        v[index].text = text;
-                      })
-                    );
-                  }}
-                ></textarea>
-                <button
-                  className="block p-2 text-2xl px-5 text-red-500 bg-slate-100 ml-4 rounded"
-                  onClick={() => handleDeleteInputDescription(description.id)}
-                >
-                  <BsTrash />
-                </button>
-              </div>
-            ))}
+            {descriptionArray.lenght === 0 ? (
+              <span className="block py-4 text-slate-900">
+                No description available
+              </span>
+            ) : (
+              descriptionArray.map((description: any, index: number) => (
+                <div key={description.id} className="flex py-4">
+                  <textarea
+                    className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300 resize-none h-32"
+                    value={description.text}
+                    onChange={(e) => {
+                      const text = e.target.value;
+                      setDescriptionArray((currentDescription: any) =>
+                        produce(currentDescription, (v: any) => {
+                          v[index].text = text;
+                        })
+                      );
+                    }}
+                  ></textarea>
+                  <button
+                    className="block p-2 text-2xl px-5 text-red-500 bg-slate-100 ml-4 rounded"
+                    onClick={() => handleDeleteInputDescription(description.id)}
+                  >
+                    <BsTrash />
+                  </button>
+                </div>
+              ))
+            )}
           </div>
 
           <button

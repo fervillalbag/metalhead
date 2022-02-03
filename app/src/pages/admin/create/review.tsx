@@ -4,8 +4,12 @@ import { v4 as uuidv4 } from "uuid";
 import { useMutation } from "@apollo/client";
 import { CREATE_REVIEW_HOME } from "@/graphql/mutation/reviewHome";
 import Loading from "@/components/Loading";
+import { BsFillArrowLeftCircleFill, BsTrash } from "react-icons/bs";
+import { useRouter } from "next/router";
 
 const CreateReviewAdmin: React.FC = () => {
+  const router = useRouter();
+
   const [data, setData] = React.useState<any>({
     name: "",
     avatar: "",
@@ -23,11 +27,16 @@ const CreateReviewAdmin: React.FC = () => {
     status: false,
   });
 
+  const inputFileRef = React.useRef<any>(null);
   const [createReviewHome] = useMutation(CREATE_REVIEW_HOME);
 
   const newDescription = {
     id: uuidv4(),
     text: "",
+  };
+
+  const handleChangeImage = () => {
+    inputFileRef.current.click();
   };
 
   const handleAddInputDescription = () => {
@@ -90,64 +99,110 @@ const CreateReviewAdmin: React.FC = () => {
     });
 
     console.log(responseApi?.data);
+    router.push("/admin/review");
   };
 
   if (!data || !descriptionArray) return <Loading />;
 
   return (
-    <div className="p-4">
-      <input
-        type="text"
-        value={data?.name}
-        className="border p-2 w-11/12"
-        onChange={(e) => setData({ ...data, name: e.target.value })}
-        placeholder="Introducir nombre"
-      />
-
-      <div className="py-4">
-        <input type="file" onChange={handleHeaderFileChange} />
+    <div className="flex">
+      <div className="px-12 pt-10">
+        <button
+          className="border border-slate-300 rounded flex items-center justify-center px-3 py-2 text-slate-500 mb-8 w-32"
+          onClick={() => router.push("/admin/review")}
+        >
+          <span className="mr-2">
+            <BsFillArrowLeftCircleFill />
+          </span>
+          <span>Back</span>
+        </button>
       </div>
 
-      <div className="py-4">
-        {showAvatarImage && <img src={showAvatarImage} alt="" width={100} />}
-      </div>
+      <div className="p-10 w-full h-screen overflow-y-auto no-scrollbar">
+        <h1 className="text-3xl text-slate-600">Create a new review</h1>
 
-      <div className="py-4">
-        {descriptionArray.map((description: any, index: number) => (
-          <div key={description.id} className="flex py-4">
-            <textarea
-              className="border p-2 w-11/12"
-              value={description.text}
-              onChange={(e) => {
-                const text = e.target.value;
-                setDescriptionArray((currentDescription: any) =>
-                  produce(currentDescription, (v: any) => {
-                    v[index].text = text;
-                  })
-                );
-              }}
-            ></textarea>
-            <button
-              className="block border p-2"
-              onClick={() => handleDeleteInputDescription(description.id)}
-            >
-              delete
-            </button>
+        <div className="pt-8 pb-4">
+          <div>
+            <span className="block text-sm mb-2 text-slate-500">Name:</span>
+            <input
+              type="text"
+              value={data?.name}
+              className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300"
+              onChange={(e) => setData({ ...data, name: e.target.value })}
+              placeholder="Introducir nombre"
+            />
           </div>
-        ))}
+        </div>
+
+        <div className="pt-3">
+          <button
+            className="border border-slate-300 rounded block px-3 py-2 text-slate-500 mb-2"
+            onClick={handleChangeImage}
+          >
+            {showAvatarImage ? "Change image" : "Add image"}
+          </button>
+          <input
+            ref={inputFileRef}
+            type="file"
+            onChange={handleHeaderFileChange}
+            className="hidden"
+          />
+        </div>
+
+        {showAvatarImage && (
+          <div className="py-4">
+            <img src={showAvatarImage} alt="" width={100} />
+          </div>
+        )}
+
+        <div>
+          <h3 className="text-slate-600 mt-4">Description:</h3>
+
+          {descriptionArray.length === 0 ? (
+            <span className="block py-4 text-slate-900">
+              No description available
+            </span>
+          ) : (
+            descriptionArray.map((description: any, index: number) => (
+              <div key={description.id} className="flex py-4">
+                <textarea
+                  className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300 resize-none h-32"
+                  value={description.text}
+                  onChange={(e) => {
+                    const text = e.target.value;
+                    setDescriptionArray((currentDescription: any) =>
+                      produce(currentDescription, (v: any) => {
+                        v[index].text = text;
+                      })
+                    );
+                  }}
+                ></textarea>
+                <button
+                  className="block p-2 text-2xl px-5 text-red-500 bg-slate-100 ml-4 rounded"
+                  onClick={() => handleDeleteInputDescription(description.id)}
+                >
+                  <BsTrash />
+                </button>
+              </div>
+            ))
+          )}
+        </div>
+
+        <button
+          className="border border-slate-300 rounded block px-3 py-2 text-slate-500 mt-2 mb-8"
+          onClick={handleAddInputDescription}
+        >
+          agregar campo
+        </button>
+        <button
+          className="bg-slate-700 text-white rounded block px-8 text-lg py-2 mt-8"
+          onClick={handleCreateReview}
+        >
+          crear
+        </button>
+
+        {error.status && <span className="block">{error.type}</span>}
       </div>
-
-      <button
-        className="block border p-2 mb-4"
-        onClick={handleAddInputDescription}
-      >
-        agregar campo
-      </button>
-      <button className="block border p-2 mb-4" onClick={handleCreateReview}>
-        crear
-      </button>
-
-      {error.status && <span className="block">{error.type}</span>}
     </div>
   );
 };
