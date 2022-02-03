@@ -7,6 +7,7 @@ import { useMutation } from "@apollo/client";
 import { UPDATE_GROWTH_ITEM } from "@/graphql/mutation/growthHome";
 import Loading from "@/components/Loading";
 import { produce } from "immer";
+import { BsFillArrowLeftCircleFill, BsTrash } from "react-icons/bs";
 
 const GrowthId = () => {
   const router = useRouter();
@@ -75,48 +76,72 @@ const GrowthId = () => {
   if (!data || !descriptionArray) return <Loading />;
 
   return (
-    <div className="p-4">
-      <input
-        type="text"
-        value={data?.title}
-        className="border w-11/12 p-2"
-        onChange={(e) => setData({ ...data, title: e.target.value })}
-      />
-
-      <div className="py-4">
-        {descriptionArray.map((description: any, index: number) => (
-          <div key={description.id} className="flex py-4">
-            <textarea
-              className="border p-2 w-11/12"
-              value={description.text}
-              onChange={(e) => {
-                const text = e.target.value;
-                setDescriptionArray((currentDescription: any) =>
-                  produce(currentDescription, (v: any) => {
-                    v[index].text = text;
-                  })
-                );
-              }}
-            ></textarea>
-            <button
-              className="border p-2 block"
-              onClick={() => handleDeleteInputDescription(description.id)}
-            >
-              delete
-            </button>
-          </div>
-        ))}
+    <div className="flex">
+      <div className="px-12 pt-10">
+        <button
+          className="border border-slate-300 rounded flex items-center justify-center px-3 py-2 text-slate-500 mb-8 w-32"
+          onClick={() => router.push("/admin/growth")}
+        >
+          <span className="mr-2">
+            <BsFillArrowLeftCircleFill />
+          </span>
+          <span>Back</span>
+        </button>
       </div>
 
-      <button
-        className="border p-2 block mb-2"
-        onClick={handleAddInputDescription}
-      >
-        agregar campo
-      </button>
-      <button className="border p-2 block" onClick={handleUpdate}>
-        Actualizar
-      </button>
+      <section className="p-10 w-full h-screen overflow-y-auto no-scrollbar">
+        <h1 className="text-3xl text-slate-600">Edit a growth item</h1>
+
+        <div className="py-4">
+          <div>
+            <span className="block text-sm mb-2 text-slate-500">Title:</span>
+            <input
+              type="text"
+              value={data?.title}
+              className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300"
+              onChange={(e) => setData({ ...data, title: e.target.value })}
+            />
+          </div>
+
+          <div className="py-4">
+            {descriptionArray.map((description: any, index: number) => (
+              <div key={description.id} className="flex py-4">
+                <textarea
+                  className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300 resize-none h-32"
+                  value={description.text}
+                  onChange={(e) => {
+                    const text = e.target.value;
+                    setDescriptionArray((currentDescription: any) =>
+                      produce(currentDescription, (v: any) => {
+                        v[index].text = text;
+                      })
+                    );
+                  }}
+                ></textarea>
+                <button
+                  className="block p-2 text-2xl px-5 text-red-500 bg-slate-100 ml-4 rounded"
+                  onClick={() => handleDeleteInputDescription(description.id)}
+                >
+                  <BsTrash />
+                </button>
+              </div>
+            ))}
+          </div>
+
+          <button
+            className="border border-slate-300 rounded block px-3 py-2 text-slate-500 mb-8"
+            onClick={handleAddInputDescription}
+          >
+            Add input description
+          </button>
+          <button
+            className="bg-slate-700 text-white rounded block px-8 text-lg py-2 mt-8"
+            onClick={handleUpdate}
+          >
+            Update
+          </button>
+        </div>
+      </section>
     </div>
   );
 };
