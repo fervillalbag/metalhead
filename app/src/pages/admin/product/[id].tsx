@@ -210,7 +210,9 @@ const ProductItemAdmin: React.FC = () => {
             </div>
           </div>
 
-          <div className="py-4">
+          <div>
+            <h3 className="text-slate-600 mt-4">Description:</h3>
+
             {descriptionArray.length === 0 ? (
               <span className="block py-4 text-slate-900">
                 No description available
