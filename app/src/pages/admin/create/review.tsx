@@ -192,13 +192,13 @@ const CreateReviewAdmin: React.FC = () => {
           className="border border-slate-300 rounded block px-3 py-2 text-slate-500 mt-2 mb-8"
           onClick={handleAddInputDescription}
         >
-          agregar campo
+          Add input description
         </button>
         <button
           className="bg-slate-700 text-white rounded block px-8 text-lg py-2 mt-8"
           onClick={handleCreateReview}
         >
-          crear
+          Create
         </button>
 
         {error.status && <span className="block">{error.type}</span>}

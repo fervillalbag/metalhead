@@ -8,6 +8,7 @@ import client from "@/config/apollo";
 import { GET_PRODUCT } from "@/graphql/queries/products";
 import Loading from "@/components/Loading";
 import { UPDATE_PRODUCT_ITEM } from "@/graphql/mutation/product";
+import { BsFillArrowLeftCircleFill, BsTrash } from "react-icons/bs";
 
 const ProductItemAdmin: React.FC = () => {
   const router = useRouter();
@@ -22,6 +23,7 @@ const ProductItemAdmin: React.FC = () => {
     status: false,
   });
 
+  const inputFileRef = React.useRef<any>(null);
   const [updateProduct] = useMutation(UPDATE_PRODUCT_ITEM);
 
   React.useEffect(() => {
@@ -39,6 +41,10 @@ const ProductItemAdmin: React.FC = () => {
       }
     })();
   }, [router]);
+
+  const handleChangeImage = () => {
+    inputFileRef.current.click();
+  };
 
   const handleHeaderFileChange = (e: any) => {
     const file = e.currentTarget.files[0];
@@ -136,79 +142,121 @@ const ProductItemAdmin: React.FC = () => {
   if (!data || !descriptionArray) return <Loading />;
 
   return (
-    <div className="p-4">
-      <div className="py-4">
-        <input
-          type="text"
-          value={data?.name}
-          className="w-11/12 border p-2"
-          onChange={(e) => setData({ ...data, name: e.target.value })}
-        />
-      </div>
-      <div className="py-4">
-        <input
-          type="number"
-          value={data?.code}
-          className="w-11/12 border p-2"
-          onChange={(e) => setData({ ...data, code: e.target.value })}
-        />
-      </div>
-      <div className="py-4">
-        <input
-          type="number"
-          value={data?.price}
-          className="w-11/12 border p-2"
-          onChange={(e) => setData({ ...data, price: e.target.value })}
-        />
+    <div className="flex">
+      <div className="px-12 pt-10">
+        <button
+          className="border border-slate-300 rounded flex items-center justify-center px-3 py-2 text-slate-500 mb-8 w-32"
+          onClick={() => router.push("/admin/product")}
+        >
+          <span className="mr-2">
+            <BsFillArrowLeftCircleFill />
+          </span>
+          <span>Back</span>
+        </button>
       </div>
 
-      <div className="py-4">
-        <input type="file" onChange={handleHeaderFileChange} />
-        <div className="pt-4">
-          {!showProductImage ? (
-            <img src={data?.image} width={100} alt="" />
-          ) : (
-            <img src={showProductImage} width={100} alt="" />
-          )}
+      <div className="p-10 w-full h-screen overflow-y-auto no-scrollbar">
+        <h1 className="text-3xl text-slate-600">Update product</h1>
+
+        <div>
+          <div className="pt-8 pb-4">
+            <span className="block text-sm mb-2 text-slate-500">Name:</span>
+            <input
+              type="text"
+              value={data?.name}
+              className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300"
+              onChange={(e) => setData({ ...data, name: e.target.value })}
+            />
+          </div>
+          <div className="py-4">
+            <span className="block text-sm mb-2 text-slate-500">Code:</span>
+            <input
+              type="number"
+              value={data?.code}
+              className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300"
+              onChange={(e) => setData({ ...data, code: e.target.value })}
+            />
+          </div>
+          <div className="py-4">
+            <span className="block text-sm mb-2 text-slate-500">Price:</span>
+            <input
+              type="number"
+              value={data?.price}
+              className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300"
+              onChange={(e) => setData({ ...data, price: e.target.value })}
+            />
+          </div>
+
+          <div className="py-4">
+            <button
+              className="border border-slate-300 rounded block px-3 py-2 text-slate-500 mb-2"
+              onClick={handleChangeImage}
+            >
+              Change image
+            </button>
+            <input
+              ref={inputFileRef}
+              type="file"
+              onChange={handleHeaderFileChange}
+              className="hidden"
+            />
+
+            <div className="pt-4">
+              {!showProductImage ? (
+                <img src={data?.image} width={100} alt="" />
+              ) : (
+                <img src={showProductImage} width={100} alt="" />
+              )}
+            </div>
+          </div>
+
+          <div className="py-4">
+            {descriptionArray.length === 0 ? (
+              <span className="block py-4 text-slate-900">
+                No description available
+              </span>
+            ) : (
+              descriptionArray.map((description: any, index: number) => (
+                <div key={description.id} className="flex py-4">
+                  <textarea
+                    value={description.text}
+                    className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300 resize-none h-32"
+                    onChange={(e) => {
+                      const text = e.target.value;
+                      setDescriptionArray((currentDescription: any) =>
+                        produce(currentDescription, (v: any) => {
+                          v[index].text = text;
+                        })
+                      );
+                    }}
+                  ></textarea>
+                  <button
+                    className="block p-2 text-2xl px-5 text-red-500 bg-slate-100 ml-4 rounded"
+                    onClick={() => handleDeleteInputDescription(description.id)}
+                  >
+                    <BsTrash />
+                  </button>
+                </div>
+              ))
+            )}
+          </div>
+
+          <button
+            className="border border-slate-300 rounded block px-3 py-2 text-slate-500 mt-2 mb-8"
+            onClick={handleAddInputDescription}
+          >
+            Add input description
+          </button>
+          <button
+            className="bg-slate-700 text-white rounded block px-8 text-lg py-2 mt-8"
+            onClick={handleUpdate}
+          >
+            Update
+          </button>
+
+          {error.status && <span className="block">{error.type}</span>}
         </div>
       </div>
-
-      <div className="py-4">
-        {descriptionArray.map((description: any, index: number) => (
-          <div key={description.id} className="flex py-4">
-            <textarea
-              value={description.text}
-              className="border p-2 w-11/12"
-              onChange={(e) => {
-                const text = e.target.value;
-                setDescriptionArray((currentDescription: any) =>
-                  produce(currentDescription, (v: any) => {
-                    v[index].text = text;
-                  })
-                );
-              }}
-            ></textarea>
-            <button
-              className="border p-2"
-              onClick={() => handleDeleteInputDescription(description.id)}
-            >
-              delete
-            </button>
-          </div>
-        ))}
-      </div>
-
-      <button
-        className="block border p-2 mb-4"
-        onClick={handleAddInputDescription}
-      >
-        agregar campo
-      </button>
-      <button className="block border p-2" onClick={handleUpdate}>
-        actualizar
-      </button>
-
-      {error.status && <span className="block">{error.type}</span>}
     </div>
   );
 };

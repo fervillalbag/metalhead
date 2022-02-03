@@ -163,7 +163,7 @@ const CreateProductAdmin: React.FC = () => {
             className="border border-slate-300 rounded block px-3 py-2 text-slate-500 mb-2"
             onClick={handleChangeImage}
           >
-            {showProductImage ? "Change image" : "Add image"}
+            Change image
           </button>
           <input
             ref={inputFileRef}
