@@ -2,6 +2,7 @@ import React from "react";
 import { v4 as uuidv4 } from "uuid";
 import { BsTrash } from "react-icons/bs";
 import { produce } from "immer";
+import toast from "react-hot-toast";
 
 import Loading from "@/components/Loading";
 import client from "@/config/apollo";
@@ -83,7 +84,7 @@ const AboutPageAdmin: React.FC = () => {
         },
       });
 
-      console.log(responseApi);
+      toast.success(responseApi?.data?.updateAboutPage?.message);
     } else {
       const responseApi = await updateAboutPage({
         variables: {
@@ -96,7 +97,7 @@ const AboutPageAdmin: React.FC = () => {
         },
       });
 
-      console.log(responseApi);
+      toast.success(responseApi?.data?.updateAboutPage?.message);
     }
   };
 
