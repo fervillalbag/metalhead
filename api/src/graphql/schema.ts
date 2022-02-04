@@ -72,6 +72,7 @@ const typeDefs = gql`
     id: ID
     name: String
     code: Int
+    quantity: Int
     price: Int
     image: String
     description: [Description]
@@ -166,6 +167,7 @@ const typeDefs = gql`
   input ProductInput {
     id: String
     name: String
+    quantity: Int
     code: Int
     price: Int
     image: String

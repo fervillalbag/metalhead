@@ -6,6 +6,7 @@ export const GET_PRODUCTS = gql`
       id
       name
       code
+      quantity
       image
       price
       description {
@@ -23,6 +24,7 @@ export const GET_PRODUCT = gql`
       id
       name
       code
+      quantity
       image
       price
       createdAt

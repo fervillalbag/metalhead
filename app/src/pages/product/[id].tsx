@@ -85,6 +85,15 @@ const Product: React.FC<ProductIprops> = ({ dataProduct }) => {
               ))}
             </div>
 
+            <div className="flex items-center mb-2">
+              <span className="block text-slate-800 text-sm font-regular mr-1">
+                Available:
+              </span>
+              <span className="block text-slate-800 text-sm font-bold">
+                {productDataPage?.quantity}
+              </span>
+            </div>
+
             <div className="flex items-center">
               <button className="bg-DarkBlue inline-block text-VeryPaleRed py-3 px-8 rounded-full font-medium mt-4 text-sm mr-3">
                 Buy now

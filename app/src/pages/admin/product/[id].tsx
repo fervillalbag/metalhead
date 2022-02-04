@@ -178,6 +178,15 @@ const ProductItemAdmin: React.FC = () => {
             />
           </div>
           <div className="py-4">
+            <span className="block text-sm mb-2 text-slate-500">Quantity:</span>
+            <input
+              type="number"
+              value={data?.quantity}
+              className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300"
+              onChange={(e) => setData({ ...data, quantity: e.target.value })}
+            />
+          </div>
+          <div className="py-4">
             <span className="block text-sm mb-2 text-slate-500">Price:</span>
             <input
               type="number"
