@@ -1,11 +1,13 @@
 import React from "react";
 import { produce } from "immer";
 import { v4 as uuidv4 } from "uuid";
+import { useRouter } from "next/router";
+import { BsFillArrowLeftCircleFill, BsTrash } from "react-icons/bs";
+import toast, { Toaster } from "react-hot-toast";
+
 import { useMutation } from "@apollo/client";
 import { CREATE_REVIEW_HOME } from "@/graphql/mutation/reviewHome";
 import Loading from "@/components/Loading";
-import { BsFillArrowLeftCircleFill, BsTrash } from "react-icons/bs";
-import { useRouter } from "next/router";
 
 const CreateReviewAdmin: React.FC = () => {
   const router = useRouter();
@@ -22,10 +24,6 @@ const CreateReviewAdmin: React.FC = () => {
   ]);
   const [showAvatarImage, setShowAvatarImage] = React.useState<any>("");
   const [fileAvatar, setFileAvatar] = React.useState<any>(null);
-  const [error, setError] = React.useState<any>({
-    type: "",
-    status: false,
-  });
 
   const inputFileRef = React.useRef<any>(null);
   const [createReviewHome] = useMutation(CREATE_REVIEW_HOME);
@@ -61,45 +59,64 @@ const CreateReviewAdmin: React.FC = () => {
 
   const handleCreateReview = async () => {
     if (!data?.name || data?.name === "") {
-      setError({
-        type: "El nombre es obligatorio",
-        status: true,
+      toast("El nombre es obligatorio!", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#FFF",
+          color: "#333",
+        },
       });
       return;
     }
 
     if (!fileAvatar) {
-      setError({
-        type: "La imagen es obligatoria",
-        status: true,
+      toast("La imagen es obligatoria!", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#FFF",
+          color: "#333",
+        },
       });
       return;
     }
 
-    setError({
-      type: "",
-      status: false,
-    });
+    if (descriptionArray[0].text === "") {
+      toast("La descripción es obligatoria!", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#FFF",
+          color: "#333",
+        },
+      });
+      return;
+    }
 
     const url = "https://api.cloudinary.com/v1_1/dbp9am0cx/image/upload";
-    const formData = new FormData();
-    formData.append("file", fileAvatar);
-    formData.append("upload_preset", "reviewItem");
-    const res = await fetch(url, { method: "post", body: formData });
-    const imageData = await res.json();
 
-    const responseApi = await createReviewHome({
-      variables: {
-        input: {
-          name: data?.name,
-          description: descriptionArray,
-          avatar: imageData?.secure_url,
+    try {
+      const formData = new FormData();
+      formData.append("file", fileAvatar);
+      formData.append("upload_preset", "reviewItem");
+      const res = await fetch(url, { method: "post", body: formData });
+      const imageData = await res.json();
+      const responseApi = await createReviewHome({
+        variables: {
+          input: {
+            name: data?.name,
+            description: descriptionArray,
+            avatar: imageData?.secure_url,
+          },
         },
-      },
-    });
+      });
 
-    console.log(responseApi?.data);
-    router.push("/admin/review");
+      toast.success(responseApi?.data?.createReviewHome?.message);
+      router.push("/admin/review");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   if (!data || !descriptionArray) return <Loading />;
@@ -117,6 +134,8 @@ const CreateReviewAdmin: React.FC = () => {
           <span>Back</span>
         </button>
       </div>
+
+      <Toaster position="top-center" reverseOrder={false} />
 
       <div className="p-10 w-full h-screen overflow-y-auto no-scrollbar">
         <h1 className="text-3xl text-slate-600">Create a new review</h1>
@@ -200,8 +219,6 @@ const CreateReviewAdmin: React.FC = () => {
         >
           Create
         </button>
-
-        {error.status && <span className="block">{error.type}</span>}
       </div>
     </div>
   );

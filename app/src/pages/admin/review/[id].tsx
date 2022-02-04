@@ -2,6 +2,7 @@ import React from "react";
 import { useRouter } from "next/router";
 import { v4 as uuidv4 } from "uuid";
 import { produce } from "immer";
+import toast, { Toaster } from "react-hot-toast";
 
 import Loading from "@/components/Loading";
 import client from "@/config/apollo";
@@ -18,10 +19,6 @@ const ReviewItemId = () => {
   const [descriptionArray, setDescriptionArray] = React.useState<any>([]);
   const [showHeaderImage, setShowHeaderImage] = React.useState<any>();
   const [fileHeader, setFileHeader] = React.useState<any>();
-  const [error, setError] = React.useState<any>({
-    type: "",
-    status: false,
-  });
 
   const inputFileRef = React.useRef<any>(null);
   const [updateReviewHome] = useMutation(UPDATE_REVIEW_HOME_ITEM);
@@ -77,18 +74,28 @@ const ReviewItemId = () => {
     });
 
     if (!data?.name || data?.name === "") {
-      setError({
-        type: "El nombre es obligatorio",
-        status: true,
+      toast("El nombre es obligatorio!", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#FFF",
+          color: "#333",
+        },
       });
-
       return;
     }
 
-    setError({
-      type: "",
-      status: false,
-    });
+    if (descriptionArray.length === 0) {
+      toast("La descripción es obligatoria!", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#FFF",
+          color: "#333",
+        },
+      });
+      return;
+    }
 
     if (fileHeader) {
       const url = "https://api.cloudinary.com/v1_1/dbp9am0cx/image/upload";
@@ -109,7 +116,7 @@ const ReviewItemId = () => {
         },
       });
 
-      console.log(responseApi?.data);
+      toast.success(responseApi?.data?.updateReviewHome?.message);
     } else {
       const responseApi = await updateReviewHome({
         variables: {
@@ -122,8 +129,9 @@ const ReviewItemId = () => {
         },
       });
 
-      console.log(responseApi?.data);
+      toast.success(responseApi?.data?.updateReviewHome?.message);
     }
+    router.push("/admin/review");
   };
 
   if (!data || !descriptionArray) return <Loading />;
@@ -141,6 +149,8 @@ const ReviewItemId = () => {
           <span>Back</span>
         </button>
       </div>
+
+      <Toaster position="top-center" reverseOrder={false} />
 
       <div className="p-10 w-full h-screen overflow-y-auto no-scrollbar">
         <h1 className="text-3xl text-slate-600">
@@ -233,8 +243,6 @@ const ReviewItemId = () => {
             >
               Update
             </button>
-
-            {error.status && <span className="block">{error.type}</span>}
           </section>
         )}
       </div>

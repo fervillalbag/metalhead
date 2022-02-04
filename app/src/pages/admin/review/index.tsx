@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { v4 as uuidv4 } from "uuid";
 import { useMutation } from "@apollo/client";
 import { produce } from "immer";
+import toast, { Toaster } from "react-hot-toast";
 
 import client from "@/config/apollo";
 import Loading from "@/components/Loading";
@@ -22,10 +23,6 @@ const ReviewInfoAdmin = () => {
   const [dataItems, setDataItems] = React.useState<any>([]);
   const [showModal, setShowModal] = React.useState<boolean>(false);
   const [itemDelete, setItemDelete] = React.useState<string>("");
-  const [error, setError] = React.useState<any>({
-    type: "",
-    status: false,
-  });
 
   const [updateReviewHomeInfo] = useMutation(UPDATE_REVIEW_INFO);
   const [deleteReviewHome] = useMutation(DELETE_REVIEW_HOME_ITEM);
@@ -69,7 +66,7 @@ const ReviewInfoAdmin = () => {
           id,
         },
       });
-      console.log(response);
+      toast.success(response?.data?.deleteReviewHome?.message);
       router.reload();
     } catch (error) {
       console.log(error);
@@ -85,9 +82,13 @@ const ReviewInfoAdmin = () => {
     });
 
     if (!data || data?.title === "") {
-      setError({
-        type: "El título es obligatorio",
-        status: true,
+      toast("El título es obligatorio!", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#FFF",
+          color: "#333",
+        },
       });
       return;
     }
@@ -103,20 +104,18 @@ const ReviewInfoAdmin = () => {
         },
       });
 
-      console.log(response);
+      toast.success(response?.data?.updateReviewHomeInfo?.message);
     } catch (error) {
+      toast.error("An error has occurred");
       console.log(error);
     }
-
-    setError({
-      type: "",
-      status: false,
-    });
   };
 
   return (
     <div className="flex">
       <NavbarDashboard />
+
+      <Toaster position="top-center" reverseOrder={false} />
 
       <div className="p-10 w-full h-screen overflow-y-auto no-scrollbar">
         <h1 className="text-3xl text-slate-600">Review Section</h1>
@@ -237,8 +236,6 @@ const ReviewInfoAdmin = () => {
             >
               Update
             </button>
-
-            {error.status && <span className="block">{error.type}</span>}
 
             <Modal showModal={showModal}>
               <div className="flex flex-col justify-center h-full items-center">
