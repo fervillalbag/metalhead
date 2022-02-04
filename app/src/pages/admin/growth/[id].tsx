@@ -140,6 +140,9 @@ const GrowthId = () => {
           >
             Add input description
           </button>
+
+          <div className="border border-slate-200 mt-8"></div>
+
           <button
             className="bg-slate-700 text-white rounded block px-8 text-lg py-2 mt-8"
             onClick={handleUpdate}
