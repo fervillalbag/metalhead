@@ -3,6 +3,7 @@ import produce from "immer";
 import { useRouter } from "next/router";
 import { v4 as uuidv4 } from "uuid";
 import { useMutation } from "@apollo/client";
+import toast from "react-hot-toast";
 
 import client from "@/config/apollo";
 import { GET_PRODUCT } from "@/graphql/queries/products";
@@ -18,10 +19,6 @@ const ProductItemAdmin: React.FC = () => {
   const [showProductImage, setShowProductImage] = React.useState<any>(null);
   const [descriptionArray, setDescriptionArray] = React.useState<any>(null);
   const [fileProduct, setFileProduct] = React.useState<any>(null);
-  const [error, setError] = React.useState<any>({
-    type: "",
-    status: false,
-  });
 
   const inputFileRef = React.useRef<any>(null);
   const [updateProduct] = useMutation(UPDATE_PRODUCT_ITEM);
@@ -84,59 +81,84 @@ const ProductItemAdmin: React.FC = () => {
       !data?.name ||
       data?.code === "" ||
       !data?.code ||
+      !data?.quantity ||
+      !data?.quantity ||
       data?.price === "" ||
       !data?.price
     ) {
-      setError({
-        type: "Todos los campos son obligatorios",
-        status: true,
+      toast("Todos los campos son obligatorios!", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#FFF",
+          color: "#333",
+        },
+      });
+      return;
+    }
+
+    if (newDescriptionArray.length === 0) {
+      toast("La descripción es obligatoria!", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#FFF",
+          color: "#333",
+        },
       });
       return;
     }
 
     if (fileProduct) {
       const url = "https://api.cloudinary.com/v1_1/dbp9am0cx/image/upload";
-      const formData = new FormData();
-      formData.append("file", fileProduct);
-      formData.append("upload_preset", "products");
-      const res = await fetch(url, { method: "post", body: formData });
-      const imageData = await res.json();
 
-      const responseApi = await updateProduct({
-        variables: {
-          input: {
-            id: data?.id,
-            name: data?.name,
-            code: Number(data?.code),
-            image: imageData?.secure_url,
-            price: Number(data?.price),
-            description: newDescriptionArray,
+      try {
+        const formData = new FormData();
+        formData.append("file", fileProduct);
+        formData.append("upload_preset", "products");
+        const res = await fetch(url, { method: "post", body: formData });
+        const imageData = await res.json();
+
+        const responseApi = await updateProduct({
+          variables: {
+            input: {
+              id: data?.id,
+              name: data?.name,
+              code: Number(data?.code),
+              quantity: Number(data?.quantity),
+              image: imageData?.secure_url,
+              price: Number(data?.price),
+              description: newDescriptionArray,
+            },
           },
-        },
-      });
-
-      console.log(responseApi?.data);
+        });
+        toast.success(responseApi?.data?.updateProduct?.message);
+      } catch (error) {
+        console.log(error);
+      }
     } else {
-      const responseApi = await updateProduct({
-        variables: {
-          input: {
-            id: data?.id,
-            name: data?.name,
-            code: Number(data?.code),
-            image: data?.image,
-            price: Number(data?.price),
-            description: newDescriptionArray,
+      try {
+        const responseApi = await updateProduct({
+          variables: {
+            input: {
+              id: data?.id,
+              name: data?.name,
+              code: Number(data?.code),
+              quantity: Number(data?.quantity),
+              image: data?.image,
+              price: Number(data?.price),
+              description: newDescriptionArray,
+            },
           },
-        },
-      });
+        });
 
-      console.log(responseApi?.data);
+        toast.success(responseApi?.data?.updateProduct?.message);
+      } catch (error) {
+        console.log(error);
+      }
     }
 
-    setError({
-      type: "",
-      status: false,
-    });
+    router.push("/admin/product");
   };
 
   if (!data || !descriptionArray) return <Loading />;
@@ -264,8 +286,6 @@ const ProductItemAdmin: React.FC = () => {
           >
             Update
           </button>
-
-          {error.status && <span className="block">{error.type}</span>}
         </div>
       </div>
     </div>

@@ -3,7 +3,7 @@ import { produce } from "immer";
 import { v4 as uuidv4 } from "uuid";
 import { useRouter } from "next/router";
 import { BsFillArrowLeftCircleFill, BsTrash } from "react-icons/bs";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 import { useMutation } from "@apollo/client";
 import { CREATE_REVIEW_HOME } from "@/graphql/mutation/reviewHome";
@@ -134,8 +134,6 @@ const CreateReviewAdmin: React.FC = () => {
           <span>Back</span>
         </button>
       </div>
-
-      <Toaster position="top-center" reverseOrder={false} />
 
       <div className="p-10 w-full h-screen overflow-y-auto no-scrollbar">
         <h1 className="text-3xl text-slate-600">Create a new review</h1>

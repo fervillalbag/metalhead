@@ -2,7 +2,7 @@ import React from "react";
 import { useRouter } from "next/router";
 import { v4 as uuidv4 } from "uuid";
 import { produce } from "immer";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 import Loading from "@/components/Loading";
 import client from "@/config/apollo";
@@ -149,8 +149,6 @@ const ReviewItemId = () => {
           <span>Back</span>
         </button>
       </div>
-
-      <Toaster position="top-center" reverseOrder={false} />
 
       <div className="p-10 w-full h-screen overflow-y-auto no-scrollbar">
         <h1 className="text-3xl text-slate-600">

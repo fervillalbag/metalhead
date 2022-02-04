@@ -3,6 +3,7 @@ import { produce } from "immer";
 import { useRouter } from "next/router";
 import { v4 as uuidv4 } from "uuid";
 import { useMutation } from "@apollo/client";
+import toast from "react-hot-toast";
 
 import Loading from "@/components/Loading";
 import client from "@/config/apollo";
@@ -22,10 +23,6 @@ const ProductAdmin = () => {
   const [descriptionArray, setDescriptionArray] = React.useState<any>([]);
   const [showModal, setShowModal] = React.useState<boolean>(false);
   const [itemDelete, setItemDelete] = React.useState<string>("");
-  const [error, setError] = React.useState<any>({
-    type: "",
-    status: false,
-  });
 
   const [updateProductInfo] = useMutation(UPDATE_PRODUCT_INFO);
   const [deleteProduct] = useMutation(DELETE_PRODUCT_ITEM);
@@ -73,7 +70,7 @@ const ProductAdmin = () => {
           id,
         },
       });
-      console.log(response);
+      toast.success(response?.data?.deleteProduct?.message);
       router.reload();
     } catch (error) {
       console.log(error);
@@ -89,9 +86,13 @@ const ProductAdmin = () => {
     });
 
     if (!data?.title) {
-      setError({
-        type: "Todos los campos son obligatorios",
-        status: true,
+      toast("El nombre es obligatoria!", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#FFF",
+          color: "#333",
+        },
       });
       return;
     }
@@ -107,15 +108,10 @@ const ProductAdmin = () => {
         },
       });
 
-      console.log(response);
+      toast.success(response?.data?.updateProductInfo?.message);
     } catch (error) {
       console.log(error);
     }
-
-    setError({
-      type: "",
-      status: false,
-    });
   };
 
   return (
@@ -248,8 +244,6 @@ const ProductAdmin = () => {
             >
               Update Info
             </button>
-
-            {error.status && <span className="block">{error.type}</span>}
 
             <Modal showModal={showModal}>
               <div className="flex flex-col justify-center h-full items-center">

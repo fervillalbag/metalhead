@@ -1,6 +1,7 @@
 import React from "react";
 import { produce } from "immer";
 import { v4 as uuidv4 } from "uuid";
+import toast from "react-hot-toast";
 
 import Loading from "@/components/Loading";
 import { useMutation } from "@apollo/client";
@@ -14,6 +15,7 @@ const CreateProductAdmin: React.FC = () => {
   const [data, setData] = React.useState<any>({
     name: "",
     code: 0,
+    quantity: 0,
     image: "",
     price: 0,
   });
@@ -25,10 +27,6 @@ const CreateProductAdmin: React.FC = () => {
   ]);
   const [showProductImage, setShowProductImage] = React.useState<any>(null);
   const [fileProduct, setFileProduct] = React.useState<any>(null);
-  const [error, setError] = React.useState<any>({
-    type: "",
-    status: false,
-  });
 
   const inputFileRef = React.useRef<any>(null);
   const [createProduct] = useMutation(CREATE_PRODUCT_ITEM);
@@ -68,17 +66,47 @@ const CreateProductAdmin: React.FC = () => {
       !data?.name ||
       data?.code === "" ||
       !data?.code ||
+      data?.quantity === "" ||
+      !data?.quantity ||
       data?.price === "" ||
       !data?.price
     ) {
-      setError({
-        type: "Todos los campos son obligatorios",
-        status: true,
+      toast("Todos los campos son obligatorios!", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#FFF",
+          color: "#333",
+        },
       });
       return;
     }
 
-    if (fileProduct) {
+    if (descriptionArray[0].text === "") {
+      toast("La descripción es obligatoria!", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#FFF",
+          color: "#333",
+        },
+      });
+      return;
+    }
+
+    if (!fileProduct) {
+      toast("La imagen es obligatoria!", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#FFF",
+          color: "#333",
+        },
+      });
+      return;
+    }
+
+    try {
       const url = "https://api.cloudinary.com/v1_1/dbp9am0cx/image/upload";
       const formData = new FormData();
       formData.append("file", fileProduct);
@@ -91,6 +119,7 @@ const CreateProductAdmin: React.FC = () => {
           input: {
             name: data?.name,
             code: Number(data?.code),
+            quantity: Number(data?.quantity),
             price: Number(data?.price),
             image: imageData?.secure_url,
             description: descriptionArray,
@@ -98,18 +127,15 @@ const CreateProductAdmin: React.FC = () => {
         },
       });
 
-      console.log(responseApi?.data);
-    } else {
-      setError({ type: "La imagen es obligatoria", status: true });
+      toast.success(responseApi?.data?.createProduct?.message);
+    } catch (error) {
+      console.log(error);
     }
 
-    setError({
-      type: "",
-      status: false,
-    });
+    router.push("/admin/product");
   };
 
-  if (!data || !descriptionArray) return <Loading />;
+  if (!data) return <Loading />;
 
   return (
     <div className="flex">
@@ -144,6 +170,16 @@ const CreateProductAdmin: React.FC = () => {
             placeholder="Introduce código"
             value={data?.code}
             onChange={(e) => setData({ ...data, code: e.target.value })}
+            className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300"
+          />
+        </div>
+        <div className="py-3">
+          <span className="block text-sm mb-2 text-slate-500">Quantity:</span>
+          <input
+            type="number"
+            placeholder="Introduce código"
+            value={data?.quantity}
+            onChange={(e) => setData({ ...data, quantity: e.target.value })}
             className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300"
           />
         </div>
@@ -224,8 +260,6 @@ const CreateProductAdmin: React.FC = () => {
         >
           Create
         </button>
-
-        {error.status && <span className="block">{error.type}</span>}
       </div>
     </div>
   );
