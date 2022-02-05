@@ -3,6 +3,7 @@ import { useMutation } from "@apollo/client";
 import { v4 as uuidv4 } from "uuid";
 import { BsTrash } from "react-icons/bs";
 import { produce } from "immer";
+import toast from "react-hot-toast";
 
 import client from "@/config/apollo";
 import { GET_HEADER_HOME } from "@/graphql/queries/headerHome";
@@ -17,10 +18,6 @@ const HeaderAdmin: React.FC = () => {
   const [descriptionArray, setDescriptionArray] = React.useState<any>([]);
   const [showHeaderImage, setShowHeaderImage] = React.useState<any>(null);
   const [fileHeader, setFileHeader] = React.useState<any>(null);
-  const [error, setError] = React.useState<any>({
-    type: "",
-    status: false,
-  });
 
   const inputFileRef = React.useRef<any>(null);
   const [updateHeaderHome] = useMutation(UPDATE_HEADER_INFO);
@@ -70,9 +67,25 @@ const HeaderAdmin: React.FC = () => {
     });
 
     if (data?.title === "") {
-      setError({
-        type: "Todos los campos son requeridos",
-        status: true,
+      toast("El nombre es obligatorio!", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#FFF",
+          color: "#333",
+        },
+      });
+      return;
+    }
+
+    if (newDescriptionArray.length === 0) {
+      toast("La descripción es obligatoria!", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#FFF",
+          color: "#333",
+        },
       });
       return;
     }
@@ -96,7 +109,7 @@ const HeaderAdmin: React.FC = () => {
         },
       });
 
-      console.log(responseApi?.data?.updateHeaderHome?.message);
+      toast.success(responseApi?.data?.updateHeaderHome?.message);
     } else {
       const responseApi = await updateHeaderHome({
         variables: {
@@ -109,13 +122,8 @@ const HeaderAdmin: React.FC = () => {
         },
       });
 
-      console.log(responseApi?.data?.updateHeaderHome?.message);
+      toast.success(responseApi?.data?.updateHeaderHome?.message);
     }
-
-    setError({
-      type: "",
-      status: false,
-    });
   };
 
   return (
@@ -212,8 +220,6 @@ const HeaderAdmin: React.FC = () => {
             >
               Update
             </button>
-
-            {error.status && <span className="block">{error.type}</span>}
           </section>
         )}
       </div>
