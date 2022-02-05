@@ -97,6 +97,22 @@ const ReviewItemId = () => {
       return;
     }
 
+    const isDescriptionEmpty = newDescriptionArray.some(
+      (description: any) => description.text === ""
+    );
+
+    if (isDescriptionEmpty) {
+      toast("La descripción debe tener contenido!", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#FFF",
+          color: "#333",
+        },
+      });
+      return;
+    }
+
     if (fileHeader) {
       const url = "https://api.cloudinary.com/v1_1/dbp9am0cx/image/upload";
       const formData = new FormData();

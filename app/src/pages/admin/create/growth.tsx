@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { v4 as uuidv4 } from "uuid";
 import { useMutation } from "@apollo/client";
 import { CREATE_GROWTH_ITEM } from "@/graphql/mutation/growthHome";
+import toast from "react-hot-toast";
 
 const CreateGrowthItem: React.FC = () => {
   const router = useRouter();
@@ -38,6 +39,46 @@ const CreateGrowthItem: React.FC = () => {
   };
 
   const handleUpdate = async () => {
+    if (!title || title === "") {
+      toast("El título es obligatorio!", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#FFF",
+          color: "#333",
+        },
+      });
+      return;
+    }
+
+    if (descriptionArray.length === 0) {
+      toast("La descripción es obligatoria!", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#FFF",
+          color: "#333",
+        },
+      });
+      return;
+    }
+
+    const isDescriptionEmpty = descriptionArray.some(
+      (description: any) => description.text === ""
+    );
+
+    if (isDescriptionEmpty) {
+      toast("La descripción debe tener contenido!", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#FFF",
+          color: "#333",
+        },
+      });
+      return;
+    }
+
     try {
       const res = await createGrowthHome({
         variables: {
@@ -48,9 +89,8 @@ const CreateGrowthItem: React.FC = () => {
         },
       });
 
+      toast.success(res?.data?.createGrowthHome?.message);
       router.push("/admin/growth");
-
-      console.log(res);
     } catch (error) {
       console.log(error);
     }

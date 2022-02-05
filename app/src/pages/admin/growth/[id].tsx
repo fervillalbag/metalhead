@@ -8,6 +8,7 @@ import { UPDATE_GROWTH_ITEM } from "@/graphql/mutation/growthHome";
 import Loading from "@/components/Loading";
 import { produce } from "immer";
 import { BsFillArrowLeftCircleFill, BsTrash } from "react-icons/bs";
+import toast from "react-hot-toast";
 
 const GrowthId = () => {
   const router = useRouter();
@@ -56,6 +57,46 @@ const GrowthId = () => {
       };
     });
 
+    if (data?.title === "" || !data?.title) {
+      toast("El título es obligatorio!", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#FFF",
+          color: "#333",
+        },
+      });
+      return;
+    }
+
+    if (newDescriptionArray.length === 0) {
+      toast("La descripción es obligatoria!", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#FFF",
+          color: "#333",
+        },
+      });
+      return;
+    }
+
+    const isDescriptionEmpty = newDescriptionArray.some(
+      (description: any) => description.text === ""
+    );
+
+    if (isDescriptionEmpty) {
+      toast("La descripción debe tener contenido!", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#FFF",
+          color: "#333",
+        },
+      });
+      return;
+    }
+
     try {
       const response = await updateGrowthHome({
         variables: {
@@ -67,7 +108,7 @@ const GrowthId = () => {
         },
       });
 
-      console.log(response);
+      toast.success(response?.data?.updateGrowthHome?.message);
     } catch (error) {
       console.log(error);
     }

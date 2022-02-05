@@ -97,8 +97,24 @@ const ProductItemAdmin: React.FC = () => {
       return;
     }
 
-    if (newDescriptionArray.length === 0) {
-      toast("La descripción es obligatoria!", {
+    const isDescriptionEmpty = newDescriptionArray.some(
+      (description: any) => description.text === ""
+    );
+
+    if (isDescriptionEmpty) {
+      toast("La descripción debe tener contenido!", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#FFF",
+          color: "#333",
+        },
+      });
+      return;
+    }
+
+    if (newDescriptionArray[0].text === "") {
+      toast("La descripción debe tener contenido!", {
         icon: "⚠️",
         style: {
           borderRadius: "10px",

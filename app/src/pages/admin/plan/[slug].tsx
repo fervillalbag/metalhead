@@ -89,7 +89,9 @@ const SlugPlanAdmin: React.FC = () => {
       return;
     }
 
-    if (newItem[0].text === "") {
+    const isItemsEmpty = newItem.some((item: any) => item.text === "");
+
+    if (isItemsEmpty) {
       toast("El ítem debe tener contenido!", {
         icon: "⚠️",
         style: {

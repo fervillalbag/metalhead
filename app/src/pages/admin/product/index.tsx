@@ -97,6 +97,22 @@ const ProductAdmin = () => {
       return;
     }
 
+    const isDescriptionEmpty = newDescriptionArray.some(
+      (description: any) => description.text === ""
+    );
+
+    if (isDescriptionEmpty) {
+      toast("La descripción debe tener contenido!", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#FFF",
+          color: "#333",
+        },
+      });
+      return;
+    }
+
     try {
       const response = await updateProductInfo({
         variables: {

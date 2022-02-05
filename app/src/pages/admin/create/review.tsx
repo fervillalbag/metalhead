@@ -82,8 +82,24 @@ const CreateReviewAdmin: React.FC = () => {
       return;
     }
 
-    if (descriptionArray[0].text === "") {
+    if (descriptionArray.length === 0) {
       toast("La descripción es obligatoria!", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#FFF",
+          color: "#333",
+        },
+      });
+      return;
+    }
+
+    const isDescriptionEmpty = descriptionArray.some(
+      (description: any) => description.text === ""
+    );
+
+    if (isDescriptionEmpty) {
+      toast("La descripción debe tener contenido!", {
         icon: "⚠️",
         style: {
           borderRadius: "10px",

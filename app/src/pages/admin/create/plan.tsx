@@ -78,8 +78,10 @@ const CreatePlanAdmin: React.FC = () => {
       return;
     }
 
-    if (itemsData[0].text === "") {
-      toast("Los ítems deben tener contenido", {
+    const isItemsEmpty = itemsData.some((item: any) => item.text === "");
+
+    if (isItemsEmpty) {
+      toast("El ítem debe tener contenido!", {
         icon: "⚠️",
         style: {
           borderRadius: "10px",

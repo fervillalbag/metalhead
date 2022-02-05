@@ -13,6 +13,7 @@ import { UPDATE_GROWTH_INFO } from "@/graphql/mutation/growthInfo";
 import { GET_GROWTH_HOME } from "@/graphql/queries/growthHome";
 import { DELETE_GROWTH_ITEM } from "@/graphql/mutation/growthHome";
 import NavbarDashboard from "@/components/admin/Navbar";
+import toast from "react-hot-toast";
 
 const GrowthAdmin: React.FC = () => {
   const router = useRouter();
@@ -67,7 +68,7 @@ const GrowthAdmin: React.FC = () => {
           id,
         },
       });
-      console.log(response);
+      toast.success(response?.data?.deleteGrowthHome?.message);
       router.reload();
     } catch (error) {
       console.log(error);
@@ -82,6 +83,46 @@ const GrowthAdmin: React.FC = () => {
       };
     });
 
+    if (!data?.title || data?.title === "") {
+      toast("El título es obligatorio!", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#FFF",
+          color: "#333",
+        },
+      });
+      return;
+    }
+
+    if (newDescriptionArray.length === 0) {
+      toast("La descripción es obligatoria!", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#FFF",
+          color: "#333",
+        },
+      });
+      return;
+    }
+
+    const isDescriptionEmpty = newDescriptionArray.some(
+      (description: any) => description.text === ""
+    );
+
+    if (isDescriptionEmpty) {
+      toast("La descripción debe tener contenido!", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#FFF",
+          color: "#333",
+        },
+      });
+      return;
+    }
+
     try {
       const response = await updateGrowthInfoHome({
         variables: {
@@ -93,7 +134,7 @@ const GrowthAdmin: React.FC = () => {
         },
       });
 
-      console.log(response);
+      toast.success(response?.data?.updateGrowthInfoHome?.message);
     } catch (error) {
       console.log(error);
     }

@@ -65,6 +65,46 @@ const AboutPageAdmin: React.FC = () => {
       };
     });
 
+    if (!data?.title || data?.title === "") {
+      toast("El título es obligatorio!", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#FFF",
+          color: "#333",
+        },
+      });
+      return;
+    }
+
+    if (newDescriptionArray.length === 0) {
+      toast("La descripción es obligatoria!", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#FFF",
+          color: "#333",
+        },
+      });
+      return;
+    }
+
+    const isDescriptionEmpty = newDescriptionArray.some(
+      (description: any) => description.text === ""
+    );
+
+    if (isDescriptionEmpty) {
+      toast("La descripción debe tener contenido!", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#FFF",
+          color: "#333",
+        },
+      });
+      return;
+    }
+
     if (fileAbout) {
       const url = "https://api.cloudinary.com/v1_1/dbp9am0cx/image/upload";
       const formData = new FormData();
