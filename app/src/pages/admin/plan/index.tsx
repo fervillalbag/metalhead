@@ -13,6 +13,7 @@ import { GET_PLAN_INFO } from "@/graphql/queries/planInfo";
 import { DELETE_PLAN_ITEM } from "@/graphql/mutation/plan";
 import { UPDATE_PLAN_INFO } from "@/graphql/mutation/planInfo";
 import NavbarDashboard from "@/components/admin/Navbar";
+import toast from "react-hot-toast";
 
 const PlanAdmin: React.FC = () => {
   const router = useRouter();
@@ -22,10 +23,6 @@ const PlanAdmin: React.FC = () => {
   const [showModal, setShowModal] = React.useState<boolean>(false);
   const [itemDelete, setItemDelete] = React.useState<string>("");
   const [descriptionArray, setDescriptionArray] = React.useState<any>([]);
-  const [error, setError] = React.useState<any>({
-    type: "",
-    status: false,
-  });
 
   const [deletePlan] = useMutation(DELETE_PLAN_ITEM);
   const [updatePlanInfo] = useMutation(UPDATE_PLAN_INFO);
@@ -73,7 +70,7 @@ const PlanAdmin: React.FC = () => {
           id,
         },
       });
-      console.log(res);
+      toast.success(res?.data?.deletePlan?.message);
       router.reload();
     } catch (error) {
       console.log(error);
@@ -89,17 +86,40 @@ const PlanAdmin: React.FC = () => {
     });
 
     if (!data || data?.title === "") {
-      setError({
-        type: "El título es obligatorio",
-        status: true,
+      toast("El título es obligatorio!", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#FFF",
+          color: "#333",
+        },
       });
       return;
     }
 
-    setError({
-      type: "",
-      status: false,
-    });
+    if (newDescriptionArray.length === 0) {
+      toast("La descripción es obligatoria!", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#FFF",
+          color: "#333",
+        },
+      });
+      return;
+    }
+
+    if (newDescriptionArray[0].text === "") {
+      toast("La descripción debe tener contenido!", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#FFF",
+          color: "#333",
+        },
+      });
+      return;
+    }
 
     try {
       const res = await updatePlanInfo({
@@ -111,7 +131,7 @@ const PlanAdmin: React.FC = () => {
           },
         },
       });
-      console.log(res);
+      toast.success(res?.data?.updatePlanInfo?.message);
     } catch (error) {
       console.log(error);
     }
@@ -226,8 +246,6 @@ const PlanAdmin: React.FC = () => {
             >
               Update Info
             </button>
-
-            {error.status && <span className="block">{error.type}</span>}
 
             <Modal showModal={showModal}>
               <div className="flex flex-col justify-center h-full items-center">

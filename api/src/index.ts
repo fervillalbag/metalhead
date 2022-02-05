@@ -1,4 +1,4 @@
-import { ApolloServer, gql } from "apollo-server";
+import { ApolloServer } from "apollo-server";
 import typeDefs from "./graphql/schema";
 import resolvers from "./graphql/resolvers";
 import mongoose, { ConnectOptions } from "mongoose";

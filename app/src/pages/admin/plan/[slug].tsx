@@ -9,6 +9,7 @@ import { GET_PLAN } from "@/graphql/queries/plan";
 import { useMutation } from "@apollo/client";
 import { UPDATE_PLAN_ITEM } from "@/graphql/mutation/plan";
 import { BsFillArrowLeftCircleFill, BsTrash } from "react-icons/bs";
+import toast from "react-hot-toast";
 
 const SlugPlanAdmin: React.FC = () => {
   const router = useRouter();
@@ -16,10 +17,6 @@ const SlugPlanAdmin: React.FC = () => {
 
   const [data, setData] = React.useState<any>(null);
   const [dataItems, setDataItems] = React.useState<any>(null);
-  const [error, setError] = React.useState<any>({
-    type: "",
-    status: false,
-  });
 
   const [updatePlan] = useMutation(UPDATE_PLAN_ITEM);
 
@@ -69,17 +66,40 @@ const SlugPlanAdmin: React.FC = () => {
       !data?.url ||
       data?.url === ""
     ) {
-      setError({
-        type: "Todos los campos son obligatorios",
-        status: true,
+      toast("Todos los campos son obligatorio!", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#FFF",
+          color: "#333",
+        },
       });
       return;
     }
 
-    setError({
-      type: "",
-      status: false,
-    });
+    if (newItem.length === 0) {
+      toast("El ítem es obligatorio!", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#FFF",
+          color: "#333",
+        },
+      });
+      return;
+    }
+
+    if (newItem[0].text === "") {
+      toast("El ítem debe tener contenido!", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#FFF",
+          color: "#333",
+        },
+      });
+      return;
+    }
 
     try {
       const res = await updatePlan({
@@ -94,7 +114,8 @@ const SlugPlanAdmin: React.FC = () => {
           },
         },
       });
-      console.log(res);
+      toast.success(res?.data?.updatePlan?.message);
+      router.push("/admin/plan");
     } catch (error) {
       console.log(error);
     }
@@ -212,8 +233,6 @@ const SlugPlanAdmin: React.FC = () => {
         >
           Update
         </button>
-
-        {error.status && <span className="block">{error.type}</span>}
       </div>
     </div>
   );

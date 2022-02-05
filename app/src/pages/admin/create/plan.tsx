@@ -2,6 +2,7 @@ import React from "react";
 import { produce } from "immer";
 import { v4 as uuidv4 } from "uuid";
 import { useRouter } from "next/router";
+import toast from "react-hot-toast";
 
 import Loading from "@/components/Loading";
 import { useMutation } from "@apollo/client";
@@ -25,10 +26,6 @@ const CreatePlanAdmin: React.FC = () => {
       text: "",
     },
   ]);
-  const [error, setError] = React.useState<any>({
-    type: "",
-    status: false,
-  });
 
   const [createPlan] = useMutation(CREATE_PLAN_ITEM);
 
@@ -58,17 +55,40 @@ const CreatePlanAdmin: React.FC = () => {
       !data?.url ||
       data?.url === ""
     ) {
-      setError({
-        type: "Todos los campos son obligatorios",
-        status: true,
+      toast("Todos los campos son obligatorios!", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#FFF",
+          color: "#333",
+        },
       });
       return;
     }
 
-    setError({
-      type: "",
-      status: false,
-    });
+    if (itemsData.length === 0) {
+      toast("Los ítems son obligatorios", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#FFF",
+          color: "#333",
+        },
+      });
+      return;
+    }
+
+    if (itemsData[0].text === "") {
+      toast("Los ítems deben tener contenido", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#FFF",
+          color: "#333",
+        },
+      });
+      return;
+    }
 
     try {
       const res = await createPlan({
@@ -84,7 +104,8 @@ const CreatePlanAdmin: React.FC = () => {
         },
       });
 
-      console.log(res);
+      toast.success(res?.data?.createPlan?.message);
+      router.push("/admin/plan");
     } catch (error) {
       console.log(error);
     }
@@ -209,8 +230,6 @@ const CreatePlanAdmin: React.FC = () => {
           Create
         </button>
       </div>
-
-      {error.status && <span className="block">{error.type}</span>}
     </div>
   );
 };
