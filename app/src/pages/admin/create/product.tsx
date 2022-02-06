@@ -8,53 +8,65 @@ import { useMutation } from "@apollo/client";
 import { CREATE_PRODUCT_ITEM } from "@/graphql/mutation/product";
 import { BsFillArrowLeftCircleFill, BsTrash } from "react-icons/bs";
 import { useRouter } from "next/router";
+import { Products } from "@/types/product";
+import { Description } from "@/types/description";
+import { FileType } from "@/types/file";
 
 const CreateProductAdmin: React.FC = () => {
   const router = useRouter();
 
-  const [data, setData] = React.useState<any>({
+  const [data, setData] = React.useState<Products>({
     name: "",
     code: 0,
     quantity: 0,
     image: "",
     price: 0,
   });
-  const [descriptionArray, setDescriptionArray] = React.useState<any>([
-    {
-      id: uuidv4(),
-      text: "",
-    },
-  ]);
-  const [showProductImage, setShowProductImage] = React.useState<any>(null);
-  const [fileProduct, setFileProduct] = React.useState<any>(null);
+  const [descriptionArray, setDescriptionArray] = React.useState<Description[]>(
+    [
+      {
+        id: uuidv4(),
+        text: "",
+      },
+    ]
+  );
+  const [showProductImage, setShowProductImage] = React.useState<string | null>(
+    null
+  );
+  const [fileProduct, setFileProduct] = React.useState<FileType | null | Blob>(
+    null
+  );
 
-  const inputFileRef = React.useRef<any>(null);
+  const inputFileRef = React.useRef<HTMLInputElement | null>(null);
   const [createProduct] = useMutation(CREATE_PRODUCT_ITEM);
 
-  const newDescription = {
+  const newDescription: Description = {
     id: uuidv4(),
     text: "",
   };
 
   const handleChangeImage = () => {
-    inputFileRef.current.click();
+    if (inputFileRef.current) {
+      inputFileRef.current.click();
+    }
   };
 
   const handleAddInputDescription = () => {
-    setDescriptionArray((currentDescription: any) => [
+    setDescriptionArray((currentDescription: Description[]) => [
       ...currentDescription,
       newDescription,
     ]);
   };
 
   const handleDeleteInputDescription = (id: string) => {
-    setDescriptionArray((currentDescription: any) =>
-      currentDescription.filter((x: any) => x.id !== id)
+    setDescriptionArray((currentDescription: Description[]) =>
+      currentDescription.filter((x: Description) => x.id !== id)
     );
   };
 
-  const handleHeaderFileChange = (e: any) => {
-    const file = e.currentTarget.files[0];
+  const handleHeaderFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const target = e.currentTarget as HTMLInputElement;
+    const file = target.files![0];
     const image = URL.createObjectURL(file);
     setShowProductImage(image);
     setFileProduct(file);
@@ -64,11 +76,10 @@ const CreateProductAdmin: React.FC = () => {
     if (
       data?.name === "" ||
       !data?.name ||
-      data?.code === "" ||
+      data?.code === 0 ||
       !data?.code ||
-      data?.quantity === "" ||
       !data?.quantity ||
-      data?.price === "" ||
+      data?.price === 0 ||
       !data?.price
     ) {
       toast("Todos los campos son obligatorios!", {
@@ -95,7 +106,7 @@ const CreateProductAdmin: React.FC = () => {
     }
 
     const isDescriptionEmpty = descriptionArray.some(
-      (description: any) => description.text === ""
+      (description: Description) => description.text === ""
     );
 
     if (isDescriptionEmpty) {
@@ -125,7 +136,7 @@ const CreateProductAdmin: React.FC = () => {
     try {
       const url = "https://api.cloudinary.com/v1_1/dbp9am0cx/image/upload";
       const formData = new FormData();
-      formData.append("file", fileProduct);
+      formData.append("file", fileProduct as string | Blob);
       formData.append("upload_preset", "products");
       const res = await fetch(url, { method: "post", body: formData });
       const imageData = await res.json();
@@ -185,7 +196,7 @@ const CreateProductAdmin: React.FC = () => {
             type="number"
             placeholder="Introduce código"
             value={data?.code}
-            onChange={(e) => setData({ ...data, code: e.target.value })}
+            onChange={(e) => setData({ ...data, code: Number(e.target.value) })}
             className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300"
           />
         </div>
@@ -195,7 +206,9 @@ const CreateProductAdmin: React.FC = () => {
             type="number"
             placeholder="Introduce código"
             value={data?.quantity}
-            onChange={(e) => setData({ ...data, quantity: e.target.value })}
+            onChange={(e) =>
+              setData({ ...data, quantity: Number(e.target.value) })
+            }
             className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300"
           />
         </div>
@@ -205,7 +218,9 @@ const CreateProductAdmin: React.FC = () => {
             type="number"
             placeholder="Introduce precio"
             value={data?.price}
-            onChange={(e) => setData({ ...data, price: e.target.value })}
+            onChange={(e) =>
+              setData({ ...data, price: Number(e.target.value) })
+            }
             className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300"
           />
         </div>
@@ -239,15 +254,15 @@ const CreateProductAdmin: React.FC = () => {
               No description available
             </span>
           ) : (
-            descriptionArray.map((description: any, index: number) => (
+            descriptionArray.map((description: Description, index: number) => (
               <div key={description.id} className="flex py-4">
                 <textarea
                   className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300 resize-none h-32"
                   value={description.text}
                   onChange={(e) => {
                     const text = e.target.value;
-                    setDescriptionArray((currentDescription: any) =>
-                      produce(currentDescription, (v: any) => {
+                    setDescriptionArray((currentDescription: Description[]) =>
+                      produce(currentDescription, (v) => {
                         v[index].text = text;
                       })
                     );

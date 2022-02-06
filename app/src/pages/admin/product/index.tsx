@@ -13,15 +13,21 @@ import { GET_PRODUCT_INFO } from "@/graphql/queries/productInfo";
 import { UPDATE_PRODUCT_INFO } from "@/graphql/mutation/productInfo";
 import { GET_PRODUCTS } from "@/graphql/queries/products";
 import { DELETE_PRODUCT_ITEM } from "@/graphql/mutation/product";
+import { ProductInfo, Products } from "@/types/product";
+import { Description } from "@/types/description";
 
 const ProductAdmin = () => {
   const router = useRouter();
 
-  const [data, setData] = React.useState<any>(null);
-  const [dataItems, setDataItems] = React.useState<any>([]);
-  const [descriptionArray, setDescriptionArray] = React.useState<any>([]);
+  const [data, setData] = React.useState<ProductInfo | null>(null);
+  const [dataItems, setDataItems] = React.useState<Products[]>([]);
+  const [descriptionArray, setDescriptionArray] = React.useState<Description[]>(
+    []
+  );
   const [showModal, setShowModal] = React.useState<boolean>(false);
-  const [itemDelete, setItemDelete] = React.useState<string>("");
+  const [itemDelete, setItemDelete] = React.useState<string | undefined>(
+    undefined
+  );
 
   const [updateProductInfo] = useMutation(UPDATE_PRODUCT_INFO);
   const [deleteProduct] = useMutation(DELETE_PRODUCT_ITEM);
@@ -43,45 +49,49 @@ const ProductAdmin = () => {
     setDescriptionArray(dataProductInfo?.getProductInfo?.description);
   }, [dataProductInfo, dataProducts]);
 
-  const newDescription = {
+  const newDescription: Description = {
     id: uuidv4(),
     text: "",
   };
 
   const handleAddInputDescription = () => {
-    setDescriptionArray((currentDescription: any) => [
+    setDescriptionArray((currentDescription: Description[]) => [
       ...currentDescription,
       newDescription,
     ]);
   };
 
   const handleDeleteInputDescription = (id: string) => {
-    setDescriptionArray((currentDescription: any) =>
-      currentDescription.filter((x: any) => x.id !== id)
+    setDescriptionArray((currentDescription: Description[]) =>
+      currentDescription.filter((x: Description) => x.id !== id)
     );
   };
 
-  const handleDeleteReviewItem = async (id: string) => {
-    try {
-      const response = await deleteProduct({
-        variables: {
-          id,
-        },
-      });
-      refetchDataProducts();
-      toast.success(response?.data?.deleteProduct?.message);
-    } catch (error) {
-      console.log(error);
+  const handleDeleteProductItem = async (id: string | undefined) => {
+    if (id) {
+      try {
+        const response = await deleteProduct({
+          variables: {
+            id,
+          },
+        });
+        refetchDataProducts();
+        toast.success(response?.data?.deleteProduct?.message);
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
   const handleUpdate = async () => {
-    const newDescriptionArray = descriptionArray.map((description: any) => {
-      return {
-        id: description.id,
-        text: description.text,
-      };
-    });
+    const newDescriptionArray = descriptionArray.map(
+      (description: Description) => {
+        return {
+          id: description.id,
+          text: description.text,
+        };
+      }
+    );
 
     if (!data?.title) {
       toast("El nombre es obligatoria!", {
@@ -96,7 +106,7 @@ const ProductAdmin = () => {
     }
 
     const isDescriptionEmpty = newDescriptionArray.some(
-      (description: any) => description.text === ""
+      (description: Description) => description.text === ""
     );
 
     if (isDescriptionEmpty) {
@@ -152,35 +162,42 @@ const ProductAdmin = () => {
             <div>
               <h3 className="text-slate-600 mt-4">Description:</h3>
 
-              {descriptionArray.length === 0 ? (
+              {!descriptionArray ? (
+                <span className="block py-4 text-slate-900">
+                  There is an error
+                </span>
+              ) : descriptionArray.length === 0 ? (
                 <span className="block py-4 text-slate-900">
                   No description available
                 </span>
               ) : (
-                descriptionArray.map((description: any, index: number) => (
-                  <div key={description.id} className="flex py-4">
-                    <textarea
-                      className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300 resize-none h-32"
-                      value={description.text}
-                      onChange={(e) => {
-                        const text = e.target.value;
-                        setDescriptionArray((currentDescripton: any) =>
-                          produce(currentDescripton, (v: any) => {
-                            v[index].text = text;
-                          })
-                        );
-                      }}
-                    ></textarea>
-                    <button
-                      className="block p-2 text-2xl px-5 text-red-500 bg-slate-100 ml-4 rounded"
-                      onClick={() =>
-                        handleDeleteInputDescription(description.id)
-                      }
-                    >
-                      <BsTrash />
-                    </button>
-                  </div>
-                ))
+                descriptionArray.map(
+                  (description: Description, index: number) => (
+                    <div key={description.id} className="flex py-4">
+                      <textarea
+                        className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300 resize-none h-32"
+                        value={description.text}
+                        onChange={(e) => {
+                          const text = e.target.value;
+                          setDescriptionArray(
+                            (currentDescripton: Description[]) =>
+                              produce(currentDescripton, (v) => {
+                                v[index].text = text;
+                              })
+                          );
+                        }}
+                      ></textarea>
+                      <button
+                        className="block p-2 text-2xl px-5 text-red-500 bg-slate-100 ml-4 rounded"
+                        onClick={() =>
+                          handleDeleteInputDescription(description.id)
+                        }
+                      >
+                        <BsTrash />
+                      </button>
+                    </div>
+                  )
+                )
               )}
             </div>
 
@@ -205,7 +222,7 @@ const ProductAdmin = () => {
                   No products available
                 </span>
               ) : (
-                dataItems.map((product: any) => (
+                dataItems.map((product: Products) => (
                   <div
                     key={product.id}
                     className="shadow-lg rounded border border-slate-200 px-4 py-3 h-72 flex flex-col justify-between"
@@ -271,7 +288,7 @@ const ProductAdmin = () => {
                   <button
                     className="block p-2 border"
                     onClick={() => {
-                      handleDeleteReviewItem(itemDelete);
+                      handleDeleteProductItem(itemDelete);
                       setShowModal(false);
                     }}
                   >

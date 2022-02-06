@@ -9,16 +9,25 @@ import { GET_PRODUCT } from "@/graphql/queries/products";
 import Loading from "@/components/Loading";
 import { UPDATE_PRODUCT_ITEM } from "@/graphql/mutation/product";
 import { BsFillArrowLeftCircleFill, BsTrash } from "react-icons/bs";
+import { Products } from "@/types/product";
+import { Description } from "@/types/description";
+import { FileType } from "@/types/file";
 
 const ProductItemAdmin: React.FC = () => {
   const router = useRouter();
 
-  const [data, setData] = React.useState<any>(null);
-  const [showProductImage, setShowProductImage] = React.useState<any>(null);
-  const [descriptionArray, setDescriptionArray] = React.useState<any>(null);
-  const [fileProduct, setFileProduct] = React.useState<any>(null);
+  const [data, setData] = React.useState<Products | null>(null);
+  const [showProductImage, setShowProductImage] = React.useState<string | null>(
+    null
+  );
+  const [descriptionArray, setDescriptionArray] = React.useState<Description[]>(
+    []
+  );
+  const [fileProduct, setFileProduct] = React.useState<FileType | null | Blob>(
+    null
+  );
 
-  const inputFileRef = React.useRef<any>(null);
+  const inputFileRef = React.useRef<HTMLInputElement | null>(null);
   const [updateProduct] = useMutation(UPDATE_PRODUCT_ITEM);
 
   const { data: productId } = useQuery(GET_PRODUCT, {
@@ -34,50 +43,54 @@ const ProductItemAdmin: React.FC = () => {
   }, [router, productId]);
 
   const handleChangeImage = () => {
-    inputFileRef.current.click();
+    if (inputFileRef.current) {
+      inputFileRef.current.click();
+    }
   };
 
-  const handleHeaderFileChange = (e: any) => {
-    const file = e.currentTarget.files[0];
+  const handleHeaderFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const target = e.currentTarget as HTMLInputElement;
+    const file = target.files![0];
     const image = URL.createObjectURL(file);
     setShowProductImage(image);
     setFileProduct(file);
   };
 
-  const newDescription = {
+  const newDescription: Description = {
     id: uuidv4(),
     text: "",
   };
 
   const handleAddInputDescription = () => {
-    setDescriptionArray((currentDescription: any) => [
+    setDescriptionArray((currentDescription: Description[]) => [
       ...currentDescription,
       newDescription,
     ]);
   };
 
   const handleDeleteInputDescription = (id: string) => {
-    setDescriptionArray((currentDescription: any) =>
-      currentDescription.filter((x: any) => x.id !== id)
+    setDescriptionArray((currentDescription: Description[]) =>
+      currentDescription.filter((x: Description) => x.id !== id)
     );
   };
 
   const handleUpdate = async () => {
-    const newDescriptionArray = descriptionArray.map((description: any) => {
-      return {
-        id: description.id,
-        text: description.text,
-      };
-    });
+    const newDescriptionArray = descriptionArray.map(
+      (description: Description) => {
+        return {
+          id: description.id,
+          text: description.text,
+        };
+      }
+    );
 
     if (
       data?.name === "" ||
       !data?.name ||
-      data?.code === "" ||
+      data?.code === 0 ||
       !data?.code ||
       !data?.quantity ||
-      !data?.quantity ||
-      data?.price === "" ||
+      data?.price === 0 ||
       !data?.price
     ) {
       toast("Todos los campos son obligatorios!", {
@@ -92,7 +105,7 @@ const ProductItemAdmin: React.FC = () => {
     }
 
     const isDescriptionEmpty = newDescriptionArray.some(
-      (description: any) => description.text === ""
+      (description: Description) => description.text === ""
     );
 
     if (isDescriptionEmpty) {
@@ -124,7 +137,7 @@ const ProductItemAdmin: React.FC = () => {
 
       try {
         const formData = new FormData();
-        formData.append("file", fileProduct);
+        formData.append("file", fileProduct as string | Blob);
         formData.append("upload_preset", "products");
         const res = await fetch(url, { method: "post", body: formData });
         const imageData = await res.json();
@@ -206,7 +219,9 @@ const ProductItemAdmin: React.FC = () => {
               type="number"
               value={data?.code}
               className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300"
-              onChange={(e) => setData({ ...data, code: e.target.value })}
+              onChange={(e) =>
+                setData({ ...data, code: Number(e.target.value) })
+              }
             />
           </div>
           <div className="py-4">
@@ -215,7 +230,9 @@ const ProductItemAdmin: React.FC = () => {
               type="number"
               value={data?.quantity}
               className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300"
-              onChange={(e) => setData({ ...data, quantity: e.target.value })}
+              onChange={(e) =>
+                setData({ ...data, quantity: Number(e.target.value) })
+              }
             />
           </div>
           <div className="py-4">
@@ -224,7 +241,9 @@ const ProductItemAdmin: React.FC = () => {
               type="number"
               value={data?.price}
               className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300"
-              onChange={(e) => setData({ ...data, price: e.target.value })}
+              onChange={(e) =>
+                setData({ ...data, price: Number(e.target.value) })
+              }
             />
           </div>
 
@@ -259,28 +278,33 @@ const ProductItemAdmin: React.FC = () => {
                 No description available
               </span>
             ) : (
-              descriptionArray.map((description: any, index: number) => (
-                <div key={description.id} className="flex py-4">
-                  <textarea
-                    value={description.text}
-                    className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300 resize-none h-32"
-                    onChange={(e) => {
-                      const text = e.target.value;
-                      setDescriptionArray((currentDescription: any) =>
-                        produce(currentDescription, (v: any) => {
-                          v[index].text = text;
-                        })
-                      );
-                    }}
-                  ></textarea>
-                  <button
-                    className="block p-2 text-2xl px-5 text-red-500 bg-slate-100 ml-4 rounded"
-                    onClick={() => handleDeleteInputDescription(description.id)}
-                  >
-                    <BsTrash />
-                  </button>
-                </div>
-              ))
+              descriptionArray.map(
+                (description: Description, index: number) => (
+                  <div key={description.id} className="flex py-4">
+                    <textarea
+                      value={description.text}
+                      className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300 resize-none h-32"
+                      onChange={(e) => {
+                        const text = e.target.value;
+                        setDescriptionArray(
+                          (currentDescription: Description[]) =>
+                            produce(currentDescription, (v) => {
+                              v[index].text = text;
+                            })
+                        );
+                      }}
+                    ></textarea>
+                    <button
+                      className="block p-2 text-2xl px-5 text-red-500 bg-slate-100 ml-4 rounded"
+                      onClick={() =>
+                        handleDeleteInputDescription(description.id)
+                      }
+                    >
+                      <BsTrash />
+                    </button>
+                  </div>
+                )
+              )
             )}
           </div>
 
