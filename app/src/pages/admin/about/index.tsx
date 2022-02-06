@@ -5,18 +5,27 @@ import { BsTrash } from "react-icons/bs";
 import { produce } from "immer";
 import { useMutation, useQuery } from "@apollo/client";
 
-import { GET_ABOUT_PAGE } from "@/graphql/queries/aboutPage";
-import { UPDATE_ABOUT_INFO } from "@/graphql/mutation/about";
 import Loading from "@/components/Loading";
 import NavbarDashboard from "@/components/admin/Navbar";
+import { GET_ABOUT_PAGE } from "@/graphql/queries/aboutPage";
+import { UPDATE_ABOUT_INFO } from "@/graphql/mutation/about";
+import { Description } from "@/types/description";
+import { AboutInfo } from "@/types/about";
+import { FileType } from "@/types/file";
 
 const AboutPageAdmin: React.FC = () => {
-  const [data, setData] = React.useState<any>(null);
-  const [showAboutImage, setShowAboutImage] = React.useState<any>(null);
-  const [fileAbout, setFileAbout] = React.useState<any>(null);
-  const [descriptionArray, setDescriptionArray] = React.useState<any>([]);
+  const [data, setData] = React.useState<AboutInfo | null>(null);
+  const [showAboutImage, setShowAboutImage] = React.useState<string | null>(
+    null
+  );
+  const [fileAbout, setFileAbout] = React.useState<FileType | null | Blob>(
+    null
+  );
+  const [descriptionArray, setDescriptionArray] = React.useState<Description[]>(
+    []
+  );
 
-  const inputFileRef = React.useRef<any>(null);
+  const inputFileRef = React.useRef<HTMLInputElement | null>(null);
   const [updateAboutPage] = useMutation(UPDATE_ABOUT_INFO);
 
   const { data: aboutData } = useQuery(GET_ABOUT_PAGE, {
@@ -28,8 +37,9 @@ const AboutPageAdmin: React.FC = () => {
     setDescriptionArray(aboutData?.getAboutPage?.description);
   }, [aboutData]);
 
-  const handleHeaderFileChange = (e: any) => {
-    const file = e.currentTarget.files[0];
+  const handleHeaderFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const target = e.currentTarget as HTMLInputElement;
+    const file = target.files![0];
     const image = URL.createObjectURL(file);
     setShowAboutImage(image);
     setFileAbout(file);
@@ -41,7 +51,9 @@ const AboutPageAdmin: React.FC = () => {
   };
 
   const handleChangeImage = () => {
-    inputFileRef.current.click();
+    if (inputFileRef.current) {
+      inputFileRef.current.click();
+    }
   };
 
   const handleAddInputDescription = () => {
@@ -49,12 +61,14 @@ const AboutPageAdmin: React.FC = () => {
   };
 
   const handleDeleteInputDescription = (id: string) => {
-    const newValue = descriptionArray.filter((item: any) => item.id !== id);
+    const newValue = descriptionArray.filter(
+      (item: Description) => item.id !== id
+    );
     setDescriptionArray(newValue);
   };
 
   const handleUpdate = async () => {
-    const newDescriptionArray = descriptionArray.map((item: any) => {
+    const newDescriptionArray = descriptionArray.map((item: Description) => {
       return {
         id: item.id,
         text: item.text,
@@ -86,7 +100,7 @@ const AboutPageAdmin: React.FC = () => {
     }
 
     const isDescriptionEmpty = newDescriptionArray.some(
-      (description: any) => description.text === ""
+      (description: Description) => description.text === ""
     );
 
     if (isDescriptionEmpty) {
@@ -104,7 +118,7 @@ const AboutPageAdmin: React.FC = () => {
     if (fileAbout) {
       const url = "https://api.cloudinary.com/v1_1/dbp9am0cx/image/upload";
       const formData = new FormData();
-      formData.append("file", fileAbout);
+      formData.append("file", fileAbout as string | Blob);
       formData.append("upload_preset", "aboutpage");
       const res = await fetch(url, { method: "post", body: formData });
       const imageData = await res.json();
@@ -189,30 +203,33 @@ const AboutPageAdmin: React.FC = () => {
                   No description available
                 </span>
               ) : (
-                descriptionArray.map((description: any, index: number) => (
-                  <div key={description.id} className="flex py-4">
-                    <textarea
-                      className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300 resize-none h-32"
-                      value={description.text}
-                      onChange={(e) => {
-                        const text = e.target.value;
-                        setDescriptionArray((currentDescription: any) =>
-                          produce(currentDescription, (v: any) => {
-                            v[index].text = text;
-                          })
-                        );
-                      }}
-                    ></textarea>
-                    <button
-                      className="block p-2 text-2xl px-5 text-red-500 bg-slate-100 ml-4 rounded"
-                      onClick={() =>
-                        handleDeleteInputDescription(description.id)
-                      }
-                    >
-                      <BsTrash />
-                    </button>
-                  </div>
-                ))
+                descriptionArray.map(
+                  (description: Description, index: number) => (
+                    <div key={description.id} className="flex py-4">
+                      <textarea
+                        className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300 resize-none h-32"
+                        value={description.text}
+                        onChange={(e) => {
+                          const text = e.target.value;
+                          setDescriptionArray(
+                            (currentDescription: Description[]) =>
+                              produce(currentDescription, (v) => {
+                                v[index].text = text;
+                              })
+                          );
+                        }}
+                      ></textarea>
+                      <button
+                        className="block p-2 text-2xl px-5 text-red-500 bg-slate-100 ml-4 rounded"
+                        onClick={() =>
+                          handleDeleteInputDescription(description.id)
+                        }
+                      >
+                        <BsTrash />
+                      </button>
+                    </div>
+                  )
+                )
               )}
             </div>
 
