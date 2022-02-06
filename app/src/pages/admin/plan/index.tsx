@@ -1,19 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
+import toast from "react-hot-toast";
 import { produce } from "immer";
 import { useRouter } from "next/router";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { v4 as uuidv4 } from "uuid";
 import { BsTrash } from "react-icons/bs";
 
 import Loading from "@/components/Loading";
 import Modal from "@/components/Modal";
-import client from "@/config/apollo";
+import NavbarDashboard from "@/components/admin/Navbar";
 import { GET_PLANS } from "@/graphql/queries/plan";
 import { GET_PLAN_INFO } from "@/graphql/queries/planInfo";
 import { DELETE_PLAN_ITEM } from "@/graphql/mutation/plan";
 import { UPDATE_PLAN_INFO } from "@/graphql/mutation/planInfo";
-import NavbarDashboard from "@/components/admin/Navbar";
-import toast from "react-hot-toast";
 
 const PlanAdmin: React.FC = () => {
   const router = useRouter();
@@ -27,23 +26,19 @@ const PlanAdmin: React.FC = () => {
   const [deletePlan] = useMutation(DELETE_PLAN_ITEM);
   const [updatePlanInfo] = useMutation(UPDATE_PLAN_INFO);
 
-  React.useEffect(() => {
-    (async () => {
-      const { data: dataInfo } = await client.query({
-        query: GET_PLAN_INFO,
-        fetchPolicy: "network-only",
-      });
+  const { data: dataInfo } = useQuery(GET_PLAN_INFO, {
+    fetchPolicy: "network-only",
+  });
 
-      const { data: dataPlans } = await client.query({
-        query: GET_PLANS,
-        fetchPolicy: "network-only",
-      });
+  const { data: dataPlans, refetch: refetchDataPlans } = useQuery(GET_PLANS, {
+    fetchPolicy: "network-only",
+  });
 
-      setData(dataInfo?.getPlanInfo);
-      setDataItems(dataPlans?.getPlans);
-      setDescriptionArray(dataInfo?.getPlanInfo?.description);
-    })();
-  }, []);
+  useEffect(() => {
+    setData(dataInfo?.getPlanInfo);
+    setDataItems(dataPlans?.getPlans);
+    setDescriptionArray(dataInfo?.getPlanInfo?.description);
+  }, [dataInfo, dataPlans]);
 
   const newDescription = {
     id: uuidv4(),
@@ -70,8 +65,8 @@ const PlanAdmin: React.FC = () => {
           id,
         },
       });
+      refetchDataPlans();
       toast.success(res?.data?.deletePlan?.message);
-      router.reload();
     } catch (error) {
       console.log(error);
     }

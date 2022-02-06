@@ -1,19 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
+import toast from "react-hot-toast";
 import { v4 as uuidv4 } from "uuid";
 import { useRouter } from "next/router";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { produce } from "immer";
 import { BsTrash } from "react-icons/bs";
 
-import client from "@/config/apollo";
 import Loading from "@/components/Loading";
 import Modal from "@/components/Modal";
+import NavbarDashboard from "@/components/admin/Navbar";
 import { GET_GROWTH_INFO_HOME } from "@/graphql/queries/growthInfo";
 import { UPDATE_GROWTH_INFO } from "@/graphql/mutation/growthInfo";
 import { GET_GROWTH_HOME } from "@/graphql/queries/growthHome";
 import { DELETE_GROWTH_ITEM } from "@/graphql/mutation/growthHome";
-import NavbarDashboard from "@/components/admin/Navbar";
-import toast from "react-hot-toast";
 
 const GrowthAdmin: React.FC = () => {
   const router = useRouter();
@@ -27,23 +26,22 @@ const GrowthAdmin: React.FC = () => {
   const [updateGrowthInfoHome] = useMutation(UPDATE_GROWTH_INFO);
   const [deleteGrowthHome] = useMutation(DELETE_GROWTH_ITEM);
 
-  React.useEffect(() => {
-    (async () => {
-      const { data: growthData } = await client.query({
-        query: GET_GROWTH_INFO_HOME,
-        fetchPolicy: "network-only",
-      });
+  const { data: growthData } = useQuery(GET_GROWTH_INFO_HOME, {
+    fetchPolicy: "network-only",
+  });
 
-      const { data: growthDataItems } = await client.query({
-        query: GET_GROWTH_HOME,
-        fetchPolicy: "network-only",
-      });
+  const { data: growthDataItems, refetch: refetchGrowthDataItems } = useQuery(
+    GET_GROWTH_HOME,
+    {
+      fetchPolicy: "network-only",
+    }
+  );
 
-      setData(growthData?.getGrowthInfoHome);
-      setDescriptionArray(growthData?.getGrowthInfoHome?.description);
-      setDataItems(growthDataItems?.getGrowthHome);
-    })();
-  }, []);
+  useEffect(() => {
+    setData(growthData?.getGrowthInfoHome);
+    setDescriptionArray(growthData?.getGrowthInfoHome?.description);
+    setDataItems(growthDataItems?.getGrowthHome);
+  }, [growthData, growthDataItems]);
 
   const newDescription = {
     id: uuidv4(),
@@ -68,8 +66,8 @@ const GrowthAdmin: React.FC = () => {
           id,
         },
       });
+      refetchGrowthDataItems();
       toast.success(response?.data?.deleteGrowthHome?.message);
-      router.reload();
     } catch (error) {
       console.log(error);
     }

@@ -1,14 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
+import toast from "react-hot-toast";
 import { v4 as uuidv4 } from "uuid";
 import { BsTrash } from "react-icons/bs";
 import { produce } from "immer";
-import toast from "react-hot-toast";
+import { useMutation, useQuery } from "@apollo/client";
 
-import Loading from "@/components/Loading";
-import client from "@/config/apollo";
 import { GET_ABOUT_PAGE } from "@/graphql/queries/aboutPage";
-import { useMutation } from "@apollo/client";
 import { UPDATE_ABOUT_INFO } from "@/graphql/mutation/about";
+import Loading from "@/components/Loading";
 import NavbarDashboard from "@/components/admin/Navbar";
 
 const AboutPageAdmin: React.FC = () => {
@@ -18,19 +17,16 @@ const AboutPageAdmin: React.FC = () => {
   const [descriptionArray, setDescriptionArray] = React.useState<any>([]);
 
   const inputFileRef = React.useRef<any>(null);
-
   const [updateAboutPage] = useMutation(UPDATE_ABOUT_INFO);
 
-  React.useEffect(() => {
-    (async () => {
-      const { data: aboutData } = await client.query({
-        query: GET_ABOUT_PAGE,
-        fetchPolicy: "network-only",
-      });
-      setData(aboutData?.getAboutPage);
-      setDescriptionArray(aboutData?.getAboutPage?.description);
-    })();
-  }, []);
+  const { data: aboutData } = useQuery(GET_ABOUT_PAGE, {
+    fetchPolicy: "network-only",
+  });
+
+  useEffect(() => {
+    setData(aboutData?.getAboutPage);
+    setDescriptionArray(aboutData?.getAboutPage?.description);
+  }, [aboutData]);
 
   const handleHeaderFileChange = (e: any) => {
     const file = e.currentTarget.files[0];

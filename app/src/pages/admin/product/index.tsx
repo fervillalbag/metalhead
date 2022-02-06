@@ -1,19 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
+import toast from "react-hot-toast";
 import { produce } from "immer";
 import { useRouter } from "next/router";
 import { v4 as uuidv4 } from "uuid";
-import { useMutation } from "@apollo/client";
-import toast from "react-hot-toast";
+import { useMutation, useQuery } from "@apollo/client";
+import { BsTrash } from "react-icons/bs";
 
 import Loading from "@/components/Loading";
-import client from "@/config/apollo";
+import Modal from "@/components/Modal";
+import NavbarDashboard from "@/components/admin/Navbar";
 import { GET_PRODUCT_INFO } from "@/graphql/queries/productInfo";
 import { UPDATE_PRODUCT_INFO } from "@/graphql/mutation/productInfo";
 import { GET_PRODUCTS } from "@/graphql/queries/products";
-import Modal from "@/components/Modal";
 import { DELETE_PRODUCT_ITEM } from "@/graphql/mutation/product";
-import NavbarDashboard from "@/components/admin/Navbar";
-import { BsTrash } from "react-icons/bs";
 
 const ProductAdmin = () => {
   const router = useRouter();
@@ -27,23 +26,22 @@ const ProductAdmin = () => {
   const [updateProductInfo] = useMutation(UPDATE_PRODUCT_INFO);
   const [deleteProduct] = useMutation(DELETE_PRODUCT_ITEM);
 
-  React.useEffect(() => {
-    (async () => {
-      const { data: dataProductInfo } = await client.query({
-        query: GET_PRODUCT_INFO,
-        fetchPolicy: "network-only",
-      });
+  const { data: dataProductInfo } = useQuery(GET_PRODUCT_INFO, {
+    fetchPolicy: "network-only",
+  });
 
-      const { data: dataProducts } = await client.query({
-        query: GET_PRODUCTS,
-        fetchPolicy: "network-only",
-      });
+  const { data: dataProducts, refetch: refetchDataProducts } = useQuery(
+    GET_PRODUCTS,
+    {
+      fetchPolicy: "network-only",
+    }
+  );
 
-      setData(dataProductInfo?.getProductInfo);
-      setDataItems(dataProducts?.getProducts);
-      setDescriptionArray(dataProductInfo?.getProductInfo?.description);
-    })();
-  }, []);
+  useEffect(() => {
+    setData(dataProductInfo?.getProductInfo);
+    setDataItems(dataProducts?.getProducts);
+    setDescriptionArray(dataProductInfo?.getProductInfo?.description);
+  }, [dataProductInfo, dataProducts]);
 
   const newDescription = {
     id: uuidv4(),
@@ -70,8 +68,8 @@ const ProductAdmin = () => {
           id,
         },
       });
+      refetchDataProducts();
       toast.success(response?.data?.deleteProduct?.message);
-      router.reload();
     } catch (error) {
       console.log(error);
     }
@@ -198,7 +196,11 @@ const ProductAdmin = () => {
             </h1>
 
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {dataItems.length === 0 ? (
+              {!dataItems ? (
+                <span className="block py-4 text-slate-900">
+                  Ha ocurrido un error
+                </span>
+              ) : dataItems && dataItems.length === 0 ? (
                 <span className="block py-4 text-slate-900">
                   No products available
                 </span>

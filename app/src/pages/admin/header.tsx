@@ -1,17 +1,16 @@
-import React from "react";
-import { useMutation } from "@apollo/client";
+import React, { useEffect } from "react";
+import toast from "react-hot-toast";
+import { useMutation, useQuery } from "@apollo/client";
 import { v4 as uuidv4 } from "uuid";
 import { BsTrash } from "react-icons/bs";
 import { produce } from "immer";
-import toast from "react-hot-toast";
 
-import client from "@/config/apollo";
+import Loading from "@/components/Loading";
+import NavbarDashboard from "@/components/admin/Navbar";
 import { GET_HEADER_HOME } from "@/graphql/queries/headerHome";
 import { UPDATE_HEADER_INFO } from "@/graphql/mutation/header";
 import { HeaderInfo } from "@/types/header";
 import { Description } from "@/types/description";
-import Loading from "@/components/Loading";
-import NavbarDashboard from "@/components/admin/Navbar";
 
 const HeaderAdmin: React.FC = () => {
   const [data, setData] = React.useState<HeaderInfo | null>(null);
@@ -40,16 +39,14 @@ const HeaderAdmin: React.FC = () => {
     setDescriptionArray(newValue);
   };
 
-  React.useEffect(() => {
-    (async () => {
-      const { data: headerData } = await client.query({
-        query: GET_HEADER_HOME,
-        fetchPolicy: "network-only",
-      });
-      setData(headerData?.getHeaderHome);
-      setDescriptionArray(headerData?.getHeaderHome.description);
-    })();
-  }, []);
+  const { data: headerData } = useQuery(GET_HEADER_HOME, {
+    fetchPolicy: "network-only",
+  });
+
+  useEffect(() => {
+    setData(headerData?.getHeaderHome);
+    setDescriptionArray(headerData?.getHeaderHome.description);
+  }, [headerData]);
 
   const handleHeaderFileChange = (e: any) => {
     const file = e.currentTarget.files[0];

@@ -1,19 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
+import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import { v4 as uuidv4 } from "uuid";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { produce } from "immer";
-import toast from "react-hot-toast";
+import { BsTrash } from "react-icons/bs";
 
-import client from "@/config/apollo";
 import Loading from "@/components/Loading";
 import Modal from "@/components/Modal";
+import NavbarDashboard from "@/components/admin/Navbar";
 import { GET_REVIEW_INFO } from "@/graphql/queries/reviewInfo";
 import { UPDATE_REVIEW_INFO } from "@/graphql/mutation/reviewInfo";
 import { GET_REVIEW_HOME } from "@/graphql/queries/reviewHome";
 import { DELETE_REVIEW_HOME_ITEM } from "@/graphql/mutation/reviewHome";
-import { BsTrash } from "react-icons/bs";
-import NavbarDashboard from "@/components/admin/Navbar";
 
 const ReviewInfoAdmin = () => {
   const router = useRouter();
@@ -27,23 +26,22 @@ const ReviewInfoAdmin = () => {
   const [updateReviewHomeInfo] = useMutation(UPDATE_REVIEW_INFO);
   const [deleteReviewHome] = useMutation(DELETE_REVIEW_HOME_ITEM);
 
-  React.useEffect(() => {
-    (async () => {
-      const { data: reviewInfo } = await client.query({
-        query: GET_REVIEW_INFO,
-        fetchPolicy: "network-only",
-      });
+  const { data: reviewInfo } = useQuery(GET_REVIEW_INFO, {
+    fetchPolicy: "network-only",
+  });
 
-      const { data: reviewItems } = await client.query({
-        query: GET_REVIEW_HOME,
-        fetchPolicy: "network-only",
-      });
+  const { data: reviewItems, refetch: refetchReviewItems } = useQuery(
+    GET_REVIEW_HOME,
+    {
+      fetchPolicy: "network-only",
+    }
+  );
 
-      setData(reviewInfo?.getReviewInfoHome);
-      setDataItems(reviewItems?.getReviewHome);
-      setDescriptionArray(reviewInfo?.getReviewInfoHome?.description);
-    })();
-  }, []);
+  useEffect(() => {
+    setData(reviewInfo?.getReviewInfoHome);
+    setDataItems(reviewItems?.getReviewHome);
+    setDescriptionArray(reviewInfo?.getReviewInfoHome?.description);
+  }, [reviewInfo, reviewItems]);
 
   const newDescription = {
     id: uuidv4(),
@@ -66,8 +64,8 @@ const ReviewInfoAdmin = () => {
           id,
         },
       });
+      refetchReviewItems();
       toast.success(response?.data?.deleteReviewHome?.message);
-      router.reload();
     } catch (error) {
       console.log(error);
     }

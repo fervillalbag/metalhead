@@ -1,19 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
+import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import { v4 as uuidv4 } from "uuid";
 import { produce } from "immer";
-import toast from "react-hot-toast";
+import { useMutation, useQuery } from "@apollo/client";
+import { BsFillArrowLeftCircleFill, BsTrash } from "react-icons/bs";
 
 import Loading from "@/components/Loading";
-import client from "@/config/apollo";
 import { GET_REVIEW_HOME_ITEM } from "@/graphql/queries/reviewHome";
-import { useMutation } from "@apollo/client";
 import { UPDATE_REVIEW_HOME_ITEM } from "@/graphql/mutation/reviewHome";
-import { BsFillArrowLeftCircleFill, BsTrash } from "react-icons/bs";
 
 const ReviewItemId = () => {
   const router = useRouter();
-  const queryId = router?.query?.id;
 
   const [data, setData] = React.useState<any>(null);
   const [descriptionArray, setDescriptionArray] = React.useState<any>([]);
@@ -23,22 +21,17 @@ const ReviewItemId = () => {
   const inputFileRef = React.useRef<any>(null);
   const [updateReviewHome] = useMutation(UPDATE_REVIEW_HOME_ITEM);
 
-  React.useEffect(() => {
-    (async () => {
-      if (queryId) {
-        const { data: reviewItem } = await client.query({
-          query: GET_REVIEW_HOME_ITEM,
-          fetchPolicy: "network-only",
-          variables: {
-            id: queryId,
-          },
-        });
+  const { data: reviewItem } = useQuery(GET_REVIEW_HOME_ITEM, {
+    fetchPolicy: "network-only",
+    variables: {
+      id: router?.query?.id,
+    },
+  });
 
-        setData(reviewItem?.getReviewHomeItem);
-        setDescriptionArray(reviewItem?.getReviewHomeItem?.description);
-      }
-    })();
-  }, [router]);
+  useEffect(() => {
+    setData(reviewItem?.getReviewHomeItem);
+    setDescriptionArray(reviewItem?.getReviewHomeItem?.description);
+  }, [router, reviewItem]);
 
   const newDescription = {
     id: uuidv4(),

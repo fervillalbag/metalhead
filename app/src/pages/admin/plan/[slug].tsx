@@ -1,38 +1,34 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { produce } from "immer";
 import { useRouter } from "next/router";
 import { v4 as uuidv4 } from "uuid";
 
 import Loading from "@/components/Loading";
-import client from "@/config/apollo";
 import { GET_PLAN } from "@/graphql/queries/plan";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { UPDATE_PLAN_ITEM } from "@/graphql/mutation/plan";
 import { BsFillArrowLeftCircleFill, BsTrash } from "react-icons/bs";
 import toast from "react-hot-toast";
 
 const SlugPlanAdmin: React.FC = () => {
   const router = useRouter();
-  const slug = router?.query?.slug;
 
   const [data, setData] = React.useState<any>(null);
   const [dataItems, setDataItems] = React.useState<any>(null);
 
   const [updatePlan] = useMutation(UPDATE_PLAN_ITEM);
 
-  React.useEffect(() => {
-    (async () => {
-      const { data: dataItem } = await client.query({
-        query: GET_PLAN,
-        fetchPolicy: "network-only",
-        variables: {
-          slug,
-        },
-      });
-      setData(dataItem?.getPlan);
-      setDataItems(dataItem?.getPlan?.items);
-    })();
-  }, [router]);
+  const { data: dataItem } = useQuery(GET_PLAN, {
+    fetchPolicy: "network-only",
+    variables: {
+      slug: router?.query?.slug,
+    },
+  });
+
+  useEffect(() => {
+    setData(dataItem?.getPlan);
+    setDataItems(dataItem?.getPlan?.items);
+  }, [router, dataItem]);
 
   const newInputItem = {
     id: uuidv4(),

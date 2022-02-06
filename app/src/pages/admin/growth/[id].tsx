@@ -1,39 +1,34 @@
-import React from "react";
+import React, { useEffect } from "react";
+import toast from "react-hot-toast";
 import { useRouter } from "next/router";
-import client from "@/config/apollo";
-import { GET_GROWTH_ITEM } from "@/graphql/queries/growthHome";
 import { v4 as uuidv4 } from "uuid";
-import { useMutation } from "@apollo/client";
-import { UPDATE_GROWTH_ITEM } from "@/graphql/mutation/growthHome";
-import Loading from "@/components/Loading";
 import { produce } from "immer";
 import { BsFillArrowLeftCircleFill, BsTrash } from "react-icons/bs";
-import toast from "react-hot-toast";
 
-const GrowthId = () => {
+import Loading from "@/components/Loading";
+import { GET_GROWTH_ITEM } from "@/graphql/queries/growthHome";
+import { useMutation, useQuery } from "@apollo/client";
+import { UPDATE_GROWTH_ITEM } from "@/graphql/mutation/growthHome";
+
+const GrowthId: React.FC = () => {
   const router = useRouter();
 
   const [data, setData] = React.useState<any>(null);
   const [descriptionArray, setDescriptionArray] = React.useState<any>([]);
-  const queryId = router.query.id;
 
   const [updateGrowthHome] = useMutation(UPDATE_GROWTH_ITEM);
 
-  React.useEffect(() => {
-    (async () => {
-      if (queryId) {
-        const { data: dataGrowthItem } = await client.query({
-          query: GET_GROWTH_ITEM,
-          fetchPolicy: "network-only",
-          variables: {
-            id: router.query.id,
-          },
-        });
-        setData(dataGrowthItem?.getGrowthHomeItem);
-        setDescriptionArray(dataGrowthItem?.getGrowthHomeItem?.description);
-      }
-    })();
-  }, [router]);
+  const { data: dataGrowthItem } = useQuery(GET_GROWTH_ITEM, {
+    fetchPolicy: "network-only",
+    variables: {
+      id: router?.query?.id,
+    },
+  });
+
+  useEffect(() => {
+    setData(dataGrowthItem?.getGrowthHomeItem);
+    setDescriptionArray(dataGrowthItem?.getGrowthHomeItem?.description);
+  }, [router, dataGrowthItem]);
 
   const newDescription = {
     id: uuidv4(),

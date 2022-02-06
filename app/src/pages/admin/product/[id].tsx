@@ -1,11 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import produce from "immer";
 import { useRouter } from "next/router";
 import { v4 as uuidv4 } from "uuid";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import toast from "react-hot-toast";
 
-import client from "@/config/apollo";
 import { GET_PRODUCT } from "@/graphql/queries/products";
 import Loading from "@/components/Loading";
 import { UPDATE_PRODUCT_ITEM } from "@/graphql/mutation/product";
@@ -13,7 +12,6 @@ import { BsFillArrowLeftCircleFill, BsTrash } from "react-icons/bs";
 
 const ProductItemAdmin: React.FC = () => {
   const router = useRouter();
-  const queryId = router?.query?.id;
 
   const [data, setData] = React.useState<any>(null);
   const [showProductImage, setShowProductImage] = React.useState<any>(null);
@@ -23,21 +21,17 @@ const ProductItemAdmin: React.FC = () => {
   const inputFileRef = React.useRef<any>(null);
   const [updateProduct] = useMutation(UPDATE_PRODUCT_ITEM);
 
-  React.useEffect(() => {
-    (async () => {
-      if (queryId) {
-        const { data: productId } = await client.query({
-          query: GET_PRODUCT,
-          fetchPolicy: "network-only",
-          variables: {
-            id: queryId,
-          },
-        });
-        setData(productId?.getProduct);
-        setDescriptionArray(productId?.getProduct?.description);
-      }
-    })();
-  }, [router]);
+  const { data: productId } = useQuery(GET_PRODUCT, {
+    fetchPolicy: "network-only",
+    variables: {
+      id: router?.query?.id,
+    },
+  });
+
+  useEffect(() => {
+    setData(productId?.getProduct);
+    setDescriptionArray(productId?.getProduct?.description);
+  }, [router, productId]);
 
   const handleChangeImage = () => {
     inputFileRef.current.click();
