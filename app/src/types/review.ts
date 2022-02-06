@@ -9,8 +9,8 @@ export type ReviewInfo = {
 };
 
 export type ReviewData = {
-  id: string;
+  id?: string;
   name: string;
   avatar: string;
-  description: Description[];
+  description?: Description[];
 };

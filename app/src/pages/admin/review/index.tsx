@@ -13,15 +13,21 @@ import { GET_REVIEW_INFO } from "@/graphql/queries/reviewInfo";
 import { UPDATE_REVIEW_INFO } from "@/graphql/mutation/reviewInfo";
 import { GET_REVIEW_HOME } from "@/graphql/queries/reviewHome";
 import { DELETE_REVIEW_HOME_ITEM } from "@/graphql/mutation/reviewHome";
+import { ReviewData, ReviewInfo } from "@/types/review";
+import { Description } from "@/types/description";
 
 const ReviewInfoAdmin = () => {
   const router = useRouter();
 
-  const [data, setData] = React.useState<any>(null);
-  const [descriptionArray, setDescriptionArray] = React.useState<any>([]);
-  const [dataItems, setDataItems] = React.useState<any>([]);
+  const [data, setData] = React.useState<ReviewInfo | null>(null);
+  const [descriptionArray, setDescriptionArray] = React.useState<Description[]>(
+    []
+  );
+  const [dataItems, setDataItems] = React.useState<ReviewData[]>([]);
   const [showModal, setShowModal] = React.useState<boolean>(false);
-  const [itemDelete, setItemDelete] = React.useState<string>("");
+  const [itemDelete, setItemDelete] = React.useState<string | undefined>(
+    undefined
+  );
 
   const [updateReviewHomeInfo] = useMutation(UPDATE_REVIEW_INFO);
   const [deleteReviewHome] = useMutation(DELETE_REVIEW_HOME_ITEM);
@@ -43,7 +49,7 @@ const ReviewInfoAdmin = () => {
     setDescriptionArray(reviewInfo?.getReviewInfoHome?.description);
   }, [reviewInfo, reviewItems]);
 
-  const newDescription = {
+  const newDescription: Description = {
     id: uuidv4(),
     text: "",
   };
@@ -53,11 +59,13 @@ const ReviewInfoAdmin = () => {
   };
 
   const handleDeleteInputDescription = (id: string) => {
-    const newValue = descriptionArray.filter((item: any) => item.id !== id);
+    const newValue = descriptionArray.filter(
+      (item: Description) => item.id !== id
+    );
     setDescriptionArray(newValue);
   };
 
-  const handleDeleteReviewItem = async (id: string) => {
+  const handleDeleteReviewItem = async (id: string | undefined) => {
     try {
       const response = await deleteReviewHome({
         variables: {
@@ -72,12 +80,14 @@ const ReviewInfoAdmin = () => {
   };
 
   const handleUpdate = async () => {
-    const newDescriptionArray = descriptionArray.map((description: any) => {
-      return {
-        id: description.id,
-        text: description.text,
-      };
-    });
+    const newDescriptionArray = descriptionArray.map(
+      (description: Description) => {
+        return {
+          id: description.id,
+          text: description.text,
+        };
+      }
+    );
 
     if (!data || data?.title === "") {
       toast("El título es obligatorio!", {
@@ -92,7 +102,7 @@ const ReviewInfoAdmin = () => {
     }
 
     const isDescriptionEmpty = newDescriptionArray.some(
-      (description: any) => description.text === ""
+      (description: Description) => description.text === ""
     );
 
     if (isDescriptionEmpty) {
@@ -154,30 +164,33 @@ const ReviewInfoAdmin = () => {
                   No description available
                 </span>
               ) : (
-                descriptionArray.map((description: any, index: number) => (
-                  <div key={description.id} className="flex py-4">
-                    <textarea
-                      className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300 resize-none h-32"
-                      value={description.text}
-                      onChange={(e) => {
-                        const text = e.target.value;
-                        setDescriptionArray((currentDescription: any) =>
-                          produce(currentDescription, (v: any) => {
-                            v[index].text = text;
-                          })
-                        );
-                      }}
-                    ></textarea>
-                    <button
-                      className="block p-2 text-2xl px-5 text-red-500 bg-slate-100 ml-4 rounded"
-                      onClick={() =>
-                        handleDeleteInputDescription(description.id)
-                      }
-                    >
-                      <BsTrash />
-                    </button>
-                  </div>
-                ))
+                descriptionArray.map(
+                  (description: Description, index: number) => (
+                    <div key={description.id} className="flex py-4">
+                      <textarea
+                        className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300 resize-none h-32"
+                        value={description.text}
+                        onChange={(e) => {
+                          const text = e.target.value;
+                          setDescriptionArray(
+                            (currentDescription: Description[]) =>
+                              produce(currentDescription, (v) => {
+                                v[index].text = text;
+                              })
+                          );
+                        }}
+                      ></textarea>
+                      <button
+                        className="block p-2 text-2xl px-5 text-red-500 bg-slate-100 ml-4 rounded"
+                        onClick={() =>
+                          handleDeleteInputDescription(description.id)
+                        }
+                      >
+                        <BsTrash />
+                      </button>
+                    </div>
+                  )
+                )
               )}
             </div>
 
@@ -202,7 +215,7 @@ const ReviewInfoAdmin = () => {
                   No reviews available
                 </span>
               ) : (
-                dataItems.map((item: any) => (
+                dataItems.map((item: ReviewData) => (
                   <div
                     key={item.id}
                     className="shadow-lg rounded border border-slate-200 px-4 py-3 h-36 flex flex-col justify-between"

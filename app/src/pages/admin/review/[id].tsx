@@ -9,16 +9,23 @@ import { BsFillArrowLeftCircleFill, BsTrash } from "react-icons/bs";
 import Loading from "@/components/Loading";
 import { GET_REVIEW_HOME_ITEM } from "@/graphql/queries/reviewHome";
 import { UPDATE_REVIEW_HOME_ITEM } from "@/graphql/mutation/reviewHome";
+import { ReviewData } from "@/types/review";
+import { Description } from "@/types/description";
+import { FileType } from "@/types/file";
 
 const ReviewItemId = () => {
   const router = useRouter();
 
-  const [data, setData] = React.useState<any>(null);
-  const [descriptionArray, setDescriptionArray] = React.useState<any>([]);
-  const [showHeaderImage, setShowHeaderImage] = React.useState<any>();
-  const [fileHeader, setFileHeader] = React.useState<any>();
+  const [data, setData] = React.useState<ReviewData | null>(null);
+  const [descriptionArray, setDescriptionArray] = React.useState<Description[]>(
+    []
+  );
+  const [showHeaderImage, setShowHeaderImage] = React.useState<string | null>(
+    null
+  );
+  const [fileHeader, setFileHeader] = React.useState<FileType | null | Blob>();
 
-  const inputFileRef = React.useRef<any>(null);
+  const inputFileRef = React.useRef<HTMLInputElement | null>(null);
   const [updateReviewHome] = useMutation(UPDATE_REVIEW_HOME_ITEM);
 
   const { data: reviewItem } = useQuery(GET_REVIEW_HOME_ITEM, {
@@ -33,13 +40,15 @@ const ReviewItemId = () => {
     setDescriptionArray(reviewItem?.getReviewHomeItem?.description);
   }, [router, reviewItem]);
 
-  const newDescription = {
+  const newDescription: Description = {
     id: uuidv4(),
     text: "",
   };
 
   const handleChangeImage = () => {
-    inputFileRef.current.click();
+    if (inputFileRef.current) {
+      inputFileRef.current.click();
+    }
   };
 
   const handleAddInputDescription = () => {
@@ -47,24 +56,29 @@ const ReviewItemId = () => {
   };
 
   const handleDeleteInputDescription = (id: string) => {
-    const newValue = descriptionArray.filter((item: any) => item.id !== id);
+    const newValue = descriptionArray.filter(
+      (item: Description) => item.id !== id
+    );
     setDescriptionArray(newValue);
   };
 
-  const handleHeaderFileChange = (e: any) => {
-    const file = e.currentTarget.files[0];
+  const handleHeaderFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const target = e.currentTarget as HTMLInputElement;
+    const file = target.files![0];
     const image = URL.createObjectURL(file);
     setShowHeaderImage(image);
     setFileHeader(file);
   };
 
   const handleUpdate = async () => {
-    const newDescriptionArray = descriptionArray.map((description: any) => {
-      return {
-        id: description.id,
-        text: description.text,
-      };
-    });
+    const newDescriptionArray = descriptionArray.map(
+      (description: Description) => {
+        return {
+          id: description.id,
+          text: description.text,
+        };
+      }
+    );
 
     if (!data?.name || data?.name === "") {
       toast("El nombre es obligatorio!", {
@@ -91,7 +105,7 @@ const ReviewItemId = () => {
     }
 
     const isDescriptionEmpty = newDescriptionArray.some(
-      (description: any) => description.text === ""
+      (description: Description) => description.text === ""
     );
 
     if (isDescriptionEmpty) {
@@ -109,7 +123,7 @@ const ReviewItemId = () => {
     if (fileHeader) {
       const url = "https://api.cloudinary.com/v1_1/dbp9am0cx/image/upload";
       const formData = new FormData();
-      formData.append("file", fileHeader);
+      formData.append("file", fileHeader as string | Blob);
       formData.append("upload_preset", "reviewItem");
       const res = await fetch(url, { method: "post", body: formData });
       const imageData = await res.json();
@@ -133,7 +147,7 @@ const ReviewItemId = () => {
             id: data?.id,
             name: data?.name,
             description: newDescriptionArray,
-            avatar: data?.image,
+            avatar: data?.avatar,
           },
         },
       });
@@ -208,30 +222,33 @@ const ReviewItemId = () => {
                   No description available
                 </span>
               ) : (
-                descriptionArray.map((description: any, index: number) => (
-                  <div key={description.id} className="flex py-4">
-                    <textarea
-                      className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300 resize-none h-32"
-                      value={description.text}
-                      onChange={(e) => {
-                        const text = e.target.value;
-                        setDescriptionArray((currentDescription: any) =>
-                          produce(currentDescription, (v: any) => {
-                            v[index].text = text;
-                          })
-                        );
-                      }}
-                    ></textarea>
-                    <button
-                      className="block p-2 text-2xl px-5 text-red-500 bg-slate-100 ml-4 rounded"
-                      onClick={() =>
-                        handleDeleteInputDescription(description.id)
-                      }
-                    >
-                      <BsTrash />
-                    </button>
-                  </div>
-                ))
+                descriptionArray.map(
+                  (description: Description, index: number) => (
+                    <div key={description.id} className="flex py-4">
+                      <textarea
+                        className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300 resize-none h-32"
+                        value={description.text}
+                        onChange={(e) => {
+                          const text = e.target.value;
+                          setDescriptionArray(
+                            (currentDescription: Description[]) =>
+                              produce(currentDescription, (v) => {
+                                v[index].text = text;
+                              })
+                          );
+                        }}
+                      ></textarea>
+                      <button
+                        className="block p-2 text-2xl px-5 text-red-500 bg-slate-100 ml-4 rounded"
+                        onClick={() =>
+                          handleDeleteInputDescription(description.id)
+                        }
+                      >
+                        <BsTrash />
+                      </button>
+                    </div>
+                  )
+                )
               )}
             </div>
 
