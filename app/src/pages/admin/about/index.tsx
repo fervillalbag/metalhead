@@ -116,11 +116,17 @@ const AboutPageAdmin: React.FC = () => {
     }
 
     if (fileAbout) {
-      const url = "https://api.cloudinary.com/v1_1/dbp9am0cx/image/upload";
+      const url = process.env.URL_CLOUDINARY_RES;
       const formData = new FormData();
       formData.append("file", fileAbout as string | Blob);
-      formData.append("upload_preset", "aboutpage");
-      const res = await fetch(url, { method: "post", body: formData });
+      formData.append(
+        "upload_preset",
+        process.env.CLOUDINARY_NAME_PRESET_ABOUT_HOME as string
+      );
+      const res = await fetch(url as string, {
+        method: "post",
+        body: formData,
+      });
       const imageData = await res.json();
 
       const responseApi = await updateAboutPage({
