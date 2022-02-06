@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import toast from "react-hot-toast";
 import { produce } from "immer";
 import { useRouter } from "next/router";
 import { v4 as uuidv4 } from "uuid";
@@ -8,13 +9,19 @@ import { GET_PLAN } from "@/graphql/queries/plan";
 import { useMutation, useQuery } from "@apollo/client";
 import { UPDATE_PLAN_ITEM } from "@/graphql/mutation/plan";
 import { BsFillArrowLeftCircleFill, BsTrash } from "react-icons/bs";
-import toast from "react-hot-toast";
+import { Item, PlanItem } from "@/types/plan";
 
 const SlugPlanAdmin: React.FC = () => {
   const router = useRouter();
 
-  const [data, setData] = React.useState<any>(null);
-  const [dataItems, setDataItems] = React.useState<any>(null);
+  const [data, setData] = React.useState<PlanItem | null>(null);
+  const [dataItems, setDataItems] = React.useState<Item[]>([
+    {
+      id: uuidv4(),
+      text: "",
+      status: false,
+    },
+  ]);
 
   const [updatePlan] = useMutation(UPDATE_PLAN_ITEM);
 
@@ -30,24 +37,24 @@ const SlugPlanAdmin: React.FC = () => {
     setDataItems(dataItem?.getPlan?.items);
   }, [router, dataItem]);
 
-  const newInputItem = {
+  const newInputItem: Item = {
     id: uuidv4(),
     text: "",
     status: false,
   };
 
   const handleAddInputItem = () => {
-    setDataItems((currentItem: any) => [...currentItem, newInputItem]);
+    setDataItems((currentItem: Item[]) => [...currentItem, newInputItem]);
   };
 
   const handleDeleteInputItem = (id: string) => {
-    setDataItems((currentItem: any) =>
-      currentItem.filter((x: any) => x.id !== id)
+    setDataItems((currentItem: Item[]) =>
+      currentItem.filter((x: Item) => x.id !== id)
     );
   };
 
   const handleUpdate = async () => {
-    const newItem = dataItems.map((item: any) => {
+    const newItem = dataItems.map((item: Item) => {
       return {
         id: item.id,
         text: item.text,
@@ -58,7 +65,7 @@ const SlugPlanAdmin: React.FC = () => {
     if (
       !data?.name ||
       data?.name === "" ||
-      data?.price === "" ||
+      data?.price === 0 ||
       !data?.url ||
       data?.url === ""
     ) {
@@ -85,7 +92,7 @@ const SlugPlanAdmin: React.FC = () => {
       return;
     }
 
-    const isItemsEmpty = newItem.some((item: any) => item.text === "");
+    const isItemsEmpty = newItem.some((item: Item) => item.text === "");
 
     if (isItemsEmpty) {
       toast("El ítem debe tener contenido!", {
@@ -153,7 +160,9 @@ const SlugPlanAdmin: React.FC = () => {
             type="number"
             className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300"
             value={data?.price}
-            onChange={(e) => setData({ ...data, price: e.target.value })}
+            onChange={(e) =>
+              setData({ ...data, price: Number(e.target.value) })
+            }
           />
         </div>
 
@@ -175,15 +184,15 @@ const SlugPlanAdmin: React.FC = () => {
               No Items available
             </span>
           ) : (
-            dataItems.map((item: any, index: number) => (
+            dataItems.map((item: Item, index: number) => (
               <div key={item.id} className="flex py-4">
                 <input
                   className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300 resize-none"
                   value={item?.text}
                   onChange={(e) => {
                     const text = e.target.value;
-                    setDataItems((currentItem: any) =>
-                      produce(currentItem, (v: any) => {
+                    setDataItems((currentItem: Item[]) =>
+                      produce(currentItem, (v) => {
                         v[index].text = text;
                       })
                     );
@@ -195,8 +204,8 @@ const SlugPlanAdmin: React.FC = () => {
                       item.status ? "bg-green-200" : "bg-red-200"
                     }`}
                     onClick={() => {
-                      setDataItems((currentItem: any) =>
-                        produce(currentItem, (v: any) => {
+                      setDataItems((currentItem: Item[]) =>
+                        produce(currentItem, (v) => {
                           v[index].status = !item.status;
                         })
                       );

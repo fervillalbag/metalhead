@@ -13,15 +13,21 @@ import { GET_PLANS } from "@/graphql/queries/plan";
 import { GET_PLAN_INFO } from "@/graphql/queries/planInfo";
 import { DELETE_PLAN_ITEM } from "@/graphql/mutation/plan";
 import { UPDATE_PLAN_INFO } from "@/graphql/mutation/planInfo";
+import { PlanInfo, PlanItem } from "@/types/plan";
+import { Description } from "@/types/description";
 
 const PlanAdmin: React.FC = () => {
   const router = useRouter();
 
-  const [data, setData] = React.useState<any>(null);
-  const [dataItems, setDataItems] = React.useState<any>(null);
+  const [data, setData] = React.useState<PlanInfo | null>(null);
+  const [dataItems, setDataItems] = React.useState<PlanItem[] | null>(null);
   const [showModal, setShowModal] = React.useState<boolean>(false);
-  const [itemDelete, setItemDelete] = React.useState<string>("");
-  const [descriptionArray, setDescriptionArray] = React.useState<any>([]);
+  const [itemDelete, setItemDelete] = React.useState<string | undefined>(
+    undefined
+  );
+  const [descriptionArray, setDescriptionArray] = React.useState<Description[]>(
+    []
+  );
 
   const [deletePlan] = useMutation(DELETE_PLAN_ITEM);
   const [updatePlanInfo] = useMutation(UPDATE_PLAN_INFO);
@@ -40,25 +46,25 @@ const PlanAdmin: React.FC = () => {
     setDescriptionArray(dataInfo?.getPlanInfo?.description);
   }, [dataInfo, dataPlans]);
 
-  const newDescription = {
+  const newDescription: Description = {
     id: uuidv4(),
     text: "",
   };
 
   const handleAddInputDescription = () => {
-    setDescriptionArray((currentDescription: any) => [
+    setDescriptionArray((currentDescription: Description[]) => [
       ...currentDescription,
       newDescription,
     ]);
   };
 
   const handleDeleteInputDescription = (id: string) => {
-    setDescriptionArray((currentDescription: any) =>
-      currentDescription.filter((x: any) => x.id !== id)
+    setDescriptionArray((currentDescription: Description[]) =>
+      currentDescription.filter((x: Description) => x.id !== id)
     );
   };
 
-  const handleDeleteReviewItem = async (id: string) => {
+  const handleDeleteReviewItem = async (id: string | undefined) => {
     try {
       const res = await deletePlan({
         variables: {
@@ -73,12 +79,14 @@ const PlanAdmin: React.FC = () => {
   };
 
   const handleUpdate = async () => {
-    const newDescriptionArray = descriptionArray.map((description: any) => {
-      return {
-        id: description.id,
-        text: description.text,
-      };
-    });
+    const newDescriptionArray = descriptionArray.map(
+      (description: Description) => {
+        return {
+          id: description.id,
+          text: description.text,
+        };
+      }
+    );
 
     if (!data || data?.title === "") {
       toast("El título es obligatorio!", {
@@ -92,12 +100,8 @@ const PlanAdmin: React.FC = () => {
       return;
     }
 
-    const isDescriptionEmpty = newDescriptionArray.some(
-      (description: any) => description.text === ""
-    );
-
-    if (isDescriptionEmpty) {
-      toast("La descripción debe tener contenido!", {
+    if (newDescriptionArray.length === 0) {
+      toast("La descripción es obligatoria!", {
         icon: "⚠️",
         style: {
           borderRadius: "10px",
@@ -108,8 +112,12 @@ const PlanAdmin: React.FC = () => {
       return;
     }
 
-    if (newDescriptionArray.length === 0) {
-      toast("La descripción es obligatoria!", {
+    const isDescriptionEmpty = newDescriptionArray.some(
+      (description: Description) => description.text === ""
+    );
+
+    if (isDescriptionEmpty) {
+      toast("La descripción debe tener contenido!", {
         icon: "⚠️",
         style: {
           borderRadius: "10px",
@@ -177,30 +185,33 @@ const PlanAdmin: React.FC = () => {
                   No description available
                 </span>
               ) : (
-                descriptionArray.map((description: any, index: number) => (
-                  <div key={description.id} className="flex py-4">
-                    <textarea
-                      className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300 resize-none h-32"
-                      value={description.text}
-                      onChange={(e) => {
-                        const text = e.target.value;
-                        setDescriptionArray((currentDescription: any) =>
-                          produce(currentDescription, (v: any) => {
-                            v[index].text = text;
-                          })
-                        );
-                      }}
-                    ></textarea>
-                    <button
-                      className="block p-2 text-2xl px-5 text-red-500 bg-slate-100 ml-4 rounded"
-                      onClick={() =>
-                        handleDeleteInputDescription(description.id)
-                      }
-                    >
-                      <BsTrash />
-                    </button>
-                  </div>
-                ))
+                descriptionArray.map(
+                  (description: Description, index: number) => (
+                    <div key={description.id} className="flex py-4">
+                      <textarea
+                        className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300 resize-none h-32"
+                        value={description.text}
+                        onChange={(e) => {
+                          const text = e.target.value;
+                          setDescriptionArray(
+                            (currentDescription: Description[]) =>
+                              produce(currentDescription, (v) => {
+                                v[index].text = text;
+                              })
+                          );
+                        }}
+                      ></textarea>
+                      <button
+                        className="block p-2 text-2xl px-5 text-red-500 bg-slate-100 ml-4 rounded"
+                        onClick={() =>
+                          handleDeleteInputDescription(description.id)
+                        }
+                      >
+                        <BsTrash />
+                      </button>
+                    </div>
+                  )
+                )
               )}
             </div>
 
@@ -214,7 +225,7 @@ const PlanAdmin: React.FC = () => {
             <h1 className="text-2xl text-slate-600 mt-8 mb-6">List of Plans</h1>
 
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {dataItems.map((plan: any, index: number) => (
+              {dataItems.map((plan: PlanItem) => (
                 <div
                   key={plan.id}
                   className="shadow-lg rounded border border-slate-200 px-4 py-3 h-36 flex flex-col justify-between"

@@ -1,47 +1,48 @@
 import React from "react";
+import toast from "react-hot-toast";
 import { produce } from "immer";
 import { v4 as uuidv4 } from "uuid";
 import { useRouter } from "next/router";
-import toast from "react-hot-toast";
 
 import Loading from "@/components/Loading";
 import { useMutation } from "@apollo/client";
 import { CREATE_PLAN_ITEM } from "@/graphql/mutation/plan";
 import { BsFillArrowLeftCircleFill, BsTrash } from "react-icons/bs";
+import { Item, PlanItem } from "@/types/plan";
 
 const CreatePlanAdmin: React.FC = () => {
   const router = useRouter();
 
-  const [data, setData] = React.useState<any>({
+  const [data, setData] = React.useState<PlanItem>({
     slug: "",
     name: "",
     price: 0,
     status: true,
     url: "",
   });
-  const [itemsData, setItemsData] = React.useState<any>([
+  const [itemsData, setItemsData] = React.useState<Item[]>([
     {
       id: uuidv4(),
-      status: true,
       text: "",
+      status: true,
     },
   ]);
 
   const [createPlan] = useMutation(CREATE_PLAN_ITEM);
 
-  const newItem = {
+  const newItem: Item = {
     id: uuidv4(),
     text: "",
     status: true,
   };
 
   const handleAddItem = () => {
-    setItemsData((currentItem: any) => [...currentItem, newItem]);
+    setItemsData((currentItem: Item[]) => [...currentItem, newItem]);
   };
 
   const handleDeleteItem = (id: string) => {
-    setItemsData((currentItem: any) =>
-      currentItem.filter((x: any) => x.id !== id)
+    setItemsData((currentItem: Item[]) =>
+      currentItem.filter((x: Item) => x.id !== id)
     );
   };
 
@@ -51,7 +52,7 @@ const CreatePlanAdmin: React.FC = () => {
       data?.slug === "" ||
       !data?.name ||
       data?.name === "" ||
-      data?.price === "" ||
+      data?.price === 0 ||
       !data?.url ||
       data?.url === ""
     ) {
@@ -78,7 +79,7 @@ const CreatePlanAdmin: React.FC = () => {
       return;
     }
 
-    const isItemsEmpty = itemsData.some((item: any) => item.text === "");
+    const isItemsEmpty = itemsData.some((item: Item) => item.text === "");
 
     if (isItemsEmpty) {
       toast("El ítem debe tener contenido!", {
@@ -156,7 +157,9 @@ const CreatePlanAdmin: React.FC = () => {
             className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300"
             value={data?.price}
             placeholder="Introduce un precio"
-            onChange={(e) => setData({ ...data, price: e.target.value })}
+            onChange={(e) =>
+              setData({ ...data, price: Number(e.target.value) })
+            }
           />
         </div>
         <div className="py-4">
@@ -174,7 +177,7 @@ const CreatePlanAdmin: React.FC = () => {
             Items
           </span>
 
-          {itemsData.map((item: any, index: number) => (
+          {itemsData.map((item: Item, index: number) => (
             <div key={item.id} className="py-4 flex">
               <input
                 type="text"
@@ -183,8 +186,8 @@ const CreatePlanAdmin: React.FC = () => {
                 placeholder="Introduce un item"
                 onChange={(e) => {
                   const text = e.target.value;
-                  setItemsData((currentItem: any) =>
-                    produce(currentItem, (v: any) => {
+                  setItemsData((currentItem: Item[]) =>
+                    produce(currentItem, (v) => {
                       v[index].text = text;
                     })
                   );
@@ -196,8 +199,8 @@ const CreatePlanAdmin: React.FC = () => {
                     item.status ? "bg-green-200" : "bg-red-200"
                   }`}
                   onClick={() =>
-                    setItemsData((currentItem: any) =>
-                      produce(currentItem, (v: any) => {
+                    setItemsData((currentItem: Item[]) =>
+                      produce(currentItem, (v) => {
                         v[index].status = !item.status;
                       })
                     )
