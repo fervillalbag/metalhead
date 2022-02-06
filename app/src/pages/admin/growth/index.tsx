@@ -47,7 +47,7 @@ const GrowthAdmin: React.FC = () => {
     setDataItems(growthDataItems?.getGrowthHome);
   }, [growthData, growthDataItems]);
 
-  const newDescription = {
+  const newDescription: Description = {
     id: uuidv4(),
     text: "",
   };

@@ -23,7 +23,7 @@ const CreateGrowthItem: React.FC = () => {
 
   const [createGrowthHome] = useMutation(CREATE_GROWTH_ITEM);
 
-  const newDescription = {
+  const newDescription: Description = {
     id: uuidv4(),
     text: "",
   };

@@ -11,23 +11,32 @@ import { GET_HEADER_HOME } from "@/graphql/queries/headerHome";
 import { UPDATE_HEADER_INFO } from "@/graphql/mutation/header";
 import { HeaderInfo } from "@/types/header";
 import { Description } from "@/types/description";
+import { FileType } from "@/types/file";
 
 const HeaderAdmin: React.FC = () => {
   const [data, setData] = React.useState<HeaderInfo | null>(null);
-  const [descriptionArray, setDescriptionArray] = React.useState<any>([]);
-  const [showHeaderImage, setShowHeaderImage] = React.useState<any>(null);
-  const [fileHeader, setFileHeader] = React.useState<any>(null);
+  const [descriptionArray, setDescriptionArray] = React.useState<Description[]>(
+    []
+  );
+  const [showHeaderImage, setShowHeaderImage] = React.useState<string | null>(
+    null
+  );
+  const [fileHeader, setFileHeader] = React.useState<FileType | null | Blob>(
+    null
+  );
 
-  const inputFileRef = React.useRef<any>(null);
+  const inputFileRef = React.useRef<HTMLInputElement | null>(null);
   const [updateHeaderHome] = useMutation(UPDATE_HEADER_INFO);
 
-  const newDescription = {
+  const newDescription: Description = {
     id: uuidv4(),
     text: "",
   };
 
   const handleChangeImage = () => {
-    inputFileRef.current.click();
+    if (inputFileRef.current) {
+      inputFileRef.current.click();
+    }
   };
 
   const handleAddNewInputDescription = () => {
@@ -35,7 +44,9 @@ const HeaderAdmin: React.FC = () => {
   };
 
   const handleDeleteInputDescription = (id: string) => {
-    const newValue = descriptionArray.filter((desc: any) => desc.id !== id);
+    const newValue = descriptionArray.filter(
+      (description: Description) => description.id !== id
+    );
     setDescriptionArray(newValue);
   };
 
@@ -48,15 +59,16 @@ const HeaderAdmin: React.FC = () => {
     setDescriptionArray(headerData?.getHeaderHome.description);
   }, [headerData]);
 
-  const handleHeaderFileChange = (e: any) => {
-    const file = e.currentTarget.files[0];
+  const handleHeaderFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const target = e.currentTarget as HTMLInputElement;
+    const file = target.files![0];
     const image = URL.createObjectURL(file);
     setShowHeaderImage(image);
     setFileHeader(file);
   };
 
   const handleUpdate = async () => {
-    const newDescriptionArray = descriptionArray.map((item: any) => {
+    const newDescriptionArray = descriptionArray.map((item: Description) => {
       return {
         id: item.id,
         text: item.text,
@@ -88,7 +100,7 @@ const HeaderAdmin: React.FC = () => {
     }
 
     const isDescriptionEmpty = newDescriptionArray.some(
-      (description: any) => description.text === ""
+      (description: Description) => description.text === ""
     );
 
     if (isDescriptionEmpty) {
@@ -106,7 +118,7 @@ const HeaderAdmin: React.FC = () => {
     if (fileHeader) {
       const url = "https://api.cloudinary.com/v1_1/dbp9am0cx/image/upload";
       const formData = new FormData();
-      formData.append("file", fileHeader);
+      formData.append("file", fileHeader as string | Blob);
       formData.append("upload_preset", "headerInfo");
       const res = await fetch(url, { method: "post", body: formData });
       const imageData = await res.json();
@@ -156,9 +168,7 @@ const HeaderAdmin: React.FC = () => {
                 type="text"
                 value={data.title}
                 className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300"
-                onChange={(e: any) =>
-                  setData({ ...data, title: e.target.value })
-                }
+                onChange={(e) => setData({ ...data, title: e.target.value })}
               />
             </div>
 
@@ -200,10 +210,11 @@ const HeaderAdmin: React.FC = () => {
                       className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300 resize-none h-32"
                       onChange={(e) => {
                         const text = e.target.value;
-                        setDescriptionArray((currentDescription: any) =>
-                          produce(currentDescription, (v: any) => {
-                            v[index].text = text;
-                          })
+                        setDescriptionArray(
+                          (currentDescription: Description[]) =>
+                            produce(currentDescription, (v) => {
+                              v[index].text = text;
+                            })
                         );
                       }}
                     ></textarea>

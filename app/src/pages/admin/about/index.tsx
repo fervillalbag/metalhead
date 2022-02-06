@@ -45,7 +45,7 @@ const AboutPageAdmin: React.FC = () => {
     setFileAbout(file);
   };
 
-  const newDescription = {
+  const newDescription: Description = {
     id: uuidv4(),
     text: "",
   };

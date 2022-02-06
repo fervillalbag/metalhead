@@ -34,7 +34,7 @@ const GrowthId: React.FC = () => {
     setDescriptionArray(dataGrowthItem?.getGrowthHomeItem?.description);
   }, [router, dataGrowthItem]);
 
-  const newDescription = {
+  const newDescription: Description = {
     id: uuidv4(),
     text: "",
   };
