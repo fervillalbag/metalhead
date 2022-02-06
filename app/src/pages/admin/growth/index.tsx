@@ -13,13 +13,17 @@ import { GET_GROWTH_INFO_HOME } from "@/graphql/queries/growthInfo";
 import { UPDATE_GROWTH_INFO } from "@/graphql/mutation/growthInfo";
 import { GET_GROWTH_HOME } from "@/graphql/queries/growthHome";
 import { DELETE_GROWTH_ITEM } from "@/graphql/mutation/growthHome";
+import { Description } from "@/types/description";
+import { GrowthInfo, GrowthData } from "@/types/growth";
 
 const GrowthAdmin: React.FC = () => {
   const router = useRouter();
 
-  const [data, setData] = React.useState<any>(null);
-  const [dataItems, setDataItems] = React.useState<any>(null);
-  const [descriptionArray, setDescriptionArray] = React.useState<any>([]);
+  const [data, setData] = React.useState<GrowthInfo | null>(null);
+  const [dataItems, setDataItems] = React.useState<GrowthData[]>([]);
+  const [descriptionArray, setDescriptionArray] = React.useState<Description[]>(
+    []
+  );
   const [showModal, setShowModal] = React.useState<boolean>(false);
   const [itemDelete, setItemDelete] = React.useState<string>("");
 
@@ -54,7 +58,7 @@ const GrowthAdmin: React.FC = () => {
 
   const handleDeleteInputDescription = (id: string) => {
     const newValue = descriptionArray.filter(
-      (description: any) => description.id !== id
+      (description: Description) => description.id !== id
     );
     setDescriptionArray(newValue);
   };
@@ -74,12 +78,14 @@ const GrowthAdmin: React.FC = () => {
   };
 
   const handleUpdate = async () => {
-    const newDescriptionArray = descriptionArray.map((description: any) => {
-      return {
-        id: description.id,
-        text: description.text,
-      };
-    });
+    const newDescriptionArray = descriptionArray.map(
+      (description: Description) => {
+        return {
+          id: description.id,
+          text: description.text,
+        };
+      }
+    );
 
     if (!data?.title || data?.title === "") {
       toast("El título es obligatorio!", {
@@ -106,7 +112,7 @@ const GrowthAdmin: React.FC = () => {
     }
 
     const isDescriptionEmpty = newDescriptionArray.some(
-      (description: any) => description.text === ""
+      (description: Description) => description.text === ""
     );
 
     if (isDescriptionEmpty) {
@@ -154,9 +160,7 @@ const GrowthAdmin: React.FC = () => {
               <input
                 type="text"
                 value={data?.title}
-                onChange={(e: any) =>
-                  setData({ ...data, title: e.target.value })
-                }
+                onChange={(e) => setData({ ...data, title: e.target.value })}
                 className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300"
               />
             </div>
@@ -168,30 +172,33 @@ const GrowthAdmin: React.FC = () => {
                   No description available
                 </span>
               ) : (
-                descriptionArray.map((description: any, index: number) => (
-                  <div className="flex py-4" key={description.id}>
-                    <textarea
-                      value={description.text}
-                      onChange={(e) => {
-                        const text = e.target.value;
-                        setDescriptionArray((currentDescription: any) =>
-                          produce(currentDescription, (v: any) => {
-                            v[index].text = text;
-                          })
-                        );
-                      }}
-                      className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300 resize-none h-32"
-                    ></textarea>
-                    <button
-                      className="block p-2 text-2xl px-5 text-red-500 bg-slate-100 ml-4 rounded"
-                      onClick={() =>
-                        handleDeleteInputDescription(description.id)
-                      }
-                    >
-                      <BsTrash />
-                    </button>
-                  </div>
-                ))
+                descriptionArray.map(
+                  (description: Description, index: number) => (
+                    <div className="flex py-4" key={description.id}>
+                      <textarea
+                        value={description.text}
+                        onChange={(e) => {
+                          const text = e.target.value;
+                          setDescriptionArray(
+                            (currentDescription: Description[]) =>
+                              produce(currentDescription, (v) => {
+                                v[index].text = text;
+                              })
+                          );
+                        }}
+                        className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300 resize-none h-32"
+                      ></textarea>
+                      <button
+                        className="block p-2 text-2xl px-5 text-red-500 bg-slate-100 ml-4 rounded"
+                        onClick={() =>
+                          handleDeleteInputDescription(description.id)
+                        }
+                      >
+                        <BsTrash />
+                      </button>
+                    </div>
+                  )
+                )
               )}
             </div>
 
@@ -237,7 +244,7 @@ const GrowthAdmin: React.FC = () => {
                   No items available
                 </span>
               ) : (
-                dataItems.map((item: any) => (
+                dataItems.map((item: GrowthData) => (
                   <div
                     className="shadow-lg rounded border border-slate-200 px-4 py-3 h-44 flex flex-col justify-between"
                     key={item.id}
