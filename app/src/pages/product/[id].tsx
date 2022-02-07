@@ -2,30 +2,16 @@ import React from "react";
 import { RiShoppingCartFill } from "react-icons/ri";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 
-import { GET_PRODUCTS, GET_PRODUCT } from "@/graphql/queries/products";
+import { GET_PRODUCT } from "@/graphql/queries/products";
 import client from "@/config/apollo";
 import Layout from "@/layout";
+import Skeleton from "@/components/Skeleton";
 
 interface ProductIprops {
   dataProduct: any;
 }
 
-export const getStaticPaths = async () => {
-  const { data: dataProducts } = await client.query({
-    query: GET_PRODUCTS,
-  });
-
-  const paths = dataProducts?.getProducts.map((item: any) => ({
-    params: { id: item.id },
-  }));
-
-  return {
-    paths,
-    fallback: false,
-  };
-};
-
-export const getStaticProps = async ({ params }: { params: any }) => {
+export const getServerSideProps = async ({ params }: { params: any }) => {
   const { data: dataProduct } = await client.query({
     query: GET_PRODUCT,
     variables: {
@@ -46,8 +32,14 @@ const Product: React.FC<ProductIprops> = ({ dataProduct }) => {
   return (
     <Layout>
       <div className="max-w-6xl w-11/12 mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 pt-10 pb-20  lg:py-28 gap-y-10 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-[500px_1fr] pt-10 pb-20  lg:py-24 gap-y-10 gap-x-10 items-center">
           <div className="grid place-items-center">
+            {!productDataPage && (
+              <div className="w-full h-[500px]">
+                <Skeleton type="thumbnail" />
+              </div>
+            )}
+
             <LazyLoadImage
               src={productDataPage?.image}
               alt=""
@@ -55,10 +47,23 @@ const Product: React.FC<ProductIprops> = ({ dataProduct }) => {
               height={"300px"}
             />
           </div>
-          <div className="px-3 lg:p-0">
+          <div className="lg:p-0">
+            {!productDataPage && (
+              <div>
+                <Skeleton type="title" />
+              </div>
+            )}
+
             <h3 className="font-bold text-VeryDarkBlue text-2xl">
               {productDataPage?.name}
             </h3>
+
+            {!productDataPage && (
+              <div>
+                <Skeleton type="title" />
+              </div>
+            )}
+
             <div className="flex items-center mt-1">
               <span className="block text-DarkGrayishBlue text-sm font-regular mr-1">
                 Code:
@@ -68,6 +73,12 @@ const Product: React.FC<ProductIprops> = ({ dataProduct }) => {
               </span>
             </div>
 
+            {!productDataPage && (
+              <div className="w-32">
+                <Skeleton type="title" />
+              </div>
+            )}
+
             <div>
               <span className="block text-DarkBlue text-3xl font-bold mt-3">
                 ${productDataPage?.price}
@@ -76,14 +87,27 @@ const Product: React.FC<ProductIprops> = ({ dataProduct }) => {
 
             <div className="py-4">
               {productDataPage?.description.map((item: any) => (
-                <span
-                  key={item.id}
-                  className="block text-DarkGrayishBlue lg:w-9/12 mt-3"
-                >
-                  {item?.text}
-                </span>
+                <div key={item.id}>
+                  {!productDataPage && (
+                    <div>
+                      <Skeleton type="text" />
+                      <Skeleton type="text" />
+                      <Skeleton type="text" />
+                    </div>
+                  )}
+
+                  <span className="block text-DarkGrayishBlue lg:w-9/12 mt-3">
+                    {item?.text}
+                  </span>
+                </div>
               ))}
             </div>
+
+            {!productDataPage && (
+              <div className="w-32">
+                <Skeleton type="title" />
+              </div>
+            )}
 
             <div className="flex items-center mb-2">
               <span className="block text-slate-800 text-sm font-regular mr-1">

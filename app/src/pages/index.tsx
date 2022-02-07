@@ -5,7 +5,7 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 
 import Layout from "@/layout";
 import client from "@/config/apollo";
-import Loading from "@/components/Loading";
+// import Loading from "@/components/Loading";
 import { GET_HEADER_HOME } from "@/graphql/queries/headerHome";
 import { GET_GROWTH_INFO_HOME } from "@/graphql/queries/growthInfo";
 import { GET_GROWTH_HOME } from "@/graphql/queries/growthHome";
@@ -14,6 +14,7 @@ import { GET_REVIEW_INFO } from "@/graphql/queries/reviewInfo";
 import { HeaderInfo } from "@/types/header";
 import { GrowthData, GrowthInfo } from "@/types/growth";
 import { ReviewData, ReviewInfo } from "@/types/review";
+import Skeleton from "@/components/Skeleton";
 
 interface HomeIprops {
   headerData: {
@@ -62,7 +63,7 @@ export const getStaticProps: GetStaticProps = async () => {
       reviewInfoData,
       growthHome,
     },
-    revalidate: 60,
+    revalidate: 60 * 60 * 2,
   };
 };
 
@@ -79,15 +80,6 @@ const Home: React.FC<HomeIprops> = ({
   const reviewInfoHomeData = reviewInfoData?.getReviewInfoHome;
   const growthItemsHomeData = growthHome?.getGrowthHome;
 
-  if (
-    !headerHomeData ||
-    !growthHomeData ||
-    !reviewHomeData ||
-    !reviewInfoHomeData ||
-    !growthItemsHomeData
-  )
-    return <Loading />;
-
   return (
     <div>
       <Layout>
@@ -97,9 +89,26 @@ const Home: React.FC<HomeIprops> = ({
 
         <header className="lg:flex items-center max-w-6xl w-11/12 mx-auto py-0 lg:py-8">
           <div className="flex-1 mb-10 lg:mb-0">
+            {!headerHomeData && (
+              <div className="mb-10">
+                <Skeleton type="title" />
+                <Skeleton type="title" />
+                <Skeleton type="title" />
+              </div>
+            )}
+
             <h3 className="text-4xl lg:text-6xl font-bold text-DarkBlue">
               {headerHomeData?.title}
             </h3>
+
+            {!headerHomeData && (
+              <>
+                <Skeleton type="text" />
+                <Skeleton type="text" />
+                <Skeleton type="text" />
+              </>
+            )}
+
             {headerHomeData &&
               headerHomeData.description.map((item: any) => (
                 <p
@@ -111,6 +120,12 @@ const Home: React.FC<HomeIprops> = ({
               ))}
           </div>
           <div className="flex flex-1 justify-center">
+            {!headerHomeData && (
+              <div className="w-96 h-96">
+                <Skeleton type="thumbnail" />
+              </div>
+            )}
+
             <LazyLoadImage
               src={headerHomeData?.image}
               alt=""

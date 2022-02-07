@@ -6,8 +6,8 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 
 import Layout from "@/layout";
 import client from "@/config/apollo";
-import Loading from "@/components/Loading";
 import { GET_PRODUCTS } from "@/graphql/queries/products";
+import Skeleton from "@/components/Skeleton";
 
 interface ProductsIprops {
   dataProducts: any;
@@ -28,17 +28,21 @@ export const getServerSideProps: GetServerSideProps = async () => {
 const Products: React.FC<ProductsIprops> = ({ dataProducts }) => {
   const dataProductsPage = dataProducts?.getProducts;
 
-  if (!dataProductsPage) return <Loading />;
-
   return (
     <Layout>
-      <div className="max-w-6xl w-11/12 mx-auto py-4 pb-16">
+      <div className="max-w-6xl w-11/12 mx-auto py-4 pb-16 min-h-[400px]">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-10 gap-x-10">
           {dataProductsPage.map((item: any) => (
             <article key={item.id} className="">
               <Link href={`/product/${item.id}`}>
                 <a>
                   <div className="border border-DarkGrayishBlue p-4">
+                    {!dataProductsPage && (
+                      <div className="w-64 h-64 mx-auto">
+                        <Skeleton type="thumbnail" />
+                      </div>
+                    )}
+
                     <LazyLoadImage
                       src={item?.image}
                       alt=""
@@ -49,14 +53,33 @@ const Products: React.FC<ProductsIprops> = ({ dataProducts }) => {
                 </a>
               </Link>
               <div className="border border-t-0 border-DarkGrayishBlue p-4">
+                {!dataProductsPage && (
+                  <div className="mb-6">
+                    <Skeleton type="text" />
+                  </div>
+                )}
+
                 <span className="block font-medium text-DarkGrayishBlue">
                   Vendor code: {item?.code}
                 </span>
+
+                {!dataProductsPage && (
+                  <div>
+                    <Skeleton type="text" />
+                  </div>
+                )}
+
                 <span className="block text-VeryDarkBlue font-medium mt-2 text-xl">
                   {item?.name}
                 </span>
 
                 <div className="flex items-center justify-between mt-4">
+                  {!dataProductsPage && (
+                    <div>
+                      <Skeleton type="text" />
+                    </div>
+                  )}
+
                   <div>
                     <span className="block font-medium text-DarkGrayishBlue">
                       Price:

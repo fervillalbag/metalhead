@@ -6,6 +6,7 @@ import Layout from "@/layout";
 import client from "@/config/apollo";
 import { GET_PLANS } from "@/graphql/queries/plan";
 import { GET_PLAN_INFO } from "@/graphql/queries/planInfo";
+import Skeleton from "@/components/Skeleton";
 
 interface PlansIprops {
   dataPlans: any;
@@ -26,7 +27,7 @@ export const getStaticProps: GetStaticProps = async () => {
       dataPlans,
       dataInfo,
     },
-    revalidate: 60,
+    revalidate: 60 * 60 * 2,
   };
 };
 
@@ -37,18 +38,42 @@ const Plans: React.FC<PlansIprops> = ({ dataPlans, dataInfo }) => {
   return (
     <Layout>
       <div className="w-11/12 max-w-6xl mx-auto">
+        {!dataHomePlanInfo && (
+          <div className="mx-auto w-32">
+            <Skeleton type="text" />
+          </div>
+        )}
+
         <h3 className="text-2xl lg:text-4xl font-bold text-DarkBlue text-center">
           {dataHomePlanInfo?.title}
         </h3>
 
         {dataHomePlanInfo?.description.map((description: any) => (
-          <span
-            key={description.id}
-            className="block mt-4 text-DarkGrayishBlue font-regular text-sm text-center lg:w-9/12 mx-auto"
-          >
-            {description.text}
-          </span>
+          <div key={description.id}>
+            {!dataHomePlanInfo && (
+              <div className="w-10/12 mx-auto mt-8">
+                <Skeleton type="text" />
+                <Skeleton type="text" />
+                <Skeleton type="text" />
+              </div>
+            )}
+
+            <span className="block mt-4 text-DarkGrayishBlue font-regular text-sm text-center lg:w-9/12 mx-auto">
+              {description.text}
+            </span>
+          </div>
         ))}
+
+        {!dataHomePlanInfo && (
+          <div className="grid grid-cols-2 gap-x-20 gap-y-16 w-10/12 mx-auto mt-8">
+            <div className="w-full h-[500px]">
+              <Skeleton type="thumbnail" />
+            </div>
+            <div className="w-full h-[500px]">
+              <Skeleton type="thumbnail" />
+            </div>
+          </div>
+        )}
 
         <div className="grid md:grid-cols-2 lg:grid-cols-[repeat(2,_370px)] gap-6 gap-y-10 justify-center pt-10 pb-20">
           {dataHomePlans.map((plan: any) => (
