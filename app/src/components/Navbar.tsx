@@ -1,16 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 
-import { FaTimes, FaBars } from "react-icons/fa";
+import { FaTimes, FaBars, FaShoppingCart } from "react-icons/fa";
 
 const Navbar: React.FC = () => {
-  const [isMenuShow, setIsMenuShow] = useState<boolean>(false);
   const router = useRouter();
+
+  const [isMenuShow, setIsMenuShow] = useState<boolean>(false);
+  const [cart, setCart] = useState([]);
 
   const handleOpenMenu = () => setIsMenuShow(true);
   const handleCloseMenu = () => setIsMenuShow(false);
+
+  useEffect(() => {
+    setCart(JSON.parse(localStorage.getItem("cart-product") || "[]"));
+  }, []);
+
+  console.log(cart);
 
   return (
     <nav className="sticky top-0 lg:static max-w-6xl w-11/12 mx-auto flex justify-between py-8 items-center">
@@ -98,12 +106,22 @@ const Navbar: React.FC = () => {
         </div>
       </div>
 
-      <div className="hidden lg:block">
+      <div className="hidden lg:flex items-center">
         <Link href="/">
           <a className="bg-BrightRed inline-block text-VeryPaleRed py-3 px-8 rounded-full text-sm font-medium">
             Get Started
           </a>
         </Link>
+        <div className="ml-4">
+          <button className="text-3xl text-VeryDarkBlue relative">
+            <span>
+              <FaShoppingCart />
+            </span>
+            <span className="text-xs absolute bg-BrightRed text-white w-6 h-6 rounded-full flex items-center justify-center bottom-[-16px] right-[-10px]">
+              {!cart.length ? 0 : cart.length}
+            </span>
+          </button>
+        </div>
       </div>
     </nav>
   );

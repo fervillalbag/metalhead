@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { GetServerSideProps } from "next";
 import { RiShoppingCartFill } from "react-icons/ri";
@@ -28,6 +28,19 @@ export const getServerSideProps: GetServerSideProps = async () => {
 const Products: React.FC<ProductsIprops> = ({ dataProducts }) => {
   const dataProductsPage = dataProducts?.getProducts;
 
+  const [cart, setCart] = useState<any | null>([]);
+
+  useEffect(() => {
+    const cartFromStoraget = JSON.parse(
+      localStorage.getItem("cart-product") || "[]"
+    );
+    setCart(cartFromStoraget);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("cart-product", JSON.stringify(cart));
+  }, [cart]);
+
   return (
     <Layout>
       <div className="max-w-6xl w-11/12 mx-auto py-4 pb-16 min-h-[400px]">
@@ -36,7 +49,7 @@ const Products: React.FC<ProductsIprops> = ({ dataProducts }) => {
             <article key={item.id} className="">
               <Link href={`/product/${item.id}`}>
                 <a>
-                  <div className="border border-DarkGrayishBlue p-4">
+                  <div className="border border-DarkGrayishBlue p-4 text-center">
                     {!dataProductsPage && (
                       <div className="w-64 h-64 mx-auto">
                         <Skeleton type="thumbnail" />
@@ -47,7 +60,7 @@ const Products: React.FC<ProductsIprops> = ({ dataProducts }) => {
                       src={item?.image}
                       alt=""
                       placeholderSrc="/imageload.png"
-                      className="w-full object-cover align-top"
+                      className="w-full h-64 object-cover align-top"
                     />
                   </div>
                 </a>
@@ -89,7 +102,10 @@ const Products: React.FC<ProductsIprops> = ({ dataProducts }) => {
                     </span>
                   </div>
                   <div>
-                    <button className="text-2xl bg-BrightRed text-white w-12 h-12 flex items-center justify-center rounded-full cursor-pointer">
+                    <button
+                      className="text-2xl bg-BrightRed text-white w-12 h-12 flex items-center justify-center rounded-full cursor-pointer"
+                      onClick={() => setCart([...cart, item])}
+                    >
                       <RiShoppingCartFill />
                     </button>
                   </div>
