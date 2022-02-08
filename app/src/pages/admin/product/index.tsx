@@ -208,6 +208,15 @@ const ProductAdmin = () => {
               Add input description
             </button>
 
+            <button
+              className="bg-slate-700 text-white rounded block px-8 text-lg py-2 mt-8"
+              onClick={handleUpdate}
+            >
+              Update Info
+            </button>
+
+            <div className="border border-slate-200 mt-8"></div>
+
             <h1 className="text-2xl text-slate-600 mt-8 mb-6">
               List of products
             </h1>
@@ -269,15 +278,6 @@ const ProductAdmin = () => {
               onClick={() => router.push("/admin/create/product")}
             >
               Add new product
-            </button>
-
-            <div className="border border-slate-200 mt-8"></div>
-
-            <button
-              className="bg-slate-700 text-white rounded block px-8 text-lg py-2 mt-8"
-              onClick={handleUpdate}
-            >
-              Update Info
             </button>
 
             <Modal showModal={showModal}>

@@ -236,6 +236,15 @@ const GrowthAdmin: React.FC = () => {
               Add input description
             </button>
 
+            <button
+              onClick={handleUpdate}
+              className="bg-slate-700 text-white rounded block px-8 text-lg py-2 mt-8"
+            >
+              Update Info
+            </button>
+
+            <div className="border border-slate-200 mt-8"></div>
+
             <h1 className="text-2xl text-slate-600 mt-8 mb-6">List of Items</h1>
 
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -280,15 +289,6 @@ const GrowthAdmin: React.FC = () => {
               onClick={() => router.push("/admin/create/growth")}
             >
               Add a new item
-            </button>
-
-            <div className="border border-slate-200 mt-8"></div>
-
-            <button
-              onClick={handleUpdate}
-              className="bg-slate-700 text-white rounded block px-8 text-lg py-2 mt-8"
-            >
-              Update
             </button>
           </div>
         )}
