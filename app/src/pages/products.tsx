@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import toast from "react-hot-toast";
 import { GetServerSideProps } from "next";
 import { RiShoppingCartFill } from "react-icons/ri";
 import { LazyLoadImage } from "react-lazy-load-image-component";
@@ -95,7 +96,10 @@ const Products: React.FC<ProductsIprops> = ({ dataProducts }) => {
                   <div>
                     <button
                       className="text-2xl bg-BrightRed text-white w-12 h-12 flex items-center justify-center rounded-full cursor-pointer"
-                      onClick={() => handleAddCart(item)}
+                      onClick={() => {
+                        handleAddCart(item);
+                        toast.success("Agregado al carrito");
+                      }}
                     >
                       <RiShoppingCartFill />
                     </button>

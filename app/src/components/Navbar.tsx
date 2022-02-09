@@ -9,7 +9,7 @@ import { CartContextModal } from "@/context/CartContextModal";
 
 const Navbar: React.FC = () => {
   const router = useRouter();
-  const { cart } = useContext(CartContext);
+  const { cart = [] } = useContext(CartContext);
   const { setIsShowModalCart } = useContext(CartContextModal);
 
   const [isMenuShow, setIsMenuShow] = useState<boolean>(false);
@@ -37,7 +37,7 @@ const Navbar: React.FC = () => {
               <FaShoppingCart />
             </span>
             <span className="text-xs absolute bg-BrightRed text-white w-6 h-6 rounded-full flex items-center justify-center bottom-[-16px] right-[-10px]">
-              {!cart.length ? 0 : cart.length}
+              {cart.length === 0 ? 0 : cart.length}
             </span>
           </button>
         </div>
@@ -134,7 +134,7 @@ const Navbar: React.FC = () => {
               <FaShoppingCart />
             </span>
             <span className="text-xs absolute bg-BrightRed text-white w-6 h-6 rounded-full flex items-center justify-center bottom-[-16px] right-[-10px]">
-              {!cart.length ? 0 : cart.length}
+              {cart.length === 0 ? 0 : cart.length}
             </span>
           </button>
         </div>

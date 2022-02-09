@@ -1,4 +1,5 @@
 import React from "react";
+import toast from "react-hot-toast";
 import { RiShoppingCartFill } from "react-icons/ri";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 
@@ -127,7 +128,10 @@ const Product: React.FC<ProductIprops> = ({ dataProduct }) => {
               </button>
               <button
                 className="border-BrightRed border inline-block text-BrightRed py-3 px-8 rounded-full font-medium mt-4 text-xl"
-                onClick={() => handleAddCart(productDataPage)}
+                onClick={() => {
+                  handleAddCart(productDataPage);
+                  toast.success("Agregado al carrito");
+                }}
               >
                 <RiShoppingCartFill />
               </button>

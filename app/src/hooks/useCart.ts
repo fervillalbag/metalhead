@@ -1,8 +1,6 @@
 import { useContext, useEffect } from "react";
 import { CartContext } from "@/context/CartContext";
 
-import toast from "react-hot-toast";
-
 export const useCart = () => {
   const { cart, setCart } = useContext(CartContext);
 
@@ -18,17 +16,39 @@ export const useCart = () => {
   }, [cart]);
 
   const handleAddCart = (item: any) => {
-    setCart([...cart, item]);
-    toast.success("Agregado al carrito");
+    const exist = cart.find((x: any) => x.id === item.id);
+    if (exist) {
+      setCart(
+        cart.map((x: any) =>
+          x.id === item.id ? { ...exist, qty: exist.qty + 1 } : x
+        )
+      );
+    } else {
+      setCart([...cart, { ...item, qty: 1 }]);
+    }
   };
 
-  const handleDeleteCart = (id: string) => {
-    setCart((currentCart: any) => currentCart.filter((x: any) => x.id !== id));
+  const handleDeleteCart = (item: any) => {
+    const exist = cart.find((x: any) => x.id === item.id);
+    if (exist.qty === 1) {
+      setCart(cart.filter((x: any) => x.id !== item.id));
+    } else {
+      setCart(
+        cart.map((x: any) =>
+          x.id === item.id ? { ...exist, qty: exist.qty - 1 } : x
+        )
+      );
+    }
+  };
+
+  const handleDeleteAllProductCart = (id: string) => {
+    setCart(cart.filter((x: any) => x.id !== id));
   };
 
   return {
     cart,
     handleAddCart,
     handleDeleteCart,
+    handleDeleteAllProductCart,
   };
 };

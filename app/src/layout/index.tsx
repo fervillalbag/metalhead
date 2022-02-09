@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Head from "next/head";
 import { FaPlus, FaMinus, FaTimes } from "react-icons/fa";
 import { useRouter } from "next/router";
@@ -8,12 +8,22 @@ import Navbar from "@/components/Navbar";
 import { CartContext } from "@/context/CartContext";
 import { CartContextModal } from "@/context/CartContextModal";
 import { BsFillTrashFill } from "react-icons/bs";
+import { useCart } from "@/hooks/useCart";
 
 const Layout: React.FC = ({ children }) => {
   const router = useRouter();
 
-  const { cart } = useContext(CartContext);
+  const [currentCart, setCurrentCart] = useState([]);
+
+  const { cart = [] } = useContext(CartContext);
   const { isShowModalCart, setIsShowModalCart } = useContext(CartContextModal);
+
+  const { handleAddCart, handleDeleteCart, handleDeleteAllProductCart } =
+    useCart();
+
+  useEffect(() => {
+    setCurrentCart(cart);
+  }, [cart]);
 
   return (
     <>
@@ -50,58 +60,76 @@ const Layout: React.FC = ({ children }) => {
 
         <div className="flex flex-col justify-between px-6 h-[calc(100vh_-_76px_-_112px)] overflow-y-scroll">
           <div>
-            {cart.map((product: any) => (
-              <article
-                key={product.id}
-                className="flex items-center mb-6 border-b pb-6 border-slate-200"
-              >
-                <div className="w-10 h-full mr-3">
-                  <button className="py-3 px-3 block bg-red-500 text-white rounded text-center text-sm">
-                    <BsFillTrashFill />
-                  </button>
-                </div>
-                <div
-                  className="border border-slate-300 w-24 h-24 md:w-20 md:h-20 p-1"
-                  onClick={() => {
-                    router.push(`/product/${product.id}`);
-                    setIsShowModalCart(false);
-                  }}
+            {currentCart.length === 0 ? (
+              <span className="block">Cart is empty</span>
+            ) : (
+              currentCart.map((product: any) => (
+                <article
+                  key={product.id}
+                  className="flex items-center mb-6 border-b pb-6 border-slate-200"
                 >
-                  <img
-                    src={product.image}
-                    className="w-full object-contain"
-                    alt=""
-                  />
-                </div>
-                <div className="ml-3 flex-1 md:flex-initial md:w-32 md:flex md:justify-between">
-                  <div>
-                    <span className="block text-sm text-slate-600">
-                      {product?.name.slice(0, 30)}
-                      {product?.name.length >= 30 && "..."}
-                    </span>
-                    <span className="block font-semibold text-sm mt-1">
-                      ${product.price}
-                    </span>
-                  </div>
-                  <div className="mt-2 md:mt-0 md:ml-3 flex md:block">
-                    <button className="flex items-center justify-center text-xs w-8 h-8 md:w-6 md:h-6 rounded bg-BrightRed text-white">
-                      <FaMinus />
-                    </button>
-                    <span className="text-base md:text-sm block my-1 text-center px-3 md:px-0 font-semibold text-slate-600">
-                      2
-                    </span>
-                    <button className="flex items-center justify-center text-xs w-8 h-8 md:w-6 md:h-6 rounded bg-BrightRed text-white">
-                      <FaPlus />
+                  <div className="w-10 h-full mr-3">
+                    <button
+                      className="py-3 px-3 block bg-red-500 text-white rounded text-center text-sm"
+                      onClick={() => handleDeleteAllProductCart(product.id)}
+                    >
+                      <BsFillTrashFill />
                     </button>
                   </div>
-                </div>
-              </article>
-            ))}
+                  <div
+                    className="border border-slate-300 w-24 h-24 md:w-20 md:h-20 p-1"
+                    onClick={() => {
+                      router.push(`/product/${product.id}`);
+                      setIsShowModalCart(false);
+                    }}
+                  >
+                    <img
+                      src={product.image}
+                      className="w-full object-contain"
+                      alt=""
+                    />
+                  </div>
+                  <div className="ml-3 flex-1 md:flex-initial md:w-32 md:flex md:justify-between">
+                    <div>
+                      <span className="block text-sm text-slate-600">
+                        {product?.name.slice(0, 30)}
+                        {product?.name.length >= 30 && "..."}
+                      </span>
+                      <span className="block font-semibold text-sm mt-1">
+                        ${product.price}
+                      </span>
+                    </div>
+                    <div className="mt-2 md:mt-0 md:ml-3 flex md:block">
+                      <button
+                        className="flex items-center justify-center text-xs w-8 h-8 md:w-6 md:h-6 rounded bg-BrightRed text-white"
+                        onClick={() => handleDeleteCart(product)}
+                      >
+                        <FaMinus />
+                      </button>
+                      <span className="text-base md:text-sm block my-1 text-center px-3 md:px-0 font-semibold text-slate-600">
+                        {product.qty}
+                      </span>
+                      <button
+                        className="flex items-center justify-center text-xs w-8 h-8 md:w-6 md:h-6 rounded bg-BrightRed text-white"
+                        onClick={() => handleAddCart(product)}
+                      >
+                        <FaPlus />
+                      </button>
+                    </div>
+                  </div>
+                </article>
+              ))
+            )}
           </div>
         </div>
 
         <div className="h-28 flex items-center px-6">
-          <button className="bg-DarkBlue block w-full text-white py-3 rounded-md">
+          <button
+            disabled={currentCart ? true : false}
+            className={`bg-DarkBlue block w-full text-white py-3 rounded-md cursor-pointer ${
+              currentCart.length === 0 && "bg-slate-400 cursor-default"
+            }`}
+          >
             Realizar compra
           </button>
         </div>
