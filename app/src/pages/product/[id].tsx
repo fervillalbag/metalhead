@@ -6,6 +6,7 @@ import { GET_PRODUCT } from "@/graphql/queries/products";
 import client from "@/config/apollo";
 import Layout from "@/layout";
 import Skeleton from "@/components/Skeleton";
+import { useCart } from "@/hooks/useCart";
 
 interface ProductIprops {
   dataProduct: any;
@@ -28,6 +29,8 @@ export const getServerSideProps = async ({ params }: { params: any }) => {
 
 const Product: React.FC<ProductIprops> = ({ dataProduct }) => {
   const productDataPage = dataProduct?.getProduct;
+
+  const { handleAddCart } = useCart();
 
   return (
     <Layout>
@@ -122,7 +125,10 @@ const Product: React.FC<ProductIprops> = ({ dataProduct }) => {
               <button className="bg-DarkBlue inline-block text-VeryPaleRed py-3 px-8 rounded-full font-medium mt-4 text-sm mr-3">
                 Buy now
               </button>
-              <button className="border-BrightRed border inline-block text-BrightRed py-3 px-8 rounded-full font-medium mt-4 text-xl">
+              <button
+                className="border-BrightRed border inline-block text-BrightRed py-3 px-8 rounded-full font-medium mt-4 text-xl"
+                onClick={() => handleAddCart(productDataPage)}
+              >
                 <RiShoppingCartFill />
               </button>
             </div>

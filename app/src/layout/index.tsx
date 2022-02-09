@@ -47,10 +47,13 @@ const Layout: React.FC = ({ children }) => {
           </div>
         </div>
 
-        <div className="flex flex-col justify-between px-6 h-[calc(100vh_-_76px)]">
+        <div className="flex flex-col justify-between px-6 h-[calc(100vh_-_76px_-_112px)] overflow-y-scroll">
           <div>
             {cart.map((product: any) => (
-              <article key={product.id} className="flex items-center mb-4">
+              <article
+                key={product.id}
+                className="flex items-center mb-6 border-b pb-6 border-slate-200"
+              >
                 <div
                   className="border border-slate-300 w-24 h-24 md:w-20 md:h-20 p-1"
                   onClick={() => {
@@ -88,12 +91,12 @@ const Layout: React.FC = ({ children }) => {
               </article>
             ))}
           </div>
+        </div>
 
-          <div className="pb-8">
-            <button className="bg-DarkBlue block w-full text-white py-3 rounded-md">
-              Realizar compra
-            </button>
-          </div>
+        <div className="h-28 flex items-center px-6">
+          <button className="bg-DarkBlue block w-full text-white py-3 rounded-md">
+            Realizar compra
+          </button>
         </div>
       </div>
 
