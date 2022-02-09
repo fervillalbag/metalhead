@@ -15,9 +15,11 @@ import { GET_PRODUCTS } from "@/graphql/queries/products";
 import { DELETE_PRODUCT_ITEM } from "@/graphql/mutation/product";
 import { ProductInfo, Products } from "@/types/product";
 import { Description } from "@/types/description";
+import { useCart } from "@/hooks/useCart";
 
 const ProductAdmin = () => {
   const router = useRouter();
+  const { handleDeleteCart } = useCart();
 
   const [data, setData] = React.useState<ProductInfo | null>(null);
   const [dataItems, setDataItems] = React.useState<Products[]>([]);
@@ -75,6 +77,7 @@ const ProductAdmin = () => {
             id,
           },
         });
+        handleDeleteCart(id);
         refetchDataProducts();
         toast.success(response?.data?.deleteProduct?.message);
       } catch (error) {

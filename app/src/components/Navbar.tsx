@@ -5,10 +5,12 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 
 import { FaTimes, FaBars, FaShoppingCart } from "react-icons/fa";
 import { CartContext } from "@/context/CartContext";
+import { CartContextModal } from "@/context/CartContextModal";
 
 const Navbar: React.FC = () => {
   const router = useRouter();
   const { cart } = useContext(CartContext);
+  const { setIsShowModalCart } = useContext(CartContextModal);
 
   const [isMenuShow, setIsMenuShow] = useState<boolean>(false);
 
@@ -27,7 +29,10 @@ const Navbar: React.FC = () => {
 
       <div className="flex items-center">
         <div className="lg:hidden mr-2">
-          <button className="text-3xl text-VeryDarkBlue relative">
+          <button
+            className="text-3xl text-VeryDarkBlue relative"
+            onClick={() => setIsShowModalCart(true)}
+          >
             <span>
               <FaShoppingCart />
             </span>
@@ -121,7 +126,10 @@ const Navbar: React.FC = () => {
           </a>
         </Link>
         <div className="ml-4">
-          <button className="text-3xl text-VeryDarkBlue relative">
+          <button
+            className="text-3xl text-VeryDarkBlue relative"
+            onClick={() => setIsShowModalCart(true)}
+          >
             <span>
               <FaShoppingCart />
             </span>
