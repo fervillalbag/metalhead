@@ -8,14 +8,17 @@ import client from "@/config/apollo";
 import "@/styles/index.css";
 import "@/styles/globals.css";
 import "react-lazy-load-image-component/src/effects/blur.css";
+import { CartContextProvider } from "@/context/CartContext";
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
     <AnimatePresence exitBeforeEnter>
-      <ApolloProvider client={client}>
-        <Component {...pageProps} />
-        <Toaster position="top-center" reverseOrder={false} />
-      </ApolloProvider>
+      <CartContextProvider>
+        <ApolloProvider client={client}>
+          <Component {...pageProps} />
+          <Toaster position="top-center" reverseOrder={false} />
+        </ApolloProvider>
+      </CartContextProvider>
     </AnimatePresence>
   );
 };

@@ -8,7 +8,9 @@
       "@/components/*": ["components/*"],
       "@/styles/*": ["styles/*"],
       "@/types/*": ["types/*"],
-      "@/pages/*": ["pages/*"]
+      "@/pages/*": ["pages/*"],
+      "@/context/*": ["context/*"],
+      "@/hooks/*": ["hooks/*"]
     },
     "allowJs": true,
     "allowUnreachableCode": false,

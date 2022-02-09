@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Link from "next/link";
 import { GetServerSideProps } from "next";
 import { RiShoppingCartFill } from "react-icons/ri";
@@ -8,6 +8,7 @@ import Layout from "@/layout";
 import client from "@/config/apollo";
 import { GET_PRODUCTS } from "@/graphql/queries/products";
 import Skeleton from "@/components/Skeleton";
+import { useCart } from "@/hooks/useCart";
 
 interface ProductsIprops {
   dataProducts: any;
@@ -28,18 +29,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
 const Products: React.FC<ProductsIprops> = ({ dataProducts }) => {
   const dataProductsPage = dataProducts?.getProducts;
 
-  const [cart, setCart] = useState<any | null>([]);
-
-  useEffect(() => {
-    const cartFromStoraget = JSON.parse(
-      localStorage.getItem("cart-product") || "[]"
-    );
-    setCart(cartFromStoraget);
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("cart-product", JSON.stringify(cart));
-  }, [cart]);
+  const { handleAddCart } = useCart();
 
   return (
     <Layout>
@@ -104,7 +94,7 @@ const Products: React.FC<ProductsIprops> = ({ dataProducts }) => {
                   <div>
                     <button
                       className="text-2xl bg-BrightRed text-white w-12 h-12 flex items-center justify-center rounded-full cursor-pointer"
-                      onClick={() => setCart([...cart, item])}
+                      onClick={() => handleAddCart(item)}
                     >
                       <RiShoppingCartFill />
                     </button>
