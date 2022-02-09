@@ -7,6 +7,7 @@ import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import { CartContext } from "@/context/CartContext";
 import { CartContextModal } from "@/context/CartContextModal";
+import { BsFillTrashFill } from "react-icons/bs";
 
 const Layout: React.FC = ({ children }) => {
   const router = useRouter();
@@ -54,6 +55,11 @@ const Layout: React.FC = ({ children }) => {
                 key={product.id}
                 className="flex items-center mb-6 border-b pb-6 border-slate-200"
               >
+                <div className="w-10 h-full mr-3">
+                  <button className="py-3 px-3 block bg-red-500 text-white rounded text-center text-sm">
+                    <BsFillTrashFill />
+                  </button>
+                </div>
                 <div
                   className="border border-slate-300 w-24 h-24 md:w-20 md:h-20 p-1"
                   onClick={() => {
@@ -67,10 +73,11 @@ const Layout: React.FC = ({ children }) => {
                     alt=""
                   />
                 </div>
-                <div className="ml-3 flex-1 md:flex md:justify-between">
+                <div className="ml-3 flex-1 md:flex-initial md:w-32 md:flex md:justify-between">
                   <div>
                     <span className="block text-sm text-slate-600">
-                      {product.name}
+                      {product?.name.slice(0, 30)}
+                      {product?.name.length >= 30 && "..."}
                     </span>
                     <span className="block font-semibold text-sm mt-1">
                       ${product.price}

@@ -62,7 +62,7 @@ const Products: React.FC<ProductsIprops> = ({ dataProducts }) => {
                   </div>
                 )}
 
-                <span className="block font-medium text-DarkGrayishBlue">
+                <span className="block font-medium text-sm text-DarkGrayishBlue">
                   Vendor code: {item?.code}
                 </span>
 
@@ -72,8 +72,9 @@ const Products: React.FC<ProductsIprops> = ({ dataProducts }) => {
                   </div>
                 )}
 
-                <span className="block text-VeryDarkBlue font-medium mt-2 text-xl">
-                  {item?.name}
+                <span className="block text-VeryDarkBlue font-medium mt-2">
+                  {item?.name.slice(0, 30)}
+                  {item?.name.length >= 30 && "..."}
                 </span>
 
                 <div className="flex items-center justify-between mt-4">
