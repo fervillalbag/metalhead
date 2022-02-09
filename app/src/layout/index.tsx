@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import Head from "next/head";
 import { FaPlus, FaMinus, FaTimes } from "react-icons/fa";
+import { useRouter } from "next/router";
 
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
@@ -8,6 +9,8 @@ import { CartContext } from "@/context/CartContext";
 import { CartContextModal } from "@/context/CartContextModal";
 
 const Layout: React.FC = ({ children }) => {
+  const router = useRouter();
+
   const { cart } = useContext(CartContext);
   const { isShowModalCart, setIsShowModalCart } = useContext(CartContextModal);
 
@@ -36,7 +39,7 @@ const Layout: React.FC = ({ children }) => {
           </span>
           <div className="-mr-1">
             <button
-              className="text-red-500 p-1 text-xl"
+              className="text-red-500 p-1 text-2xl md:text-xl"
               onClick={() => setIsShowModalCart(false)}
             >
               <FaTimes />
@@ -48,14 +51,20 @@ const Layout: React.FC = ({ children }) => {
           <div>
             {cart.map((product: any) => (
               <article key={product.id} className="flex items-center mb-4">
-                <div className="border border-slate-300 w-20 h-20 p-1">
+                <div
+                  className="border border-slate-300 w-24 h-24 md:w-20 md:h-20 p-1"
+                  onClick={() => {
+                    router.push(`/product/${product.id}`);
+                    setIsShowModalCart(false);
+                  }}
+                >
                   <img
                     src={product.image}
                     className="w-full object-contain"
                     alt=""
                   />
                 </div>
-                <div className="ml-3 flex-1 flex justify-between">
+                <div className="ml-3 flex-1 md:flex md:justify-between">
                   <div>
                     <span className="block text-sm text-slate-600">
                       {product.name}
@@ -64,15 +73,15 @@ const Layout: React.FC = ({ children }) => {
                       ${product.price}
                     </span>
                   </div>
-                  <div className="ml-6 md:ml-3">
-                    <button className="flex items-center justify-center text-xs w-6 h-6 rounded bg-BrightRed text-white">
-                      <FaPlus />
+                  <div className="mt-2 md:mt-0 md:ml-3 flex md:block">
+                    <button className="flex items-center justify-center text-xs w-8 h-8 md:w-6 md:h-6 rounded bg-BrightRed text-white">
+                      <FaMinus />
                     </button>
-                    <span className="text-sm block my-1 text-center font-semibold text-slate-600">
+                    <span className="text-base md:text-sm block my-1 text-center px-3 md:px-0 font-semibold text-slate-600">
                       2
                     </span>
-                    <button className="flex items-center justify-center text-xs w-6 h-6 rounded bg-BrightRed text-white">
-                      <FaMinus />
+                    <button className="flex items-center justify-center text-xs w-8 h-8 md:w-6 md:h-6 rounded bg-BrightRed text-white">
+                      <FaPlus />
                     </button>
                   </div>
                 </div>

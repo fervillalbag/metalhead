@@ -28,7 +28,7 @@ const Navbar: React.FC = () => {
       </div>
 
       <div className="flex items-center">
-        <div className="lg:hidden mr-2">
+        <div className="lg:hidden mr-5">
           <button
             className="text-3xl text-VeryDarkBlue relative"
             onClick={() => setIsShowModalCart(true)}
