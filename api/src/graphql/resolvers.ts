@@ -57,6 +57,11 @@ const resolvers = {
     getPlan: (_: any, { id, slug }: { id: string; slug: string }) =>
       planController.getPlan(id, slug),
     getPlans: () => planController.getPlans(),
+
+    // Slide
+    getSlides: () => slideController.getSlides(),
+    getSlide: (_: any, { id }: { id: string }) =>
+      slideController.getSlide(id),
   },
 
   Mutation: {

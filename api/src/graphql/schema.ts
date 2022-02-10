@@ -247,6 +247,10 @@ const typeDefs = gql`
 
     getPlans: [Plan]
     getPlan(id: String, slug: String): Plan
+
+    # Slide
+    getSlides: [Slide]
+    getSlide(id: String!): Slide
   }
 
   type Mutation {

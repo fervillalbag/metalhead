@@ -1,5 +1,25 @@
 import Slide from "../models/slide";
 
+const getSlides = async () => {
+  try {
+    const slides = await Slide.find({});
+    return slides;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
+
+const getSlide = async (id: string) => {
+  try {
+    const slide = await Slide.findOne({ _id: id });
+    return slide;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
+
 const createSlide = async (input: any) => {
   try {
     const slide = new Slide({
@@ -41,4 +61,6 @@ const deleteSlide = async (id: string) => {
 export default {
   createSlide,
   deleteSlide,
+  getSlides,
+  getSlide,
 };
