@@ -130,7 +130,7 @@ const Layout: React.FC = ({ children }) => {
               currentCart.length === 0 && "bg-slate-400 cursor-default"
             }`}
           >
-            Realizar compra
+            Make a purchase
           </button>
         </div>
       </div>

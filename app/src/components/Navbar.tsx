@@ -105,7 +105,7 @@ const Navbar: React.FC = () => {
               Plans
             </a>
           </Link>
-          <Link href="/">
+          <Link href="/community">
             <a
               className={`block text-2xl lg:text-base mb-6 lg:mb-0 mr-0 lg:mr-8 ${
                 router.pathname === "/community"

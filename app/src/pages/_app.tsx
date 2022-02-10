@@ -11,6 +11,7 @@ import { CartContextModalProvider } from "@/context/CartContextModal";
 import "@/styles/index.css";
 import "@/styles/globals.css";
 import "react-lazy-load-image-component/src/effects/blur.css";
+import "swiper/css";
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
