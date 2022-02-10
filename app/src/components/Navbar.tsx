@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { LazyLoadImage } from "react-lazy-load-image-component";
@@ -6,16 +6,21 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import { FaTimes, FaBars, FaShoppingCart } from "react-icons/fa";
 import { CartContext } from "@/context/CartContext";
 import { CartContextModal } from "@/context/CartContextModal";
+import { MenuContext } from "@/context/MenuContext";
 
 const Navbar: React.FC = () => {
   const router = useRouter();
   const { cart = [] } = useContext(CartContext);
   const { setIsShowModalCart } = useContext(CartContextModal);
 
-  const [isMenuShow, setIsMenuShow] = useState<boolean>(false);
+  const { isShowMenu, setIsShowMenu } = useContext(MenuContext);
 
-  const handleOpenMenu = () => setIsMenuShow(true);
-  const handleCloseMenu = () => setIsMenuShow(false);
+  const handleOpenMenu = () => setIsShowMenu(true);
+  const handleCloseMenu = () => setIsShowMenu(false);
+
+  useEffect(() => {
+    setIsShowMenu(false);
+  }, []);
 
   return (
     <nav className="sticky top-0 lg:static max-w-6xl w-11/12 mx-auto flex justify-between py-8 items-center">
@@ -52,7 +57,7 @@ const Navbar: React.FC = () => {
 
       <div
         className={`${
-          isMenuShow ? "translate-y-0" : "translate-y-[-2000px]"
+          isShowMenu ? "translate-y-0" : "translate-y-[-2000px]"
         } lg:translate-y-0 fixed left-0 top-0 bg-white md:bg-transparent w-screen h-full lg:w-auto lg:h-auto lg:static lg:flex flex-col lg:flex-row items-center justify-center z-[2000]`}
       >
         <div className="flex flex-col lg:flex-row w-full h-full items-center justify-center relative z-[2000]">

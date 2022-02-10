@@ -12,18 +12,21 @@ import "@/styles/index.css";
 import "@/styles/globals.css";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import "swiper/css";
+import { MenuContextProvider } from "@/context/MenuContext";
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
     <AnimatePresence exitBeforeEnter>
-      <CartContextProvider>
-        <CartContextModalProvider>
-          <ApolloProvider client={client}>
-            <Component {...pageProps} />
-            <Toaster position="top-center" reverseOrder={false} />
-          </ApolloProvider>
-        </CartContextModalProvider>
-      </CartContextProvider>
+      <MenuContextProvider>
+        <CartContextProvider>
+          <CartContextModalProvider>
+            <ApolloProvider client={client}>
+              <Component {...pageProps} />
+              <Toaster position="top-center" reverseOrder={false} />
+            </ApolloProvider>
+          </CartContextModalProvider>
+        </CartContextProvider>
+      </MenuContextProvider>
     </AnimatePresence>
   );
 };

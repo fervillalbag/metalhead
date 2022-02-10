@@ -1,5 +1,5 @@
 import Layout from "@/layout";
-import React from "react";
+import React, { useContext } from "react";
 import { Navigation } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -8,6 +8,7 @@ import { GET_SLIDES } from "@/graphql/queries/community";
 
 import "swiper/css/navigation";
 import "swiper/css/autoplay";
+import { MenuContext } from "@/context/MenuContext";
 
 export const getServerSideProps = async () => {
   const { data: slides } = await client.query({
@@ -22,12 +23,16 @@ export const getServerSideProps = async () => {
 };
 
 const Community = ({ slides }: any) => {
+  const { isShowMenu } = useContext(MenuContext);
+
   return (
     <Layout>
       <Swiper
         navigation={true}
         modules={[Navigation]}
-        className="h-72 lg:h-[450px] px-20"
+        className={`h-72 lg:h-[450px] px-20 ${
+          isShowMenu ? "opacity-0" : "opacity-100"
+        }`}
       >
         {slides.map((slide: any) => (
           <SwiperSlide key={slide.id} className="bg-slate-300 text-white">
