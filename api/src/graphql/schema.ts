@@ -110,6 +110,12 @@ const typeDefs = gql`
     createdAt: String
   }
 
+  type Slide {
+    id: String
+    image: String
+    createdAt: String
+  }
+
   # Inputs
 
   input CreateUser {
@@ -202,6 +208,11 @@ const typeDefs = gql`
     description: [DescriptionInput]
   }
 
+  input SlideInput {
+    image: String
+    createdAt: String
+  }
+
   # Query
 
   type Query {
@@ -285,6 +296,10 @@ const typeDefs = gql`
     createPlan(input: PlanInput!): MutationResponse
     updatePlan(input: PlanInput): MutationResponse
     deletePlan(id: ID!): MutationResponse
+
+    # Slide
+    createSlide(input: SlideInput!): MutationResponse
+    deleteSlide(id: String!): MutationResponse
   }
 `;
 

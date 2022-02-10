@@ -9,6 +9,7 @@ import planController from "../controllers/plan";
 import planInfoController from "../controllers/planInfo";
 import reviewInfoController from "../controllers/reviewInfo";
 import productInfoController from "../controllers/productInfo";
+import slideController from "../controllers/slide";
 
 import { AboutInfo } from "../types/about";
 import { ReviewHome, ReviewInfo } from "../types/review";
@@ -133,6 +134,12 @@ const resolvers = {
       planController.updatePlan(input),
     deletePlan: (_: any, { id }: { id: string }) =>
       planController.deletePlan(id),
+
+    // Slide
+    createSlide: (_: any, { input }: { input: any }) =>
+      slideController.createSlide(input),
+    deleteSlide: (_: any, { id }: { id: string }) =>
+      slideController.deleteSlide(id),
   },
 };
 
