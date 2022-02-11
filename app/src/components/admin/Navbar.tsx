@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { HiOutlineHome } from "react-icons/hi";
 import { GoCommentDiscussion } from "react-icons/go";
-import { MdBusinessCenter, MdOutlinePermMedia } from "react-icons/md";
+import { MdBusinessCenter, MdGroups, MdOutlinePermMedia } from "react-icons/md";
 import { GiBrain } from "react-icons/gi";
 import { BiStore } from "react-icons/bi";
 import { ImPriceTags } from "react-icons/im";
@@ -174,6 +174,28 @@ const NavbarDashboard: React.FC = () => {
               }`}
             >
               Plan
+            </span>
+          </a>
+        </Link>
+        <Link href="/admin/community">
+          <a className="inline-flex items-center mb-10">
+            <span
+              className={`block mr-6 text-3xl ${
+                router.pathname === "/admin/community"
+                  ? "text-slate-700"
+                  : "text-slate-400"
+              }`}
+            >
+              <MdGroups />
+            </span>
+            <span
+              className={`block ${
+                router.pathname === "/admin/community"
+                  ? "text-slate-700"
+                  : "text-slate-400"
+              }`}
+            >
+              Community
             </span>
           </a>
         </Link>

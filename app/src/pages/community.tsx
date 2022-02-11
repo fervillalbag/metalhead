@@ -5,10 +5,10 @@ import { Swiper, SwiperSlide } from "swiper/react";
 
 import client from "@/config/apollo";
 import { GET_SLIDES } from "@/graphql/queries/community";
+import { MenuContext } from "@/context/MenuContext";
 
 import "swiper/css/navigation";
 import "swiper/css/autoplay";
-import { MenuContext } from "@/context/MenuContext";
 
 export const getServerSideProps = async () => {
   const { data: slides } = await client.query({
@@ -30,8 +30,8 @@ const Community = ({ slides }: any) => {
       <Swiper
         navigation={true}
         modules={[Navigation]}
-        className={`h-72 lg:h-[450px] px-20 ${
-          isShowMenu ? "opacity-0" : "opacity-100"
+        className={`relative h-72 lg:h-[450px] px-20 ${
+          isShowMenu ? "hidden" : "block"
         }`}
       >
         {slides.map((slide: any) => (

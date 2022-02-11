@@ -258,7 +258,7 @@ const ProductAdmin = () => {
                             router.push(`/admin/product/${product.id}`)
                           }
                         >
-                          Editar
+                          Edit
                         </button>
                         <button
                           className="block w-full bg-slate-500 py-2 rounded text-white"
@@ -267,7 +267,7 @@ const ProductAdmin = () => {
                             setShowModal(true);
                           }}
                         >
-                          Eliminar
+                          Delete
                         </button>
                       </div>
                     </div>

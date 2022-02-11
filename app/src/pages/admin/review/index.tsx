@@ -238,7 +238,7 @@ const ReviewInfoAdmin = () => {
                         className="block w-full border border-slate-400 py-2 rounded"
                         onClick={() => router.push(`/admin/review/${item.id}`)}
                       >
-                        Editar
+                        Edit
                       </button>
                       <button
                         className="block w-full bg-slate-500 py-2 rounded text-white"
@@ -247,7 +247,7 @@ const ReviewInfoAdmin = () => {
                           setItemDelete(item.id);
                         }}
                       >
-                        Eliminar
+                        Delete
                       </button>
                     </div>
                   </div>

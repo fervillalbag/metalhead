@@ -12,5 +12,6 @@ module.exports = {
     CLOUDINARY_NAME_PRESET_HEADER_HOME: "headerInfo",
     CLOUDINARY_NAME_PRESET_PRODUCTS_HOME: "products",
     CLOUDINARY_NAME_PRESET_REVIEWS_HOME: "reviewItem",
+    CLOUDINARY_NAME_PRESET_BANNER: "banner",
   },
 };

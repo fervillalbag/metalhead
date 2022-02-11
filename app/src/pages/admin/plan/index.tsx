@@ -246,7 +246,7 @@ const PlanAdmin: React.FC = () => {
                       className="block w-full border border-slate-400 py-2 rounded"
                       onClick={() => router.push(`/admin/plan/${plan.slug}`)}
                     >
-                      Editar
+                      Edit
                     </button>
                     <button
                       className="block w-full bg-slate-500 py-2 rounded text-white"
@@ -255,7 +255,7 @@ const PlanAdmin: React.FC = () => {
                         setItemDelete(plan.id);
                       }}
                     >
-                      Eliminar
+                      Delete
                     </button>
                   </div>
                 </div>
