@@ -1,29 +1,22 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import Head from "next/head";
 import { FaPlus, FaMinus, FaTimes } from "react-icons/fa";
+
 import { useRouter } from "next/router";
+import { BsFillTrashFill } from "react-icons/bs";
 
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
-import { CartContext } from "@/context/CartContext";
-import { CartContextModal } from "@/context/CartContextModal";
-import { BsFillTrashFill } from "react-icons/bs";
 import { useCart } from "@/hooks/useCart";
+import { CartContextModal } from "@/context/CartContextModal";
 
 const Layout: React.FC = ({ children }) => {
   const router = useRouter();
 
-  const [currentCart, setCurrentCart] = useState([]);
-
-  const { cart = [] } = useContext(CartContext);
   const { isShowModalCart, setIsShowModalCart } = useContext(CartContextModal);
 
-  const { handleAddCart, handleDeleteCart, handleDeleteAllProductCart } =
+  const { cart, handleAddCart, handleDeleteCart, handleDeleteAllProductCart } =
     useCart();
-
-  useEffect(() => {
-    setCurrentCart(cart);
-  }, [cart]);
 
   return (
     <>
@@ -60,10 +53,10 @@ const Layout: React.FC = ({ children }) => {
 
         <div className="flex flex-col justify-between px-6 h-[calc(100vh_-_76px_-_112px)] overflow-y-scroll">
           <div>
-            {currentCart.length === 0 ? (
+            {cart.length === 0 ? (
               <span className="block">Cart is empty</span>
             ) : (
-              currentCart.map((product: any) => (
+              cart.map((product: any) => (
                 <article
                   key={product.id}
                   className="flex items-center mb-6 border-b pb-6 border-slate-200"
@@ -125,12 +118,15 @@ const Layout: React.FC = ({ children }) => {
 
         <div className="h-28 flex items-center px-6">
           <button
-            disabled={currentCart ? true : false}
             className={`bg-DarkBlue block w-full text-white py-3 rounded-md cursor-pointer ${
-              currentCart.length === 0 && "bg-slate-400 cursor-default"
+              cart.length === 0 && "bg-slate-400 cursor-default"
             }`}
+            onClick={() => {
+              setIsShowModalCart(false);
+              router.push("/cart");
+            }}
           >
-            Make a purchase
+            Go to cart
           </button>
         </div>
       </div>

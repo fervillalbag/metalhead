@@ -4,13 +4,13 @@ import { useRouter } from "next/router";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 
 import { FaTimes, FaBars, FaShoppingCart } from "react-icons/fa";
-import { CartContext } from "@/context/CartContext";
 import { CartContextModal } from "@/context/CartContextModal";
 import { MenuContext } from "@/context/MenuContext";
+import { useCart } from "@/hooks/useCart";
 
 const Navbar: React.FC = () => {
   const router = useRouter();
-  const { cart = [] } = useContext(CartContext);
+  const { cart } = useCart();
   const { setIsShowModalCart } = useContext(CartContextModal);
 
   const { isShowMenu, setIsShowMenu } = useContext(MenuContext);
