@@ -18,6 +18,7 @@ interface ProductsIprops {
 export const getServerSideProps: GetServerSideProps = async () => {
   const { data: dataProducts } = await client.query({
     query: GET_PRODUCTS,
+    fetchPolicy: "network-only",
   });
 
   return {

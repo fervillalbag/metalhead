@@ -30,6 +30,11 @@ export const useCart = () => {
 
   const handleDeleteCart = (item: any) => {
     const exist = cart.find((x: any) => x.id === item.id);
+
+    if (!exist) {
+      return;
+    }
+
     if (exist.qty === 1) {
       setCart(cart.filter((x: any) => x.id !== item.id));
     } else {

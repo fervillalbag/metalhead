@@ -27,9 +27,7 @@ const ProductAdmin = () => {
     []
   );
   const [showModal, setShowModal] = React.useState<boolean>(false);
-  const [itemDelete, setItemDelete] = React.useState<string | undefined>(
-    undefined
-  );
+  const [itemDelete, setItemDelete] = React.useState<Products | null>(null);
 
   const [updateProductInfo] = useMutation(UPDATE_PRODUCT_INFO);
   const [deleteProduct] = useMutation(DELETE_PRODUCT_ITEM);
@@ -69,15 +67,15 @@ const ProductAdmin = () => {
     );
   };
 
-  const handleDeleteProductItem = async (id: string | undefined) => {
-    if (id) {
+  const handleDeleteProductItem = async (item: Products) => {
+    if (item.id) {
       try {
         const response = await deleteProduct({
           variables: {
-            id,
+            id: item.id,
           },
         });
-        handleDeleteCart(id);
+        handleDeleteCart(item);
         refetchDataProducts();
         toast.success(response?.data?.deleteProduct?.message);
       } catch (error) {
@@ -263,7 +261,7 @@ const ProductAdmin = () => {
                         <button
                           className="block w-full bg-slate-500 py-2 rounded text-white"
                           onClick={() => {
-                            setItemDelete(product.id);
+                            setItemDelete(product);
                             setShowModal(true);
                           }}
                         >
@@ -291,7 +289,7 @@ const ProductAdmin = () => {
                   <button
                     className="block p-2 border"
                     onClick={() => {
-                      handleDeleteProductItem(itemDelete);
+                      handleDeleteProductItem(itemDelete as Products);
                       setShowModal(false);
                     }}
                   >
@@ -301,7 +299,7 @@ const ProductAdmin = () => {
                     className="block p-2 border"
                     onClick={() => {
                       setShowModal(false);
-                      setItemDelete("");
+                      setItemDelete(null);
                     }}
                   >
                     No
