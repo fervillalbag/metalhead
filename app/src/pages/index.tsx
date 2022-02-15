@@ -34,7 +34,7 @@ interface HomeIprops {
   };
 }
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getServerSideProps: GetStaticProps = async () => {
   const { data: headerData } = await client.query({
     query: GET_HEADER_HOME,
   });
@@ -63,7 +63,7 @@ export const getStaticProps: GetStaticProps = async () => {
       reviewInfoData,
       growthHome,
     },
-    revalidate: 60 * 60 * 2,
+    // revalidate: 60 * 60 * 2,
   };
 };
 
@@ -82,8 +82,11 @@ const Home: React.FC<HomeIprops> = ({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0, transition: { delay: 0.3, duration: 0.5 } }}
+      initial={{ opacity: 0 }}
+      animate={{
+        opacity: 1,
+        transition: { delay: 0.3, duration: 0.3 },
+      }}
     >
       <Layout>
         <div className="hidden lg:block absolute right-[-160px] top-[-200px] -z-10">

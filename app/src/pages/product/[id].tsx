@@ -36,8 +36,12 @@ const Product: React.FC<ProductIprops> = ({ dataProduct }) => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0, transition: { delay: 0.3, duration: 0.5 } }}
+      initial={{ opacity: 0 }}
+      animate={{
+        opacity: 1,
+
+        transition: { delay: 0.3, duration: 0.3 },
+      }}
     >
       <Layout>
         <div className="max-w-6xl w-11/12 mx-auto">

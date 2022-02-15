@@ -36,14 +36,25 @@ const Products: React.FC<ProductsIprops> = ({ dataProducts }) => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0, transition: { delay: 0.3, duration: 0.5 } }}
+      initial={{ opacity: 0 }}
+      animate={{
+        opacity: 1,
+        transition: { delay: 0.3, duration: 0.3 },
+      }}
     >
       <Layout>
         <div className="max-w-6xl w-11/12 mx-auto py-4 pb-16 min-h-[400px]">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-10 gap-x-10">
-            {dataProductsPage.map((item: any) => (
-              <article key={item.id} className="">
+            {dataProductsPage.map((item: any, index: number) => (
+              <motion.article
+                initial={{ opacity: 0, y: 30 }}
+                animate={{
+                  opacity: 1,
+                  y: 0,
+                  transition: { delay: index * 0.3, duration: 0.5 },
+                }}
+                key={item.id}
+              >
                 <Link href={`/product/${item.id}`}>
                   <a>
                     <div className="border border-DarkGrayishBlue p-4 text-center">
@@ -112,7 +123,7 @@ const Products: React.FC<ProductsIprops> = ({ dataProducts }) => {
                     </div>
                   </div>
                 </div>
-              </article>
+              </motion.article>
             ))}
           </div>
         </div>

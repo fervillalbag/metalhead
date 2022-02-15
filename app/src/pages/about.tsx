@@ -27,8 +27,11 @@ const About = ({ aboutData }: { aboutData: any }) => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0, transition: { delay: 0.3, duration: 0.5 } }}
+      initial={{ opacity: 0 }}
+      animate={{
+        opacity: 1,
+        transition: { delay: 0.3, duration: 0.3 },
+      }}
     >
       <Layout>
         <div className="grid grid-cols-1 gap-y-10 gap-x-24 lg:gap-y-0 lg:grid-cols-2 pt-0 lg:pt-8 pb-16 lg:pb-20 max-w-6xl w-11/12 mx-auto">
