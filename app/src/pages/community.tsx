@@ -27,15 +27,15 @@ const Community = ({ slides }: any) => {
   const { isShowMenu } = useContext(MenuContext);
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{
-        opacity: 1,
-
-        transition: { delay: 0.3, duration: 0.3 },
-      }}
-    >
-      <Layout>
+    <Layout>
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{
+          opacity: 1,
+          y: 0,
+          transition: { delay: 0.3, duration: 0.3 },
+        }}
+      >
         <Swiper
           navigation={true}
           modules={[Navigation]}
@@ -53,20 +53,28 @@ const Community = ({ slides }: any) => {
             </SwiperSlide>
           ))}
         </Swiper>
+      </motion.div>
 
-        <div className="max-w-6xl mx-auto w-11/12 py-10 lg:py-20">
-          <span className="block text-3xl text-DarkBlue">Community</span>
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{
+          opacity: 1,
+          y: 0,
+          transition: { delay: 0.6, duration: 0.3 },
+        }}
+        className="max-w-6xl mx-auto w-11/12 py-10 lg:py-20"
+      >
+        <span className="block text-3xl text-DarkBlue">Community</span>
 
-          <p className="mt-4 text-DarkGrayishBlue max-w-4xl">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorum
-            quasi unde enim assumenda? Fugiat laboriosam quaerat eius sed fugit,
-            in debitis voluptates sunt enim libero magni architecto asperiores
-            esse quae nobis necessitatibus omnis ratione autem ipsa tempore!
-            Itaque, temporibus sunt.
-          </p>
-        </div>
-      </Layout>
-    </motion.div>
+        <p className="mt-4 text-DarkGrayishBlue max-w-4xl">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorum quasi
+          unde enim assumenda? Fugiat laboriosam quaerat eius sed fugit, in
+          debitis voluptates sunt enim libero magni architecto asperiores esse
+          quae nobis necessitatibus omnis ratione autem ipsa tempore! Itaque,
+          temporibus sunt.
+        </p>
+      </motion.div>
+    </Layout>
   );
 };
 

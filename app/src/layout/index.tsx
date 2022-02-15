@@ -9,7 +9,6 @@ import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import { useCart } from "@/hooks/useCart";
 import { CartContextModal } from "@/context/CartContextModal";
-import { motion } from "framer-motion";
 
 const Layout: React.FC = ({ children }) => {
   const router = useRouter();
@@ -33,7 +32,7 @@ const Layout: React.FC = ({ children }) => {
         }`}
         onClick={() => setIsShowModalCart(false)}
       ></div>
-      <motion.div
+      <div
         className={`fixed w-full md:w-80 h-screen bg-white shadow-xl z-[3100] ${
           isShowModalCart ? "block" : "hidden"
         }`}
@@ -132,7 +131,7 @@ const Layout: React.FC = ({ children }) => {
             Go to cart
           </button>
         </div>
-      </motion.div>
+      </div>
 
       <Navbar />
       {children}

@@ -1,9 +1,18 @@
 import React from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 
 const Footer: React.FC = () => {
   return (
-    <footer className="py-16 bg-VeryDarkBlue">
+    <motion.footer
+      initial={{ opacity: 0, y: 30 }}
+      animate={{
+        opacity: 1,
+        y: 0,
+        transition: { delay: 0.6, duration: 0.3 },
+      }}
+      className="py-16 bg-VeryDarkBlue"
+    >
       <div className="max-w-6xl w-11/12 mx-auto grid md:grid-cols-2 lg:grid-cols-[300px_1fr_340px] gap-x-10 gap-y-10 lg:gap-y-0 grid-rows-[auto_auto]">
         <div className="order-4 md:order-none mx-auto md:mx-0">
           <img src="/logo-white.svg" alt="" />
@@ -94,7 +103,7 @@ const Footer: React.FC = () => {
           </span>
         </div>
       </div>
-    </footer>
+    </motion.footer>
   );
 };
 
