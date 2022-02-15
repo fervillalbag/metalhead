@@ -53,7 +53,9 @@ const Layout: React.FC = ({ children }) => {
 
         <div className="flex flex-col justify-between px-6 h-[calc(100vh_-_76px_-_112px)] overflow-y-scroll">
           <div>
-            {cart.length === 0 ? (
+            {!cart ? (
+              <span className="block">Loading..</span>
+            ) : cart.length === 0 ? (
               <span className="block">Cart is empty</span>
             ) : (
               cart.map((product: any) => (
@@ -119,7 +121,7 @@ const Layout: React.FC = ({ children }) => {
         <div className="h-28 flex items-center px-6">
           <button
             className={`bg-DarkBlue block w-full text-white py-3 rounded-md cursor-pointer ${
-              cart.length === 0 && "bg-slate-400 cursor-default"
+              cart.length === 0 ? "bg-slate-400 cursor-default" : null
             }`}
             onClick={() => {
               setIsShowModalCart(false);
