@@ -2,10 +2,10 @@ import React from "react";
 import Link from "next/link";
 import { GetStaticProps } from "next";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import { motion } from "framer-motion";
 
 import Layout from "@/layout";
 import client from "@/config/apollo";
-// import Loading from "@/components/Loading";
 import { GET_HEADER_HOME } from "@/graphql/queries/headerHome";
 import { GET_GROWTH_INFO_HOME } from "@/graphql/queries/growthInfo";
 import { GET_GROWTH_HOME } from "@/graphql/queries/growthHome";
@@ -81,7 +81,10 @@ const Home: React.FC<HomeIprops> = ({
   const growthItemsHomeData = growthHome?.getGrowthHome;
 
   return (
-    <div>
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0, transition: { delay: 0.3, duration: 0.5 } }}
+    >
       <Layout>
         <div className="hidden lg:block absolute right-[-160px] top-[-200px] -z-10">
           <img src="/bg-tablet-pattern.svg" alt="" />
@@ -215,7 +218,7 @@ const Home: React.FC<HomeIprops> = ({
           </div>
         </section>
       </Layout>
-    </div>
+    </motion.div>
   );
 };
 
