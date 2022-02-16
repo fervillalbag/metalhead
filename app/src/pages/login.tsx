@@ -1,8 +1,39 @@
+import React, { useState } from "react";
 import Link from "next/link";
-import React from "react";
+import toast from "react-hot-toast";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import { useMutation } from "@apollo/client";
+
+import { LOGIN } from "@/graphql/mutation/login";
 
 const Login: React.FC = () => {
+  const [userValue, setUserValue] = useState({
+    email: "",
+    password: "",
+  });
+
+  const [login] = useMutation(LOGIN);
+
+  const handleLogin = async () => {
+    try {
+      const response = await login({
+        variables: {
+          input: userValue,
+        },
+      });
+
+      if (!response?.data?.login?.token) {
+        toast.error("Hubo un error al iniciar sesión");
+        return;
+      }
+
+      toast.success("Sesión iniciado correctamente");
+      console.log(response?.data?.login?.token);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="sm:grid sm:grid-cols-2 lg:grid-cols-3 h-screen sm:overflow-y-hidden">
       <div className="lg:col-start-1 lg:col-end-3 h-24 sm:h-screen">
@@ -32,8 +63,10 @@ const Login: React.FC = () => {
             <input
               type="text"
               className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300"
-              // value={data?.title}
-              // onChange={(e) => setData({ ...data, title: e.target.value })}
+              value={userValue?.email}
+              onChange={(e) =>
+                setUserValue({ ...userValue, email: e.target.value })
+              }
               placeholder="Email address"
             />
           </div>
@@ -41,13 +74,18 @@ const Login: React.FC = () => {
             <input
               type="password"
               className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300"
-              // value={data?.title}
-              // onChange={(e) => setData({ ...data, title: e.target.value })}
+              value={userValue?.password}
+              onChange={(e) =>
+                setUserValue({ ...userValue, password: e.target.value })
+              }
               placeholder="Password"
             />
           </div>
           <div>
-            <button className="py-3 bg-DarkBlue w-full block text-white rounded">
+            <button
+              className="py-3 bg-DarkBlue w-full block text-white rounded"
+              onClick={handleLogin}
+            >
               Login
             </button>
           </div>
