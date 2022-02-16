@@ -5,6 +5,7 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import { useMutation } from "@apollo/client";
 
 import { LOGIN } from "@/graphql/mutation/login";
+import useAuth from "@/hooks/useAuth";
 
 const Login: React.FC = () => {
   const [userValue, setUserValue] = useState({
@@ -12,11 +13,13 @@ const Login: React.FC = () => {
     password: "",
   });
 
-  const [login] = useMutation(LOGIN);
+  const { login } = useAuth();
+
+  const [loginMutation] = useMutation(LOGIN);
 
   const handleLogin = async () => {
     try {
-      const response = await login({
+      const response = await loginMutation({
         variables: {
           input: userValue,
         },
@@ -28,7 +31,7 @@ const Login: React.FC = () => {
       }
 
       toast.success("Sesión iniciado correctamente");
-      console.log(response?.data?.login?.token);
+      login(response?.data?.login?.token);
     } catch (error) {
       console.log(error);
     }

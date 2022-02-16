@@ -7,26 +7,29 @@ import { Toaster } from "react-hot-toast";
 import client from "@/config/apollo";
 import { CartContextProvider } from "@/context/CartContext";
 import { CartContextModalProvider } from "@/context/CartContextModal";
+import { MenuContextProvider } from "@/context/MenuContext";
+import { UserContextProvider } from "@/context/UserContext";
 
 import "@/styles/index.css";
 import "@/styles/globals.css";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import "swiper/css";
-import { MenuContextProvider } from "@/context/MenuContext";
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
     <AnimatePresence exitBeforeEnter>
-      <MenuContextProvider>
-        <CartContextProvider>
-          <CartContextModalProvider>
-            <ApolloProvider client={client}>
-              <Component {...pageProps} />
-              <Toaster position="top-center" reverseOrder={false} />
-            </ApolloProvider>
-          </CartContextModalProvider>
-        </CartContextProvider>
-      </MenuContextProvider>
+      <UserContextProvider>
+        <MenuContextProvider>
+          <CartContextProvider>
+            <CartContextModalProvider>
+              <ApolloProvider client={client}>
+                <Component {...pageProps} />
+                <Toaster position="top-center" reverseOrder={false} />
+              </ApolloProvider>
+            </CartContextModalProvider>
+          </CartContextProvider>
+        </MenuContextProvider>
+      </UserContextProvider>
     </AnimatePresence>
   );
 };
