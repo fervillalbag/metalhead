@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 
-import { FaTimes, FaBars, FaShoppingCart } from "react-icons/fa";
+import { FaTimes, FaBars, FaShoppingCart, FaUserAlt } from "react-icons/fa";
 import { CartContextModal } from "@/context/CartContextModal";
 import { MenuContext } from "@/context/MenuContext";
 import { useCart } from "@/hooks/useCart";
@@ -142,6 +142,13 @@ const Navbar: React.FC = () => {
               {cart.length === 0 ? 0 : cart.length}
             </span>
           </button>
+        </div>
+        <div className="ml-6">
+          <Link href="/login">
+            <a className="text-3xl text-slate-500">
+              <FaUserAlt />
+            </a>
+          </Link>
         </div>
       </div>
     </nav>
