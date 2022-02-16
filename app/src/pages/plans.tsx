@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
 import { GetStaticProps } from "next";
 import { motion } from "framer-motion";
@@ -8,6 +8,8 @@ import client from "@/config/apollo";
 import { GET_PLANS } from "@/graphql/queries/plan";
 import { GET_PLAN_INFO } from "@/graphql/queries/planInfo";
 import Skeleton from "@/components/Skeleton";
+import { isAuth, isUserNotFound } from "utils/actions";
+import { getToken } from "utils/helpers";
 
 interface PlansIprops {
   dataPlans: any;
@@ -33,8 +35,20 @@ export const getStaticProps: GetStaticProps = async () => {
 };
 
 const Plans: React.FC<PlansIprops> = ({ dataPlans, dataInfo }) => {
+  isUserNotFound();
+
   const dataHomePlans = dataPlans?.getPlans;
   const dataHomePlanInfo = dataInfo?.getPlanInfo;
+
+  useEffect(() => {
+    const token = getToken();
+
+    if (!token) {
+      return;
+    } else {
+      isAuth();
+    }
+  }, []);
 
   return (
     <Layout>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { motion } from "framer-motion";
 
@@ -7,6 +7,8 @@ import { GET_ABOUT_PAGE } from "@/graphql/queries/aboutPage";
 import Layout from "@/layout";
 import Loading from "@/components/Loading";
 import Skeleton from "@/components/Skeleton";
+import { getToken } from "utils/helpers";
+import { isAuth, isUserNotFound } from "utils/actions";
 
 export const getStaticProps = async () => {
   const { data: aboutData } = await client.query({
@@ -21,9 +23,21 @@ export const getStaticProps = async () => {
 };
 
 const About = ({ aboutData }: { aboutData: any }) => {
+  isUserNotFound();
+
   const aboutDataPage = aboutData?.getAboutPage;
 
   if (!aboutDataPage) return <Loading />;
+
+  useEffect(() => {
+    const token = getToken();
+
+    if (!token) {
+      return;
+    } else {
+      isAuth();
+    }
+  }, []);
 
   return (
     <Layout>

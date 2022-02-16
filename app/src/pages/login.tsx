@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { LazyLoadImage } from "react-lazy-load-image-component";
@@ -6,8 +6,12 @@ import { useMutation } from "@apollo/client";
 
 import { LOGIN } from "@/graphql/mutation/login";
 import useAuth from "@/hooks/useAuth";
+import { isAuth, isUserNotFound } from "utils/actions";
+import { getToken } from "utils/helpers";
 
 const Login: React.FC = () => {
+  isUserNotFound();
+
   const [userValue, setUserValue] = useState({
     email: "",
     password: "",
@@ -16,6 +20,16 @@ const Login: React.FC = () => {
   const { login } = useAuth();
 
   const [loginMutation] = useMutation(LOGIN);
+
+  useEffect(() => {
+    const token = getToken();
+
+    if (!token) {
+      return;
+    } else {
+      isAuth();
+    }
+  }, []);
 
   const handleLogin = async () => {
     try {

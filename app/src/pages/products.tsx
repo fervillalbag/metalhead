@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { GetServerSideProps } from "next";
@@ -11,6 +11,8 @@ import client from "@/config/apollo";
 import { GET_PRODUCTS } from "@/graphql/queries/products";
 import Skeleton from "@/components/Skeleton";
 import { useCart } from "@/hooks/useCart";
+import { isAuth, isUserNotFound } from "utils/actions";
+import { getToken } from "utils/helpers";
 
 interface ProductsIprops {
   dataProducts: any;
@@ -31,8 +33,19 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
 const Products: React.FC<ProductsIprops> = ({ dataProducts }) => {
   const dataProductsPage = dataProducts?.getProducts;
+  isUserNotFound();
 
   const { handleAddCart } = useCart();
+
+  useEffect(() => {
+    const token = getToken();
+
+    if (!token) {
+      return;
+    } else {
+      isAuth();
+    }
+  }, []);
 
   return (
     <Layout>

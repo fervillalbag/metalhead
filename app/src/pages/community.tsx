@@ -1,5 +1,5 @@
 import Layout from "@/layout";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Navigation } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { motion } from "framer-motion";
@@ -10,8 +10,12 @@ import { MenuContext } from "@/context/MenuContext";
 
 import "swiper/css/navigation";
 import "swiper/css/autoplay";
+import { getToken } from "utils/helpers";
+import { isAuth, isUserNotFound } from "utils/actions";
 
 export const getServerSideProps = async () => {
+  isUserNotFound();
+
   const { data: slides } = await client.query({
     query: GET_SLIDES,
   });
@@ -25,6 +29,16 @@ export const getServerSideProps = async () => {
 
 const Community = ({ slides }: any) => {
   const { isShowMenu } = useContext(MenuContext);
+
+  useEffect(() => {
+    const token = getToken();
+
+    if (!token) {
+      return;
+    } else {
+      isAuth();
+    }
+  }, []);
 
   return (
     <Layout>

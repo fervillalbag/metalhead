@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
 import { GetStaticProps } from "next";
 import { LazyLoadImage } from "react-lazy-load-image-component";
@@ -15,6 +15,8 @@ import { HeaderInfo } from "@/types/header";
 import { GrowthData, GrowthInfo } from "@/types/growth";
 import { ReviewData, ReviewInfo } from "@/types/review";
 import Skeleton from "@/components/Skeleton";
+import { getToken } from "utils/helpers";
+import { isAuth, isUserNotFound } from "utils/actions";
 
 interface HomeIprops {
   headerData: {
@@ -74,11 +76,23 @@ const Home: React.FC<HomeIprops> = ({
   reviewInfoData,
   growthHome,
 }) => {
+  isUserNotFound();
+
   const headerHomeData = headerData?.getHeaderHome;
   const growthHomeData = growthData?.getGrowthInfoHome;
   const reviewHomeData = reviewData?.getReviewHome;
   const reviewInfoHomeData = reviewInfoData?.getReviewInfoHome;
   const growthItemsHomeData = growthHome?.getGrowthHome;
+
+  useEffect(() => {
+    const token = getToken();
+
+    if (!token) {
+      return;
+    } else {
+      isAuth();
+    }
+  }, []);
 
   return (
     <Layout>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import toast from "react-hot-toast";
 import { RiShoppingCartFill } from "react-icons/ri";
 import { LazyLoadImage } from "react-lazy-load-image-component";
@@ -9,6 +9,8 @@ import client from "@/config/apollo";
 import Layout from "@/layout";
 import Skeleton from "@/components/Skeleton";
 import { useCart } from "@/hooks/useCart";
+import { isAuth, isUserNotFound } from "utils/actions";
+import { getToken } from "utils/helpers";
 
 interface ProductIprops {
   dataProduct: any;
@@ -30,7 +32,19 @@ export const getServerSideProps = async ({ params }: { params: any }) => {
 };
 
 const Product: React.FC<ProductIprops> = ({ dataProduct }) => {
+  isUserNotFound();
+
   const productDataPage = dataProduct?.getProduct;
+
+  useEffect(() => {
+    const token = getToken();
+
+    if (!token) {
+      return;
+    } else {
+      isAuth();
+    }
+  }, []);
 
   const { handleAddCart } = useCart();
 

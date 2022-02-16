@@ -1,12 +1,15 @@
 import { CREATE_USER } from "@/graphql/mutation/register";
 import { useMutation } from "@apollo/client";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import { isAuth, isUserNotFound } from "utils/actions";
+import { getToken } from "utils/helpers";
 
 const Register: React.FC = () => {
   const [createUser] = useMutation(CREATE_USER);
+  isUserNotFound();
 
   const [userValue, setUserValue] = useState({
     name: "",
@@ -16,6 +19,16 @@ const Register: React.FC = () => {
     password: "",
     confirmPassword: "",
   });
+
+  useEffect(() => {
+    const token = getToken();
+
+    if (!token) {
+      return;
+    } else {
+      isAuth();
+    }
+  }, []);
 
   const handleCreateUser = async () => {
     try {
