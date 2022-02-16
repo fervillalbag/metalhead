@@ -116,6 +116,10 @@ const typeDefs = gql`
     createdAt: String
   }
 
+  type Token {
+    token: String
+  }
+
   # Inputs
 
   input CreateUser {
@@ -213,6 +217,11 @@ const typeDefs = gql`
     createdAt: String
   }
 
+  input LoginInput {
+    email: String
+    password: String
+  }
+
   # Query
 
   type Query {
@@ -256,6 +265,7 @@ const typeDefs = gql`
   type Mutation {
     # User
     createUser(input: CreateUser!): MutationResponse
+    login(input: LoginInput!): Token
 
     # Header Home
     createHeaderHome(input: HeaderHomeInput!): MutationResponse

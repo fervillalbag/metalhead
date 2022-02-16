@@ -68,6 +68,8 @@ const resolvers = {
     // Users
     createUser: (_: any, { input }: { input: User }) =>
       userController.createUser(input),
+    login: (_: any, { input }: { input: User }) =>
+      userController.login(input),
 
     // Header Home
     createHeaderHome: (_: any, { input }: { input: HeaderInfo }) =>
