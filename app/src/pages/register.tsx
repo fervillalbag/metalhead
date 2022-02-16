@@ -1,8 +1,48 @@
+import { CREATE_USER } from "@/graphql/mutation/register";
+import { useMutation } from "@apollo/client";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
+import toast from "react-hot-toast";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 
 const Register: React.FC = () => {
+  const [createUser] = useMutation(CREATE_USER);
+
+  const [userValue, setUserValue] = useState({
+    name: "",
+    lastname: "",
+    email: "",
+    username: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const handleCreateUser = async () => {
+    try {
+      const response = await createUser({
+        variables: {
+          input: {
+            name: userValue.name,
+            lastname: userValue.lastname,
+            email: userValue.email,
+            username: userValue.username,
+            password: userValue.password,
+          },
+        },
+      });
+
+      if (!response?.data?.createUser?.success) {
+        toast.error(response?.data?.createUser?.message);
+        return;
+      }
+
+      toast.success(response?.data?.createUser?.message);
+    } catch (error) {
+      console.log(error);
+    }
+    console.log(userValue);
+  };
+
   return (
     <div className="sm:grid sm:grid-cols-2 lg:grid-cols-3 h-screen sm:overflow-y-hidden">
       <div className="lg:col-start-1 lg:col-end-3 h-24 sm:h-screen">
@@ -32,8 +72,10 @@ const Register: React.FC = () => {
             <input
               type="text"
               className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300"
-              // value={data?.title}
-              // onChange={(e) => setData({ ...data, title: e.target.value })}
+              value={userValue?.name}
+              onChange={(e) =>
+                setUserValue({ ...userValue, name: e.target.value })
+              }
               placeholder="Name"
             />
           </div>
@@ -41,8 +83,10 @@ const Register: React.FC = () => {
             <input
               type="text"
               className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300"
-              // value={data?.title}
-              // onChange={(e) => setData({ ...data, title: e.target.value })}
+              value={userValue?.lastname}
+              onChange={(e) =>
+                setUserValue({ ...userValue, lastname: e.target.value })
+              }
               placeholder="Last name"
             />
           </div>
@@ -50,8 +94,10 @@ const Register: React.FC = () => {
             <input
               type="text"
               className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300"
-              // value={data?.title}
-              // onChange={(e) => setData({ ...data, title: e.target.value })}
+              value={userValue?.email}
+              onChange={(e) =>
+                setUserValue({ ...userValue, email: e.target.value })
+              }
               placeholder="Email address"
             />
           </div>
@@ -59,8 +105,10 @@ const Register: React.FC = () => {
             <input
               type="text"
               className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300"
-              // value={data?.title}
-              // onChange={(e) => setData({ ...data, title: e.target.value })}
+              value={userValue?.username}
+              onChange={(e) =>
+                setUserValue({ ...userValue, username: e.target.value })
+              }
               placeholder="Username"
             />
           </div>
@@ -68,8 +116,10 @@ const Register: React.FC = () => {
             <input
               type="password"
               className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300"
-              // value={data?.title}
-              // onChange={(e) => setData({ ...data, title: e.target.value })}
+              value={userValue?.password}
+              onChange={(e) =>
+                setUserValue({ ...userValue, password: e.target.value })
+              }
               placeholder="Password"
             />
           </div>
@@ -77,13 +127,18 @@ const Register: React.FC = () => {
             <input
               type="password"
               className="w-full block border border-slate-300 rounded px-3 py-2 focus:border-slate-500 focus:outline-0 transition-all duration-300"
-              // value={data?.title}
-              // onChange={(e) => setData({ ...data, title: e.target.value })}
+              value={userValue?.confirmPassword}
+              onChange={(e) =>
+                setUserValue({ ...userValue, confirmPassword: e.target.value })
+              }
               placeholder="Confirm password"
             />
           </div>
           <div>
-            <button className="py-3 bg-DarkBlue w-full block text-white rounded">
+            <button
+              onClick={handleCreateUser}
+              className="py-3 bg-DarkBlue w-full block text-white rounded"
+            >
               Register
             </button>
           </div>
