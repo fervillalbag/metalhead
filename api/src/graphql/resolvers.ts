@@ -10,6 +10,7 @@ import planInfoController from "../controllers/planInfo";
 import reviewInfoController from "../controllers/reviewInfo";
 import productInfoController from "../controllers/productInfo";
 import slideController from "../controllers/slide";
+import listProductController from "../controllers/listProducts";
 
 import { AboutInfo } from "../types/about";
 import { ReviewHome, ReviewInfo } from "../types/review";
@@ -62,6 +63,10 @@ const resolvers = {
     getSlides: () => slideController.getSlides(),
     getSlide: (_: any, { id }: { id: string }) =>
       slideController.getSlide(id),
+
+    // List Products
+    getListProducts: (_: any, { idUser }: { idUser: string }) =>
+      listProductController.getListProducts(idUser),
   },
 
   Mutation: {
@@ -147,6 +152,10 @@ const resolvers = {
       slideController.createSlide(input),
     deleteSlide: (_: any, { id }: { id: string }) =>
       slideController.deleteSlide(id),
+
+    // List Products
+    createListProducts: (_: any, { input }: { input: any }) =>
+      listProductController.createListProducts(input),
   },
 };
 

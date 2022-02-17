@@ -14,8 +14,6 @@ import { getToken } from "utils/helpers";
 import { isAuth, isUserNotFound } from "utils/actions";
 
 export const getServerSideProps = async () => {
-  isUserNotFound();
-
   const { data: slides } = await client.query({
     query: GET_SLIDES,
   });
@@ -28,6 +26,8 @@ export const getServerSideProps = async () => {
 };
 
 const Community = ({ slides }: any) => {
+  isUserNotFound();
+
   const { isShowMenu } = useContext(MenuContext);
 
   useEffect(() => {

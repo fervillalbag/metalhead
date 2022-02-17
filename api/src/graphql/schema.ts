@@ -79,6 +79,19 @@ const typeDefs = gql`
     createdAt: String
   }
 
+  type ListProduct {
+    id: ID
+    name: String
+    code: Int
+    quantity: Int
+    qty: Int
+    idUser: String
+    price: Int
+    image: String
+    description: [Description]
+    createdAt: String
+  }
+
   type PlansItem {
     id: ID
     text: String
@@ -184,6 +197,18 @@ const typeDefs = gql`
     description: [DescriptionInput]
   }
 
+  input ListProductInput {
+    id: String
+    name: String
+    quantity: Int
+    code: Int
+    price: Int
+    image: String
+    qty: Int
+    idUser: String
+    description: [DescriptionInput]
+  }
+
   input PlansItemInput {
     id: ID
     text: String
@@ -260,6 +285,9 @@ const typeDefs = gql`
     # Slide
     getSlides: [Slide]
     getSlide(id: String!): Slide
+
+    # List Products
+    getListProducts(idUser: String): [ListProduct]
   }
 
   type Mutation {
@@ -314,6 +342,9 @@ const typeDefs = gql`
     # Slide
     createSlide(input: SlideInput!): MutationResponse
     deleteSlide(id: String!): MutationResponse
+
+    # List Products
+    createListProducts(input: ListProductInput!): MutationResponse
   }
 `;
 

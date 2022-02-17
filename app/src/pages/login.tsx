@@ -6,11 +6,12 @@ import { useMutation } from "@apollo/client";
 
 import { LOGIN } from "@/graphql/mutation/login";
 import useAuth from "@/hooks/useAuth";
-import { isAuth, isUserNotFound } from "utils/actions";
+import { isAuth } from "utils/actions";
 import { getToken } from "utils/helpers";
+import { useRouter } from "next/router";
 
 const Login: React.FC = () => {
-  isUserNotFound();
+  const router = useRouter();
 
   const [userValue, setUserValue] = useState({
     email: "",
@@ -46,6 +47,7 @@ const Login: React.FC = () => {
 
       toast.success("Sesión iniciado correctamente");
       login(response?.data?.login?.token);
+      router.push("/cart");
     } catch (error) {
       console.log(error);
     }
