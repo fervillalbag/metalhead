@@ -156,6 +156,8 @@ const resolvers = {
     // List Products
     createListProducts: (_: any, { input }: { input: any }) =>
       listProductController.createListProducts(input),
+    deleteListProducts: (_: any, { id }: { id: string }) =>
+      listProductController.deleteListProducts(id),
   },
 };
 

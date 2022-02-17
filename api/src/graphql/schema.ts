@@ -345,6 +345,7 @@ const typeDefs = gql`
 
     # List Products
     createListProducts(input: ListProductInput!): MutationResponse
+    deleteListProducts(id: String!): MutationResponse
   }
 `;
 
