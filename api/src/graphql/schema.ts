@@ -92,6 +92,13 @@ const typeDefs = gql`
     createdAt: String
   }
 
+  type ResponseListProduct {
+    id: String
+    idUser: String
+    products: [ListProduct]
+    createdAt: String
+  }
+
   type PlansItem {
     id: ID
     text: String
@@ -287,7 +294,8 @@ const typeDefs = gql`
     getSlide(id: String!): Slide
 
     # List Products
-    getListProducts(idUser: String): [ListProduct]
+    getListProducts(idUser: String): [ResponseListProduct]
+    getListProduct(id: String!, idUser: String): ResponseListProduct
   }
 
   type Mutation {
@@ -344,7 +352,7 @@ const typeDefs = gql`
     deleteSlide(id: String!): MutationResponse
 
     # List Products
-    createListProducts(input: ListProductInput!): MutationResponse
+    createListProducts(input: [ListProductInput]!): MutationResponse
     deleteListProducts(id: String!): MutationResponse
   }
 `;

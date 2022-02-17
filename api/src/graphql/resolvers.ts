@@ -67,6 +67,10 @@ const resolvers = {
     // List Products
     getListProducts: (_: any, { idUser }: { idUser: string }) =>
       listProductController.getListProducts(idUser),
+    getListProduct: (
+      _: any,
+      { id, idUser }: { id: string; idUser: string }
+    ) => listProductController.getListProduct(id, idUser),
   },
 
   Mutation: {
@@ -154,8 +158,11 @@ const resolvers = {
       slideController.deleteSlide(id),
 
     // List Products
-    createListProducts: (_: any, { input }: { input: any }) =>
-      listProductController.createListProducts(input),
+    createListProducts: (
+      _: any,
+      { input }: { input: any },
+      ctx: any
+    ) => listProductController.createListProducts(input, ctx),
     deleteListProducts: (_: any, { id }: { id: string }) =>
       listProductController.deleteListProducts(id),
   },
