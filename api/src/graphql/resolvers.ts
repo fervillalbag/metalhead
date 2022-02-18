@@ -10,7 +10,7 @@ import planInfoController from "../controllers/planInfo";
 import reviewInfoController from "../controllers/reviewInfo";
 import productInfoController from "../controllers/productInfo";
 import slideController from "../controllers/slide";
-import listProductController from "../controllers/listProducts";
+import listProductController from "../controllers/orders";
 
 import { AboutInfo } from "../types/about";
 import { ReviewHome, ReviewInfo } from "../types/review";

@@ -1,10 +1,11 @@
-import ListProduct from "../models/listProducts";
+import ListProduct from "../models/orders";
 
 const createListProducts = async (input: any, ctx: any) => {
   try {
     const listProduct = await new ListProduct({
       products: input,
       idUser: ctx.user.id,
+      status: false,
       createdAt: new Date(),
     });
     await listProduct.save();

@@ -5,6 +5,10 @@ const ListProductsSchema = new Schema({
     type: Array,
     required: true,
   },
+  status: {
+    type: Boolean,
+    required: true,
+  },
   idUser: {
     type: Schema.Types.ObjectId,
     required: true,

@@ -95,6 +95,7 @@ const typeDefs = gql`
   type ResponseListProduct {
     id: String
     idUser: String
+    status: Boolean
     products: [ListProduct]
     createdAt: String
   }

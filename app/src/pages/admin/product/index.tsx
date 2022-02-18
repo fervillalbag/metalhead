@@ -16,6 +16,7 @@ import { DELETE_PRODUCT_ITEM } from "@/graphql/mutation/product";
 import { ProductInfo, Products } from "@/types/product";
 import { Description } from "@/types/description";
 import { useCart } from "@/hooks/useCart";
+import Link from "next/link";
 
 const ProductAdmin = () => {
   const router = useRouter();
@@ -144,7 +145,14 @@ const ProductAdmin = () => {
       <NavbarDashboard />
 
       <section className="p-10 w-full h-screen overflow-y-auto no-scrollbar">
-        <h1 className="text-3xl text-slate-600">Product Info</h1>
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl text-slate-600">Product Info</h1>
+          <Link href="/admin/product/orders">
+            <a className="bg-slate-400 py-2 px-4 rounded text-white">
+              Orders List
+            </a>
+          </Link>
+        </div>
 
         {!data || !descriptionArray ? (
           <Loading />
