@@ -13,6 +13,7 @@ import toast from "react-hot-toast";
 
 const OrderItem = ({ order, refetch }: any) => {
   const [showModal, setShowModal] = useState(false);
+  const router = useRouter();
 
   const { data: user, loading } = useQuery(GET_USER, {
     variables: {
@@ -56,7 +57,10 @@ const OrderItem = ({ order, refetch }: any) => {
         {loading ? null : user.getUser.lastname}
       </div>
       <div className="py-2 pl-3 grid grid-cols-2 gap-x-3">
-        <button className="block w-full bg-white text-slate-700 px-4 py-1 rounded-sm">
+        <button
+          onClick={() => router.push(`/admin/product/orders/${order.id}`)}
+          className="block w-full bg-white text-slate-700 px-4 py-1 rounded-sm"
+        >
           Open
         </button>
         <button
