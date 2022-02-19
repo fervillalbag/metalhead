@@ -1,12 +1,41 @@
 import { GET_ORDER } from "@/graphql/queries/orders";
+import { GET_USER } from "@/graphql/queries/user";
 import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import React from "react";
 import {
   BsFillArrowLeftCircleFill,
-  // BsToggleOff,
-  // BsToggleOn,
+  BsToggleOff,
+  BsToggleOn,
 } from "react-icons/bs";
+
+const UserSection = ({ idUser }: any) => {
+  const { data: user, loading } = useQuery(GET_USER, {
+    variables: {
+      id: idUser,
+    },
+  });
+
+  if (loading) return null;
+
+  console.log(user?.getUser);
+
+  return (
+    <div className="flex items-center">
+      <div>
+        <img src="/profile.png" className="w-16 h-16" alt="" />
+      </div>
+      <div className="ml-3">
+        <span className="block text-slate-600">
+          {user?.getUser?.name} {user?.getUser?.lastname}
+        </span>
+        <span className="block text-sm text-slate-400">
+          {user?.getUser?.email}
+        </span>
+      </div>
+    </div>
+  );
+};
 
 const OrderItem: React.FC = () => {
   const router = useRouter();
@@ -120,7 +149,35 @@ const OrderItem: React.FC = () => {
               </div>
             </div>
 
-            <div className="bg-slate-200"></div>
+            <div>
+              <span className="block text-xl mb-2 font-semibold text-slate-600 uppercase">
+                Buyer
+              </span>
+              <UserSection idUser={order?.getListProduct?.idUser} />
+              <span className="block mb-2 text-slate-400 mt-4">
+                Purchase Status
+              </span>
+
+              <div>
+                {order?.getListProduct?.status ? (
+                  <button className="flex items-center">
+                    <span className="block text-4xl text-green-600">
+                      <BsToggleOn />
+                    </span>
+                    <span className="block ml-3 text-slate-600">Delivered</span>
+                  </button>
+                ) : (
+                  <button className="flex items-center">
+                    <span className="block text-4xl text-slate-600">
+                      <BsToggleOff />
+                    </span>
+                    <span className="block ml-3 text-slate-600">
+                      Undelivered
+                    </span>
+                  </button>
+                )}
+              </div>
+            </div>
           </div>
         )}
       </div>
