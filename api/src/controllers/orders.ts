@@ -24,6 +24,24 @@ const createListProducts = async (input: any, ctx: any) => {
   }
 };
 
+const updateDataOrder = async (input: any) => {
+  try {
+    await ListProduct.findOneAndUpdate({ _id: input.id }, input);
+
+    return {
+      message: "Ha sido actualizada correctamente",
+      success: true,
+    };
+  } catch (error) {
+    console.log(error);
+
+    return {
+      message: "Hubo un problema al actualizar",
+      success: false,
+    };
+  }
+};
+
 const getListProducts = async (idUser: string) => {
   try {
     if (idUser) {
@@ -32,7 +50,6 @@ const getListProducts = async (idUser: string) => {
     }
 
     const listProducts = await ListProduct.find({});
-    console.log(listProducts);
 
     return listProducts;
   } catch (error) {
@@ -83,4 +100,5 @@ export default {
   getListProducts,
   deleteListProducts,
   getListProduct,
+  updateDataOrder,
 };

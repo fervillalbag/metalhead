@@ -92,11 +92,31 @@ const typeDefs = gql`
     createdAt: String
   }
 
+  input ListProductInput {
+    name: String
+    code: Int
+    quantity: Int
+    qty: Int
+    idUser: String
+    price: Int
+    image: String
+    description: [DescriptionInput]
+    createdAt: String
+  }
+
   type ResponseListProduct {
     id: String
     idUser: String
     status: Boolean
     products: [ListProduct]
+    createdAt: String
+  }
+
+  input ResponseListProductInput {
+    id: String
+    idUser: String
+    status: Boolean
+    products: [ListProductInput]
     createdAt: String
   }
 
@@ -355,6 +375,9 @@ const typeDefs = gql`
     # List Products
     createListProducts(input: [ListProductInput]!): MutationResponse
     deleteListProducts(id: String!): MutationResponse
+    updateDataOrder(
+      input: ResponseListProductInput!
+    ): MutationResponse
   }
 `;
 

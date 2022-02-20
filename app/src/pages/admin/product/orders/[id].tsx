@@ -1,8 +1,9 @@
+import Modal from "@/components/Modal";
 import { GET_ORDER } from "@/graphql/queries/orders";
 import { GET_USER } from "@/graphql/queries/user";
 import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useState } from "react";
 import {
   BsFillArrowLeftCircleFill,
   BsToggleOff,
@@ -39,12 +40,24 @@ const UserSection = ({ idUser }: any) => {
 
 const OrderItem: React.FC = () => {
   const router = useRouter();
+  const [showModal, setShowModal] = useState<boolean>(false);
 
   const { data: order, loading } = useQuery(GET_ORDER, {
     variables: {
       id: router?.query?.id,
     },
+    fetchPolicy: "network-only",
   });
+
+  const handleUpdateStatusOrder = async () => {
+    try {
+      // const response = await
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  console.log(order);
 
   return (
     <div className="flex">
@@ -181,6 +194,34 @@ const OrderItem: React.FC = () => {
           </div>
         )}
       </div>
+
+      <Modal showModal={showModal}>
+        <div className="flex flex-col justify-center h-full items-center">
+          <h1>¿Desea eliminar?</h1>
+
+          <div className="grid grid-cols-2 gap-x-4">
+            <button
+              className="block p-2 border"
+              onClick={() => {
+                // handleDeleteSlide(itemDelete);
+                handleUpdateStatusOrder();
+                setShowModal(false);
+              }}
+            >
+              Si
+            </button>
+            <button
+              className="block p-2 border"
+              onClick={() => {
+                setShowModal(false);
+                // setItemDelete("");
+              }}
+            >
+              No
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };

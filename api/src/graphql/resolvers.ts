@@ -165,6 +165,8 @@ const resolvers = {
     ) => listProductController.createListProducts(input, ctx),
     deleteListProducts: (_: any, { id }: { id: string }) =>
       listProductController.deleteListProducts(id),
+    updateDataOrder: (_: any, { input }: { input: any }) =>
+      listProductController.updateDataOrder(input),
   },
 };
 
