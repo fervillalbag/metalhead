@@ -17,6 +17,7 @@ import { ProductInfo, Products } from "@/types/product";
 import { Description } from "@/types/description";
 import { useCart } from "@/hooks/useCart";
 import Link from "next/link";
+import { FaTimes } from "react-icons/fa";
 
 const ProductAdmin = () => {
   const router = useRouter();
@@ -289,13 +290,26 @@ const ProductAdmin = () => {
               Add new product
             </button>
 
-            <Modal showModal={showModal}>
-              <div className="flex flex-col justify-center h-full items-center">
-                <h1>¿Desea eliminar?</h1>
-
-                <div className="grid grid-cols-2 gap-x-4">
+            <Modal
+              handleCloseModal={() => setShowModal(false)}
+              showModal={showModal}
+            >
+              <div className="flex flex-col justify-center h-full">
+                <header className="flex justify-between items-center">
+                  <span className="block text-lg font-semibold text-slate-600">
+                    ¿Desea eliminar?
+                  </span>
                   <button
-                    className="block p-2 border"
+                    className="bg-slate-100 text-slate-600 text-xl p-2 rounded-md"
+                    onClick={() => setShowModal(false)}
+                  >
+                    <FaTimes />
+                  </button>
+                </header>
+
+                <div className="grid grid-cols-2 gap-x-4 mt-6">
+                  <button
+                    className="block p-2 text-white rounded-md bg-slate-400"
                     onClick={() => {
                       handleDeleteProductItem(itemDelete as Products);
                       setShowModal(false);
@@ -304,7 +318,7 @@ const ProductAdmin = () => {
                     Si
                   </button>
                   <button
-                    className="block p-2 border"
+                    className="block p-2 rounded-md bg-white border border-slate-100 hover:bg-slate-100 transition duration-300"
                     onClick={() => {
                       setShowModal(false);
                       setItemDelete(null);

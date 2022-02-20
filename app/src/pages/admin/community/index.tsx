@@ -7,6 +7,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import { GET_SLIDES } from "@/graphql/queries/community";
 import { DELETE_SLIDE } from "@/graphql/mutation/slide";
 import Modal from "@/components/Modal";
+import { FaTimes } from "react-icons/fa";
 
 const CommunityAdmin: React.FC = () => {
   const router = useRouter();
@@ -48,13 +49,26 @@ const CommunityAdmin: React.FC = () => {
 
         <h1 className="text-2xl text-slate-600 mt-8 mb-6">List of Slides</h1>
 
-        <Modal showModal={showModal}>
-          <div className="flex flex-col justify-center h-full items-center">
-            <h1>¿Desea eliminar?</h1>
-
-            <div className="grid grid-cols-2 gap-x-4">
+        <Modal
+          handleCloseModal={() => setShowModal(false)}
+          showModal={showModal}
+        >
+          <div className="flex flex-col justify-center h-full">
+            <header className="flex items-center justify-between">
+              <span className="block text-lg font-semibold text-slate-600">
+                ¿Desea eliminar?
+              </span>
               <button
-                className="block p-2 border"
+                className="bg-slate-100 text-slate-600 text-xl p-2 rounded-md"
+                onClick={() => setShowModal(false)}
+              >
+                <FaTimes />
+              </button>
+            </header>
+
+            <div className="grid grid-cols-2 gap-x-4 mt-6">
+              <button
+                className="block p-2 text-white rounded-md bg-slate-400"
                 onClick={() => {
                   handleDeleteSlide(itemDelete);
                   setShowModal(false);
@@ -63,7 +77,7 @@ const CommunityAdmin: React.FC = () => {
                 Si
               </button>
               <button
-                className="block p-2 border"
+                className="block p-2 rounded-md bg-white border border-slate-100 hover:bg-slate-100 transition duration-300"
                 onClick={() => {
                   setShowModal(false);
                   setItemDelete("");

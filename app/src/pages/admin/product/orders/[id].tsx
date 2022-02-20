@@ -11,6 +11,7 @@ import {
   BsToggleOff,
   BsToggleOn,
 } from "react-icons/bs";
+import { FaTimes } from "react-icons/fa";
 
 const UserSection = ({ idUser }: any) => {
   const { data: user, loading } = useQuery(GET_USER, {
@@ -123,27 +124,27 @@ const OrderItem: React.FC = () => {
             <div className="col-start-1 col-end-3">
               <div className="grid grid-cols-[70px_1fr_4fr_1fr_1fr] border-b border-slate-200 pb-2 gap-x-8">
                 <div>
-                  <span className="block font-semibold text-slate-600 text-center">
+                  <span className="block text-lg font-semibold text-slate-600 text-center">
                     Image
                   </span>
                 </div>
                 <div>
-                  <span className="block font-semibold text-slate-600 text-center">
+                  <span className="block text-lg font-semibold text-slate-600 text-center">
                     Code
                   </span>
                 </div>
                 <div>
-                  <span className="block font-semibold text-slate-600">
+                  <span className="block text-lg font-semibold text-slate-600">
                     Description
                   </span>
                 </div>
                 <div>
-                  <span className="block font-semibold text-slate-600 text-center">
+                  <span className="block text-lg font-semibold text-slate-600 text-center">
                     Quantity
                   </span>
                 </div>
                 <div>
-                  <span className="block font-semibold text-slate-600 text-center">
+                  <span className="block text-lg font-semibold text-slate-600 text-center">
                     Price
                   </span>
                 </div>
@@ -245,15 +246,24 @@ const OrderItem: React.FC = () => {
         )}
       </div>
 
-      <Modal showModal={showModal}>
-        <div className="flex flex-col justify-center h-full items-center">
-          <h1>¿Desea actualizar la información?</h1>
-
-          <div className="grid grid-cols-2 gap-x-4">
+      <Modal handleCloseModal={() => setShowModal(false)} showModal={showModal}>
+        <div className="flex flex-col justify-center h-full">
+          <header className="flex items-start justify-between">
+            <span className="block text-lg font-semibold text-slate-600">
+              ¿Desea actualizar la información?
+            </span>
             <button
-              className="block p-2 border"
+              className="bg-slate-100 text-slate-600 text-xl p-2 rounded-md"
+              onClick={() => setShowModal(false)}
+            >
+              <FaTimes />
+            </button>
+          </header>
+
+          <div className="grid grid-cols-2 gap-x-4 mt-6">
+            <button
+              className="block p-2 text-white rounded-md bg-slate-400"
               onClick={() => {
-                // handleDeleteSlide(itemDelete);
                 handleUpdateStatusOrder();
                 setShowModal(false);
               }}
@@ -261,7 +271,7 @@ const OrderItem: React.FC = () => {
               Si
             </button>
             <button
-              className="block p-2 border"
+              className="block p-2 rounded-md bg-white border border-slate-100 hover:bg-slate-100 transition duration-300"
               onClick={() => {
                 setShowModal(false);
                 // setItemDelete("");
