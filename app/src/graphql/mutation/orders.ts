@@ -8,3 +8,12 @@ export const DELETE_ORDER = gql`
     }
   }
 `;
+
+export const UPDATE_ORDER = gql`
+  mutation updateDataOrder($input: ResponseListProductInput!) {
+    updateDataOrder(input: $input) {
+      message
+      success
+    }
+  }
+`;

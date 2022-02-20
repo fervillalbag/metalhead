@@ -1,9 +1,11 @@
 import Modal from "@/components/Modal";
+import { UPDATE_ORDER } from "@/graphql/mutation/orders";
 import { GET_ORDER } from "@/graphql/queries/orders";
 import { GET_USER } from "@/graphql/queries/user";
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 import {
   BsFillArrowLeftCircleFill,
   BsToggleOff,
@@ -18,8 +20,6 @@ const UserSection = ({ idUser }: any) => {
   });
 
   if (loading) return null;
-
-  console.log(user?.getUser);
 
   return (
     <div className="flex items-center">
@@ -42,22 +42,64 @@ const OrderItem: React.FC = () => {
   const router = useRouter();
   const [showModal, setShowModal] = useState<boolean>(false);
 
-  const { data: order, loading } = useQuery(GET_ORDER, {
+  const {
+    data: order,
+    loading,
+    refetch,
+  } = useQuery(GET_ORDER, {
     variables: {
       id: router?.query?.id,
     },
     fetchPolicy: "network-only",
   });
 
+  const [updateOrder] = useMutation(UPDATE_ORDER);
+
+  const newArrayProducts = order?.getListProduct?.products.map(
+    (product: any) => {
+      return {
+        code: product.code,
+        description: product.description.map((item: any) => {
+          return {
+            id: item.id,
+            text: item.text,
+          };
+        }),
+        idUser: product.idUser,
+        image: product.image,
+        name: product.name,
+        price: product.price,
+        qty: product.qty,
+        quantity: product.quantity,
+      };
+    }
+  );
+
   const handleUpdateStatusOrder = async () => {
     try {
-      // const response = await
+      const response = await updateOrder({
+        variables: {
+          input: {
+            id: order?.getListProduct?.id,
+            status: !order?.getListProduct?.status,
+            idUser: order?.getListProduct?.idUser,
+            createdAt: order?.getListProduct?.createdAt,
+            products: newArrayProducts,
+          },
+        },
+      });
+      refetch();
+
+      if (!response?.data?.updateDataOrder.success) {
+        toast.success(response?.data?.updateDataOrder?.message);
+        return;
+      }
+
+      toast.success(response?.data?.updateDataOrder?.message);
     } catch (error) {
       console.log(error);
     }
   };
-
-  console.log(order);
 
   return (
     <div className="flex">
@@ -107,40 +149,42 @@ const OrderItem: React.FC = () => {
                 </div>
               </div>
 
-              {order?.getListProduct?.products.map((product: any) => (
-                <div
-                  key={product.id}
-                  className="grid grid-cols-[70px_1fr_4fr_1fr_1fr] border-b border-slate-200 py-2 items-center gap-x-8"
-                >
-                  <div className="grid place-items-center">
-                    <img
-                      src={product.image}
-                      className="w-10 h-10 rounded-full"
-                      alt=""
-                    />
+              {order?.getListProduct?.products.map(
+                (product: any, index: number) => (
+                  <div
+                    key={index}
+                    className="grid grid-cols-[70px_1fr_4fr_1fr_1fr] border-b border-slate-200 py-2 items-center gap-x-8"
+                  >
+                    <div className="grid place-items-center">
+                      <img
+                        src={product.image}
+                        className="w-10 h-10 rounded-full"
+                        alt=""
+                      />
+                    </div>
+                    <div>
+                      <span className="block text-sm text-slate-600 text-center">
+                        {product.code}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="block text-sm text-slate-600">
+                        {product.name}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="block text-sm text-center font-semibold text-slate-400">
+                        {product.qty}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="block text-sm text-center font-semibold text-slate-400">
+                        ${product.price}
+                      </span>
+                    </div>
                   </div>
-                  <div>
-                    <span className="block text-sm text-slate-600 text-center">
-                      {product.code}
-                    </span>
-                  </div>
-                  <div>
-                    <span className="block text-sm text-slate-600">
-                      {product.name}
-                    </span>
-                  </div>
-                  <div>
-                    <span className="block text-sm text-center font-semibold text-slate-400">
-                      {product.qty}
-                    </span>
-                  </div>
-                  <div>
-                    <span className="block text-sm text-center font-semibold text-slate-400">
-                      ${product.price}
-                    </span>
-                  </div>
-                </div>
-              ))}
+                )
+              )}
 
               <div className="grid grid-cols-[70px_1fr_4fr_1fr_1fr] py-3 gap-x-8">
                 <div>
@@ -173,14 +217,20 @@ const OrderItem: React.FC = () => {
 
               <div>
                 {order?.getListProduct?.status ? (
-                  <button className="flex items-center">
+                  <button
+                    className="flex items-center"
+                    onClick={() => setShowModal(true)}
+                  >
                     <span className="block text-4xl text-green-600">
                       <BsToggleOn />
                     </span>
                     <span className="block ml-3 text-slate-600">Delivered</span>
                   </button>
                 ) : (
-                  <button className="flex items-center">
+                  <button
+                    className="flex items-center"
+                    onClick={() => setShowModal(true)}
+                  >
                     <span className="block text-4xl text-slate-600">
                       <BsToggleOff />
                     </span>
@@ -197,7 +247,7 @@ const OrderItem: React.FC = () => {
 
       <Modal showModal={showModal}>
         <div className="flex flex-col justify-center h-full items-center">
-          <h1>¿Desea eliminar?</h1>
+          <h1>¿Desea actualizar la información?</h1>
 
           <div className="grid grid-cols-2 gap-x-4">
             <button
