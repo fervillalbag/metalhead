@@ -27,7 +27,7 @@ const Cart = () => {
     <Layout>
       <div className="max-w-3xl mx-auto w-11/12">
         {cart.length !== 0 && (
-          <div className="grid grid-cols-[70px_1fr_100px_80px] gap-x-6 mb-4 mt-10">
+          <div className="grid grid-cols-[60px_1fr_60px_80px] md:grid-cols-[70px_1fr_100px_80px] gap-x-6 mb-4 mt-10">
             <span className="font-semibold text-slate-700 block text-center"></span>
             <span className="font-semibold text-slate-700 block">Name</span>
             <span className="font-semibold text-slate-700 block text-center">
@@ -45,17 +45,17 @@ const Cart = () => {
           cart.map((product: any) => (
             <div
               key={product.id}
-              className="grid grid-cols-[70px_1fr_100px_80px] gap-x-6 mb-6 items-center border-b border-slate-200 pb-6"
+              className="grid grid-cols-[60px_1fr_60px_80px] md:grid-cols-[70px_1fr_100px_80px] gap-x-6 mb-6 items-center border-b border-slate-200 pb-6"
             >
               <div>
                 <img
                   src={product.image}
                   alt=""
-                  className="w-[70px] h-[70px] object-cover border border-slate-200"
+                  className="w-[60px] h-[60px] md:w-[70px] md:h-[70px] object-cover border border-slate-200"
                 />
               </div>
               <div>
-                <span className="block text-slate-700 mb-1">
+                <span className="block text-sm md:text-base text-slate-700 mb-1">
                   {product.name}
                 </span>
                 <span className="block text-slate-400 text-xs font-semibold">
@@ -63,14 +63,14 @@ const Cart = () => {
                 </span>
               </div>
 
-              <div className="mt-2 md:mt-0 flex item-center">
+              <div className="mt-2 md:mt-0 flex flex-col md:flex-row justify-center md:justify-start items-center">
                 <button
                   className="flex items-center justify-center text-xs w-10 h-8 rounded bg-BrightRed text-white"
                   onClick={() => handleDeleteCart(product)}
                 >
                   <FaMinus />
                 </button>
-                <span className="text-base md:text-sm block my-1 text-center px-4 md:px-0 font-semibold text-slate-600 mx-3">
+                <span className="text-base md:text-sm block my-1 text-center md:px-3 font-semibold text-slate-600">
                   {product.qty}
                 </span>
                 <button
@@ -91,7 +91,7 @@ const Cart = () => {
         )}
 
         {cart.length !== 0 && (
-          <div className="grid grid-cols-[70px_1fr_100px_80px] gap-x-6 items-center pb-56">
+          <div className="grid grid-cols-[60px_1fr_60px_80px] md:grid-cols-[70px_1fr_100px_80px] gap-x-6 items-center pb-20 md:pb-56">
             <span className="block text-xl font-semibold text-slate-700 uppercase">
               Total
             </span>
