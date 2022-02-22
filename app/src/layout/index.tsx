@@ -9,6 +9,7 @@ import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import { useCart } from "@/hooks/useCart";
 import { CartContextModal } from "@/context/CartContextModal";
+import toast from "react-hot-toast";
 
 const Layout: React.FC = ({ children }) => {
   const router = useRouter();
@@ -50,7 +51,7 @@ const Layout: React.FC = ({ children }) => {
           </div>
         </div>
 
-        <div className="flex flex-col justify-between px-6 h-[calc(100vh_-_76px_-_112px)] overflow-y-scroll">
+        <div className="flex flex-col justify-between px-6 h-[calc(100vh_-_76px_-_112px_-_28px)] overflow-y-scroll">
           <div>
             {!cart ? (
               <span className="block">Loading..</span>
@@ -90,7 +91,7 @@ const Layout: React.FC = ({ children }) => {
                         {product?.name.length >= 30 && "..."}
                       </span>
                       <span className="block font-semibold text-sm mt-1">
-                        ${product.price}
+                        ${product.price * product.qty}
                       </span>
                     </div>
                     <div className="mt-2 md:mt-0 md:ml-3 flex md:block">
@@ -117,14 +118,33 @@ const Layout: React.FC = ({ children }) => {
           </div>
         </div>
 
+        {cart.length !== 0 && (
+          <div className="px-6 flex justify-between">
+            <span className="block font-bold text-DarkBlue text-lg">Total</span>
+            <span className="block text-DarkBlue">
+              $
+              {cart.length === 1
+                ? cart.map((a: any) => a.price * a.qty)
+                : cart.reduce(
+                    (a: any, b: any) => a.price * a.qty + b.price * b.qty
+                  )}
+            </span>
+          </div>
+        )}
+
         <div className="h-28 flex items-center px-6">
           <button
-            className={`bg-DarkBlue block w-full text-white py-3 rounded-md cursor-pointer ${
-              cart.length === 0 ? "bg-slate-400 cursor-default" : null
+            className={`block w-full text-white py-3 rounded-md cursor-pointer ${
+              cart.length === 0 ? "bg-slate-400 cursor-default" : "bg-DarkBlue"
             }`}
             onClick={() => {
-              setIsShowModalCart(false);
-              router.push("/cart");
+              if (cart.length === 0) {
+                toast.error("No tienes producto en el carrito");
+                return;
+              } else {
+                router.push("/cart");
+                setIsShowModalCart(false);
+              }
             }}
           >
             Go to cart

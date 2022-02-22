@@ -122,20 +122,20 @@ const OrderItem: React.FC = () => {
         ) : (
           <div className="grid grid-cols-3 gap-x-10">
             <div className="col-start-1 col-end-3">
-              <div className="grid grid-cols-[70px_1fr_4fr_1fr_1fr] border-b border-slate-200 pb-2 gap-x-8">
+              <div className="grid grid-cols-[70px_4fr_1fr_1fr_1fr] border-b border-slate-200 pb-2 gap-x-8">
                 <div>
                   <span className="block text-lg font-semibold text-slate-600 text-center">
                     Image
                   </span>
                 </div>
                 <div>
-                  <span className="block text-lg font-semibold text-slate-600 text-center">
-                    Code
+                  <span className="block text-lg font-semibold text-slate-600">
+                    Description
                   </span>
                 </div>
                 <div>
-                  <span className="block text-lg font-semibold text-slate-600">
-                    Description
+                  <span className="block text-lg font-semibold text-slate-600 text-center">
+                    Unit
                   </span>
                 </div>
                 <div>
@@ -154,7 +154,7 @@ const OrderItem: React.FC = () => {
                 (product: any, index: number) => (
                   <div
                     key={index}
-                    className="grid grid-cols-[70px_1fr_4fr_1fr_1fr] border-b border-slate-200 py-2 items-center gap-x-8"
+                    className="grid grid-cols-[70px_4fr_1fr_1fr_1fr] border-b border-slate-200 py-2 items-center gap-x-8"
                   >
                     <div className="grid place-items-center">
                       <img
@@ -164,13 +164,13 @@ const OrderItem: React.FC = () => {
                       />
                     </div>
                     <div>
-                      <span className="block text-sm text-slate-600 text-center">
-                        {product.code}
+                      <span className="block text-sm text-slate-600">
+                        {product.name}
                       </span>
                     </div>
                     <div>
-                      <span className="block text-sm text-slate-600">
-                        {product.name}
+                      <span className="block text-sm text-slate-600 text-center">
+                        ${product.price}
                       </span>
                     </div>
                     <div>
@@ -180,14 +180,14 @@ const OrderItem: React.FC = () => {
                     </div>
                     <div>
                       <span className="block text-sm text-center font-semibold text-slate-400">
-                        ${product.price}
+                        ${product.price * product.qty}
                       </span>
                     </div>
                   </div>
                 )
               )}
 
-              <div className="grid grid-cols-[70px_1fr_4fr_1fr_1fr] py-3 gap-x-8">
+              <div className="grid grid-cols-[70px_4fr_1fr_1fr_1fr] py-3 gap-x-8">
                 <div>
                   <span className="block text-center font-semibold uppercase">
                     Total
@@ -200,7 +200,7 @@ const OrderItem: React.FC = () => {
                   <span className="block text-center font-semibold text-slate-600">
                     $
                     {order?.getListProduct?.products.reduce(
-                      (a: any, b: any) => a.price + b.price
+                      (a: any, b: any) => a.price * a.qty + b.price * b.qty
                     )}
                   </span>
                 </div>

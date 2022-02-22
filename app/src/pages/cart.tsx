@@ -1,15 +1,16 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Layout from "@/layout";
 import { useCart } from "@/hooks/useCart";
 import { getToken } from "utils/helpers";
 import { isAuth, isUserNotFound } from "utils/actions";
-import { FaMinus, FaPlus } from "react-icons/fa";
+import { FaMinus, FaPlus, FaTimes } from "react-icons/fa";
 import { useMutation } from "@apollo/client";
 import { CREATE_ORDER } from "@/graphql/mutation/orders";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import { CartContext } from "@/context/CartContext";
 import useAuth from "@/hooks/useAuth";
+import Modal from "@/components/Modal";
 
 // import useAuth from "@/hooks/useAuth";
 
@@ -18,6 +19,7 @@ const Cart = () => {
 
   const { user } = useAuth();
   const { setCart } = useContext(CartContext);
+  const [showModal, setShowModal] = useState<boolean>(false);
 
   const router = useRouter();
   const { cart, handleAddCart, handleDeleteCart } = useCart();
@@ -53,15 +55,6 @@ const Cart = () => {
   });
 
   const handleCreateOrder = async () => {
-    // console.log({
-    //   input: {
-    //     idUser: user?.id,
-    //     products: [...arrayCart],
-    //   },
-    // });
-
-    // return;
-
     try {
       await createListProducts({
         variables: {
@@ -139,7 +132,7 @@ const Cart = () => {
 
               <div>
                 <span className="block text-slate-400 font-semibold text-center">
-                  ${product.price}
+                  ${product.price * product.qty}
                 </span>
               </div>
             </div>
@@ -168,12 +161,51 @@ const Cart = () => {
           <div className="flex justify-end py-20">
             <button
               className="bg-BrightRed text-white py-2 px-6 rounded"
-              onClick={handleCreateOrder}
+              onClick={() => setShowModal(true)}
             >
               Make a purchase
             </button>
           </div>
         )}
+
+        <Modal
+          handleCloseModal={() => setShowModal(false)}
+          showModal={showModal}
+        >
+          <div className="flex flex-col justify-center h-full">
+            <header className="flex items-center justify-between">
+              <span className="block text-lg font-semibold text-slate-600">
+                ¿Desea realizar la compra?
+              </span>
+              <button
+                className="bg-slate-100 text-slate-600 text-xl p-2 rounded-md"
+                onClick={() => setShowModal(false)}
+              >
+                <FaTimes />
+              </button>
+            </header>
+
+            <div className="grid grid-cols-2 gap-x-4 mt-6">
+              <button
+                className="block p-2 text-white rounded-md bg-slate-400"
+                onClick={() => {
+                  handleCreateOrder();
+                  setShowModal(false);
+                }}
+              >
+                Si
+              </button>
+              <button
+                className="block p-2 rounded-md bg-white border border-slate-100 hover:bg-slate-100 transition duration-300"
+                onClick={() => {
+                  setShowModal(false);
+                }}
+              >
+                No
+              </button>
+            </div>
+          </div>
+        </Modal>
       </div>
     </Layout>
   );
