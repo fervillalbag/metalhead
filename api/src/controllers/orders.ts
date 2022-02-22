@@ -1,10 +1,10 @@
 import ListProduct from "../models/orders";
 
-const createListProducts = async (input: any, ctx: any) => {
+const createListProducts = async (input: any) => {
   try {
     const listProduct = await new ListProduct({
-      products: input,
-      idUser: ctx.user.id,
+      idUser: input.idUser,
+      products: input.products,
       status: false,
       createdAt: new Date(),
     });

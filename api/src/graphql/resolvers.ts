@@ -158,11 +158,8 @@ const resolvers = {
       slideController.deleteSlide(id),
 
     // List Products
-    createListProducts: (
-      _: any,
-      { input }: { input: any },
-      ctx: any
-    ) => listProductController.createListProducts(input, ctx),
+    createListProducts: (_: any, { input }: { input: any }) =>
+      listProductController.createListProducts(input),
     deleteListProducts: (_: any, { id }: { id: string }) =>
       listProductController.deleteListProducts(id),
     updateDataOrder: (_: any, { input }: { input: any }) =>

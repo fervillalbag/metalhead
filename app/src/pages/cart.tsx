@@ -9,12 +9,14 @@ import { CREATE_ORDER } from "@/graphql/mutation/orders";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import { CartContext } from "@/context/CartContext";
+import useAuth from "@/hooks/useAuth";
 
 // import useAuth from "@/hooks/useAuth";
 
 const Cart = () => {
   isUserNotFound();
 
+  const { user } = useAuth();
   const { setCart } = useContext(CartContext);
 
   const router = useRouter();
@@ -51,10 +53,22 @@ const Cart = () => {
   });
 
   const handleCreateOrder = async () => {
+    // console.log({
+    //   input: {
+    //     idUser: user?.id,
+    //     products: [...arrayCart],
+    //   },
+    // });
+
+    // return;
+
     try {
       await createListProducts({
         variables: {
-          input: [...arrayCart],
+          input: {
+            idUser: user?.id,
+            products: arrayCart,
+          },
         },
       });
       toast.success("Compra realizada correctamente");

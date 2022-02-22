@@ -237,6 +237,11 @@ const typeDefs = gql`
     description: [DescriptionInput]
   }
 
+  input ListProductCreateInput {
+    idUser: String
+    products: [ListProductInput]
+  }
+
   input PlansItemInput {
     id: ID
     text: String
@@ -373,7 +378,9 @@ const typeDefs = gql`
     deleteSlide(id: String!): MutationResponse
 
     # List Products
-    createListProducts(input: [ListProductInput]!): MutationResponse
+    createListProducts(
+      input: ListProductCreateInput!
+    ): MutationResponse
     deleteListProducts(id: String!): MutationResponse
     updateDataOrder(
       input: ResponseListProductInput!
