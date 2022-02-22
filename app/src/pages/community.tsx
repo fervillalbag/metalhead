@@ -11,12 +11,25 @@ import "swiper/css/navigation";
 import "swiper/css/autoplay";
 import { getToken } from "utils/helpers";
 import { isAuth, isUserNotFound } from "utils/actions";
-import { useQuery } from "@apollo/client";
+import client from "@/config/apollo";
 
-const Community: React.FC = () => {
+interface CommunityIprops {
+  slides: any;
+}
+
+export const getStaticProps = async () => {
+  const { data: slides } = await client.query({ query: GET_SLIDES });
+
+  return {
+    props: {
+      slides,
+    },
+  };
+};
+
+const Community: React.FC<CommunityIprops> = ({ slides }) => {
   isUserNotFound();
 
-  const { data: slides } = useQuery(GET_SLIDES);
   const { isShowMenu } = useContext(MenuContext);
 
   useEffect(() => {

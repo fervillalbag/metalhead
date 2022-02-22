@@ -12,16 +12,60 @@ import { GET_REVIEW_INFO } from "@/graphql/queries/reviewInfo";
 import Skeleton from "@/components/Skeleton";
 import { getToken } from "utils/helpers";
 import { isAuth, isUserNotFound } from "utils/actions";
-import { useQuery } from "@apollo/client";
 
-const Home: React.FC = () => {
+import client from "@/config/apollo";
+import { HeaderInfo } from "@/types/header";
+import { GrowthData, GrowthInfo } from "@/types/growth";
+import { ReviewData, ReviewInfo } from "@/types/review";
+
+interface HomeIprops {
+  headerData: {
+    getHeaderHome: HeaderInfo;
+  };
+  growthData: {
+    getGrowthInfoHome: GrowthInfo;
+  };
+  reviewData: {
+    getReviewHome: ReviewData[];
+  };
+  reviewInfoData: {
+    getReviewInfoHome: ReviewInfo;
+  };
+  growthHome: {
+    getGrowthHome: GrowthData[];
+  };
+}
+
+export const getStaticProps = async () => {
+  const { data: headerData } = await client.query({ query: GET_HEADER_HOME });
+  const { data: growthData } = await client.query({
+    query: GET_GROWTH_INFO_HOME,
+  });
+  const { data: reviewData } = await client.query({ query: GET_REVIEW_HOME });
+  const { data: reviewInfoData } = await client.query({
+    query: GET_REVIEW_INFO,
+  });
+  const { data: growthHome } = await client.query({ query: GET_GROWTH_HOME });
+
+  return {
+    props: {
+      headerData,
+      growthData,
+      reviewData,
+      reviewInfoData,
+      growthHome,
+    },
+  };
+};
+
+const Home: React.FC<HomeIprops> = ({
+  headerData,
+  growthData,
+  reviewData,
+  reviewInfoData,
+  growthHome,
+}) => {
   isUserNotFound();
-
-  const { data: headerData } = useQuery(GET_HEADER_HOME);
-  const { data: growthData } = useQuery(GET_GROWTH_INFO_HOME);
-  const { data: reviewData } = useQuery(GET_REVIEW_HOME);
-  const { data: reviewInfoData } = useQuery(GET_REVIEW_INFO);
-  const { data: growthHome } = useQuery(GET_GROWTH_HOME);
 
   const headerHomeData = headerData?.getHeaderHome;
   const growthHomeData = growthData?.getGrowthInfoHome;

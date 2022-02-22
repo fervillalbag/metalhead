@@ -8,13 +8,28 @@ import { GET_PLAN_INFO } from "@/graphql/queries/planInfo";
 import Skeleton from "@/components/Skeleton";
 import { isAuth, isUserNotFound } from "utils/actions";
 import { getToken } from "utils/helpers";
-import { useQuery } from "@apollo/client";
 
-const Plans: React.FC = () => {
+import client from "@/config/apollo";
+
+interface PlansIprops {
+  dataPlans: any;
+  dataInfo: any;
+}
+
+export const getStaticProps = async () => {
+  const { data: dataPlans } = await client.query({ query: GET_PLANS });
+  const { data: dataInfo } = await client.query({ query: GET_PLAN_INFO });
+
+  return {
+    props: {
+      dataPlans,
+      dataInfo,
+    },
+  };
+};
+
+const Plans: React.FC<PlansIprops> = ({ dataPlans, dataInfo }) => {
   isUserNotFound();
-
-  const { data: dataPlans, loading: dataPlansLoading } = useQuery(GET_PLANS);
-  const { data: dataInfo, loading: dataInfoLoading } = useQuery(GET_PLAN_INFO);
 
   const dataHomePlans = dataPlans?.getPlans;
   const dataHomePlanInfo = dataInfo?.getPlanInfo;
@@ -32,7 +47,7 @@ const Plans: React.FC = () => {
   return (
     <Layout>
       <div className="w-11/12 max-w-6xl mx-auto">
-        {dataInfoLoading && (
+        {!dataInfo && (
           <div className="mx-auto w-32">
             <Skeleton type="text" />
           </div>
@@ -52,7 +67,7 @@ const Plans: React.FC = () => {
 
         {dataHomePlanInfo?.description.map((description: any) => (
           <div key={description.id}>
-            {dataInfoLoading && (
+            {!dataInfo && (
               <div className="w-10/12 mx-auto mt-8">
                 <Skeleton type="text" />
                 <Skeleton type="text" />
@@ -74,7 +89,7 @@ const Plans: React.FC = () => {
           </div>
         ))}
 
-        {dataInfoLoading && (
+        {!dataInfo && (
           <div className="grid grid-cols-2 gap-x-20 gap-y-16 w-10/12 mx-auto mt-8">
             <div className="w-full h-[500px]">
               <Skeleton type="thumbnail" />
@@ -94,7 +109,7 @@ const Plans: React.FC = () => {
           }}
           className="grid md:grid-cols-2 lg:grid-cols-[repeat(2,_370px)] gap-6 gap-y-10 justify-center pt-10 pb-20"
         >
-          {dataPlansLoading
+          {!dataHomePlans
             ? null
             : dataHomePlans.map((plan: any, index: number) => (
                 <article

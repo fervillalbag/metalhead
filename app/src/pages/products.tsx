@@ -11,14 +11,28 @@ import Skeleton from "@/components/Skeleton";
 import { useCart } from "@/hooks/useCart";
 import { isAuth, isUserNotFound } from "utils/actions";
 import { getToken } from "utils/helpers";
-import { useQuery } from "@apollo/client";
+import client from "@/config/apollo";
 
-const Products: React.FC = () => {
-  isUserNotFound();
+interface ProductsIprops {
+  dataProducts: any;
+}
 
-  const { data: dataProducts } = useQuery(GET_PRODUCTS, {
+export const getServerSideProps = async () => {
+  const { data: dataProducts } = await client.query({
+    query: GET_PRODUCTS,
     fetchPolicy: "network-only",
   });
+
+  return {
+    props: {
+      dataProducts,
+    },
+  };
+};
+
+const Products: React.FC<ProductsIprops> = ({ dataProducts }) => {
+  isUserNotFound();
+
   const dataProductsPage = dataProducts?.getProducts;
 
   const { handleAddCart } = useCart();

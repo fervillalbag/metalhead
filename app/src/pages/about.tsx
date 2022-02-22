@@ -7,12 +7,26 @@ import Layout from "@/layout";
 import Skeleton from "@/components/Skeleton";
 import { getToken } from "utils/helpers";
 import { isAuth, isUserNotFound } from "utils/actions";
-import { useQuery } from "@apollo/client";
 
-const About = () => {
+import client from "@/config/apollo";
+
+interface AboutIprops {
+  aboutData: any;
+}
+
+export const getStaticProps = async () => {
+  const { data: aboutData } = await client.query({ query: GET_ABOUT_PAGE });
+
+  return {
+    props: {
+      aboutData,
+    },
+  };
+};
+
+const About: React.FC<AboutIprops> = ({ aboutData }) => {
   isUserNotFound();
 
-  const { data: aboutData } = useQuery(GET_ABOUT_PAGE);
   const aboutDataPage = aboutData?.getAboutPage;
 
   useEffect(() => {

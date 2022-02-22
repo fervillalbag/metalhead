@@ -10,18 +10,30 @@ import Skeleton from "@/components/Skeleton";
 import { useCart } from "@/hooks/useCart";
 import { isAuth, isUserNotFound } from "utils/actions";
 import { getToken } from "utils/helpers";
-import { useQuery } from "@apollo/client";
-import { useRouter } from "next/router";
 
-const Product: React.FC = () => {
-  isUserNotFound();
-  const router = useRouter();
+import client from "@/config/apollo";
 
-  const { data: dataProduct } = useQuery(GET_PRODUCT, {
+interface ProductIprops {
+  dataProduct: any;
+}
+
+export const getServerSideProps = async ({ params }: { params: any }) => {
+  const { data: dataProduct } = await client.query({
+    query: GET_PRODUCT,
     variables: {
-      id: router.query.id,
+      id: params.id,
     },
   });
+
+  return {
+    props: {
+      dataProduct,
+    },
+  };
+};
+
+const Product: React.FC<ProductIprops> = ({ dataProduct }) => {
+  isUserNotFound();
 
   const productDataPage = dataProduct?.getProduct;
 
