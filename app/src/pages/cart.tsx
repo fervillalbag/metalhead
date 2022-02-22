@@ -1,17 +1,25 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import Layout from "@/layout";
 import { useCart } from "@/hooks/useCart";
 import { getToken } from "utils/helpers";
 import { isAuth, isUserNotFound } from "utils/actions";
 import { FaMinus, FaPlus } from "react-icons/fa";
+import { useMutation } from "@apollo/client";
+import { CREATE_ORDER } from "@/graphql/mutation/orders";
+import toast from "react-hot-toast";
+import { useRouter } from "next/router";
+import { CartContext } from "@/context/CartContext";
+
 // import useAuth from "@/hooks/useAuth";
 
 const Cart = () => {
   isUserNotFound();
 
-  const { cart, handleAddCart, handleDeleteCart } = useCart();
+  const { setCart } = useContext(CartContext);
 
-  console.log(cart);
+  const router = useRouter();
+  const { cart, handleAddCart, handleDeleteCart } = useCart();
+  const [createListProducts] = useMutation(CREATE_ORDER);
 
   useEffect(() => {
     const token = getToken();
@@ -22,6 +30,40 @@ const Cart = () => {
       isAuth();
     }
   }, []);
+
+  const arrayCart = cart.map((product: any) => {
+    return {
+      code: product.code,
+      createdAt: product.createdAt,
+      description: product.description.map((descriptionItem: any) => {
+        return {
+          id: descriptionItem.id,
+          text: descriptionItem.text,
+        };
+      }),
+      id: product.id,
+      image: product.image,
+      name: product.name,
+      price: product.price,
+      qty: product.qty,
+      quantity: product.quantity,
+    };
+  });
+
+  const handleCreateOrder = async () => {
+    try {
+      await createListProducts({
+        variables: {
+          input: [...arrayCart],
+        },
+      });
+      toast.success("Compra realizada correctamente");
+      setCart([]);
+      router.push("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <Layout>
@@ -91,7 +133,7 @@ const Cart = () => {
         )}
 
         {cart.length !== 0 && (
-          <div className="grid grid-cols-[60px_1fr_60px_80px] md:grid-cols-[70px_1fr_100px_80px] gap-x-6 items-center pb-20 md:pb-56">
+          <div className="grid grid-cols-[60px_1fr_60px_80px] md:grid-cols-[70px_1fr_100px_80px] gap-x-6 items-center">
             <span className="block text-xl font-semibold text-slate-700 uppercase">
               Total
             </span>
@@ -105,6 +147,17 @@ const Cart = () => {
                     (a: any, b: any) => a.price * a.qty + b.price * b.qty
                   )}
             </span>
+          </div>
+        )}
+
+        {cart.length !== 0 && (
+          <div className="flex justify-end py-20">
+            <button
+              className="bg-BrightRed text-white py-2 px-6 rounded"
+              onClick={handleCreateOrder}
+            >
+              Make a purchase
+            </button>
           </div>
         )}
       </div>

@@ -2,32 +2,18 @@ import React, { useEffect } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { motion } from "framer-motion";
 
-import client from "@/config/apollo";
 import { GET_ABOUT_PAGE } from "@/graphql/queries/aboutPage";
 import Layout from "@/layout";
-import Loading from "@/components/Loading";
 import Skeleton from "@/components/Skeleton";
 import { getToken } from "utils/helpers";
 import { isAuth, isUserNotFound } from "utils/actions";
+import { useQuery } from "@apollo/client";
 
-export const getStaticProps = async () => {
-  const { data: aboutData } = await client.query({
-    query: GET_ABOUT_PAGE,
-  });
-
-  return {
-    props: {
-      aboutData,
-    },
-  };
-};
-
-const About = ({ aboutData }: { aboutData: any }) => {
+const About = () => {
   isUserNotFound();
 
+  const { data: aboutData } = useQuery(GET_ABOUT_PAGE);
   const aboutDataPage = aboutData?.getAboutPage;
-
-  if (!aboutDataPage) return <Loading />;
 
   useEffect(() => {
     const token = getToken();
@@ -59,22 +45,23 @@ const About = ({ aboutData }: { aboutData: any }) => {
           <h3 className="text-2xl lg:text-4xl font-bold text-DarkBlue">
             {aboutDataPage?.title}
           </h3>
-          {aboutDataPage.description.map((item: any) => (
-            <div key={item.id}>
-              {!aboutDataPage && (
-                <div className="mt-12">
-                  <Skeleton type="text" />
-                  <Skeleton type="text" />
-                  <Skeleton type="text" />
-                  <Skeleton type="text" />
-                </div>
-              )}
+          {aboutDataPage &&
+            aboutDataPage.description.map((item: any) => (
+              <div key={item.id}>
+                {!aboutDataPage && (
+                  <div className="mt-12">
+                    <Skeleton type="text" />
+                    <Skeleton type="text" />
+                    <Skeleton type="text" />
+                    <Skeleton type="text" />
+                  </div>
+                )}
 
-              <p key={item.id} className=" text-DarkGrayishBlue mt-6">
-                {item.text}
-              </p>
-            </div>
-          ))}
+                <p key={item.id} className=" text-DarkGrayishBlue mt-6">
+                  {item.text}
+                </p>
+              </div>
+            ))}
         </motion.div>
         <motion.div
           initial={{ opacity: 0, y: 30 }}

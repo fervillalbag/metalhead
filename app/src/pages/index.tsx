@@ -1,82 +1,27 @@
 import React, { useEffect } from "react";
 import Link from "next/link";
-import { GetStaticProps } from "next";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { motion } from "framer-motion";
 
 import Layout from "@/layout";
-import client from "@/config/apollo";
 import { GET_HEADER_HOME } from "@/graphql/queries/headerHome";
 import { GET_GROWTH_INFO_HOME } from "@/graphql/queries/growthInfo";
 import { GET_GROWTH_HOME } from "@/graphql/queries/growthHome";
 import { GET_REVIEW_HOME } from "@/graphql/queries/reviewHome";
 import { GET_REVIEW_INFO } from "@/graphql/queries/reviewInfo";
-import { HeaderInfo } from "@/types/header";
-import { GrowthData, GrowthInfo } from "@/types/growth";
-import { ReviewData, ReviewInfo } from "@/types/review";
 import Skeleton from "@/components/Skeleton";
 import { getToken } from "utils/helpers";
 import { isAuth, isUserNotFound } from "utils/actions";
+import { useQuery } from "@apollo/client";
 
-interface HomeIprops {
-  headerData: {
-    getHeaderHome: HeaderInfo;
-  };
-  growthData: {
-    getGrowthInfoHome: GrowthInfo;
-  };
-  reviewData: {
-    getReviewHome: ReviewData[];
-  };
-  reviewInfoData: {
-    getReviewInfoHome: ReviewInfo;
-  };
-  growthHome: {
-    getGrowthHome: GrowthData[];
-  };
-}
-
-export const getServerSideProps: GetStaticProps = async () => {
-  const { data: headerData } = await client.query({
-    query: GET_HEADER_HOME,
-  });
-
-  const { data: growthData } = await client.query({
-    query: GET_GROWTH_INFO_HOME,
-  });
-
-  const { data: reviewData } = await client.query({
-    query: GET_REVIEW_HOME,
-  });
-
-  const { data: reviewInfoData } = await client.query({
-    query: GET_REVIEW_INFO,
-  });
-
-  const { data: growthHome } = await client.query({
-    query: GET_GROWTH_HOME,
-  });
-
-  return {
-    props: {
-      headerData,
-      growthData,
-      reviewData,
-      reviewInfoData,
-      growthHome,
-    },
-    // revalidate: 60 * 60 * 2,
-  };
-};
-
-const Home: React.FC<HomeIprops> = ({
-  headerData,
-  growthData,
-  reviewData,
-  reviewInfoData,
-  growthHome,
-}) => {
+const Home: React.FC = () => {
   isUserNotFound();
+
+  const { data: headerData } = useQuery(GET_HEADER_HOME);
+  const { data: growthData } = useQuery(GET_GROWTH_INFO_HOME);
+  const { data: reviewData } = useQuery(GET_REVIEW_HOME);
+  const { data: reviewInfoData } = useQuery(GET_REVIEW_INFO);
+  const { data: growthHome } = useQuery(GET_GROWTH_HOME);
 
   const headerHomeData = headerData?.getHeaderHome;
   const growthHomeData = growthData?.getGrowthInfoHome;
@@ -195,22 +140,23 @@ const Home: React.FC<HomeIprops> = ({
           ))}
         </div>
         <div className="flex-1 mt-8">
-          {growthItemsHomeData.map((item: any, index: number) => (
-            <article
-              key={item.id}
-              className="grid grid-cols-[60px_1fr] items-center mb-10 gap-x-4"
-            >
-              <div className="bg-BrightRed text-white py-2 px-4 rounded-2xl text-center text-xs font-bold">
-                0{index + 1}
-              </div>
-              <div className="text-DarkBlue font-semibold">{item.title}</div>
-              <div className="col-start-1 lg:col-start-2 col-end-5 mt-3 text-DarkGrayishBlue">
-                {item.description.map((item: any) => (
-                  <span key={item.id}>{item.text}</span>
-                ))}
-              </div>
-            </article>
-          ))}
+          {growthItemsHomeData &&
+            growthItemsHomeData.map((item: any, index: number) => (
+              <article
+                key={item.id}
+                className="grid grid-cols-[60px_1fr] items-center mb-10 gap-x-4"
+              >
+                <div className="bg-BrightRed text-white py-2 px-4 rounded-2xl text-center text-xs font-bold">
+                  0{index + 1}
+                </div>
+                <div className="text-DarkBlue font-semibold">{item.title}</div>
+                <div className="col-start-1 lg:col-start-2 col-end-5 mt-3 text-DarkGrayishBlue">
+                  {item.description.map((item: any) => (
+                    <span key={item.id}>{item.text}</span>
+                  ))}
+                </div>
+              </article>
+            ))}
         </div>
       </motion.section>
 
@@ -218,22 +164,23 @@ const Home: React.FC<HomeIprops> = ({
         <h3 className="text-center">{reviewInfoHomeData?.title}</h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-10 gap-y-20 mt-20">
-          {reviewHomeData.map((item: any) => (
-            <article key={item.id} className="rounded-xl bg-gray p-4">
-              <div className="grid place-items-center py-4">
-                <img src={item?.avatar} alt="" className="w-32 mt-[-80px]" />
-              </div>
-              <h4 className="text-lg text-center">{item?.name}</h4>
-              {item?.description.map((item: any) => (
-                <p
-                  key={item.id}
-                  className="text-base font-normal text-DarkGrayishBlue mt-2 text-center"
-                >
-                  {item.text}
-                </p>
-              ))}
-            </article>
-          ))}
+          {reviewHomeData &&
+            reviewHomeData.map((item: any) => (
+              <article key={item.id} className="rounded-xl bg-gray p-4">
+                <div className="grid place-items-center py-4">
+                  <img src={item?.avatar} alt="" className="w-32 mt-[-80px]" />
+                </div>
+                <h4 className="text-lg text-center">{item?.name}</h4>
+                {item?.description.map((item: any) => (
+                  <p
+                    key={item.id}
+                    className="text-base font-normal text-DarkGrayishBlue mt-2 text-center"
+                  >
+                    {item.text}
+                  </p>
+                ))}
+              </article>
+            ))}
         </div>
 
         <div className="flex justify-center mt-16">

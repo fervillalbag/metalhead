@@ -5,34 +5,23 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import { motion } from "framer-motion";
 
 import { GET_PRODUCT } from "@/graphql/queries/products";
-import client from "@/config/apollo";
 import Layout from "@/layout";
 import Skeleton from "@/components/Skeleton";
 import { useCart } from "@/hooks/useCart";
 import { isAuth, isUserNotFound } from "utils/actions";
 import { getToken } from "utils/helpers";
+import { useQuery } from "@apollo/client";
+import { useRouter } from "next/router";
 
-interface ProductIprops {
-  dataProduct: any;
-}
+const Product: React.FC = () => {
+  isUserNotFound();
+  const router = useRouter();
 
-export const getServerSideProps = async ({ params }: { params: any }) => {
-  const { data: dataProduct } = await client.query({
-    query: GET_PRODUCT,
+  const { data: dataProduct } = useQuery(GET_PRODUCT, {
     variables: {
-      id: `${params.id}`,
+      id: router.query.id,
     },
   });
-
-  return {
-    props: {
-      dataProduct,
-    },
-  };
-};
-
-const Product: React.FC<ProductIprops> = ({ dataProduct }) => {
-  isUserNotFound();
 
   const productDataPage = dataProduct?.getProduct;
 

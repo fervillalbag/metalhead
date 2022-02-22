@@ -4,7 +4,6 @@ import { Navigation } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { motion } from "framer-motion";
 
-import client from "@/config/apollo";
 import { GET_SLIDES } from "@/graphql/queries/community";
 import { MenuContext } from "@/context/MenuContext";
 
@@ -12,22 +11,12 @@ import "swiper/css/navigation";
 import "swiper/css/autoplay";
 import { getToken } from "utils/helpers";
 import { isAuth, isUserNotFound } from "utils/actions";
+import { useQuery } from "@apollo/client";
 
-export const getServerSideProps = async () => {
-  const { data: slides } = await client.query({
-    query: GET_SLIDES,
-  });
-
-  return {
-    props: {
-      slides: slides?.getSlides,
-    },
-  };
-};
-
-const Community = ({ slides }: any) => {
+const Community: React.FC = () => {
   isUserNotFound();
 
+  const { data: slides } = useQuery(GET_SLIDES);
   const { isShowMenu } = useContext(MenuContext);
 
   useEffect(() => {
@@ -57,15 +46,16 @@ const Community = ({ slides }: any) => {
             isShowMenu ? "hidden" : "block"
           }`}
         >
-          {slides.map((slide: any) => (
-            <SwiperSlide key={slide.id} className="bg-slate-300 text-white">
-              <img
-                src={slide.image}
-                className="w-full h-full object-cover"
-                alt=""
-              />
-            </SwiperSlide>
-          ))}
+          {slides &&
+            slides.getSlides.map((slide: any) => (
+              <SwiperSlide key={slide.id} className="bg-slate-300 text-white">
+                <img
+                  src={slide.image}
+                  className="w-full h-full object-cover"
+                  alt=""
+                />
+              </SwiperSlide>
+            ))}
         </Swiper>
       </motion.div>
 

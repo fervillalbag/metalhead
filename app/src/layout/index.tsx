@@ -14,7 +14,6 @@ const Layout: React.FC = ({ children }) => {
   const router = useRouter();
 
   const { isShowModalCart, setIsShowModalCart } = useContext(CartContextModal);
-
   const { cart, handleAddCart, handleDeleteCart, handleDeleteAllProductCart } =
     useCart();
 

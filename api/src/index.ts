@@ -19,6 +19,7 @@ const server = new ApolloServer({
           token.replace("Bearer ", ""),
           process.env.SECRET_KEY_LOGIN as string
         );
+
         return {
           user,
         };

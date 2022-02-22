@@ -274,7 +274,6 @@ const OrderItem: React.FC = () => {
               className="block p-2 rounded-md bg-white border border-slate-100 hover:bg-slate-100 transition duration-300"
               onClick={() => {
                 setShowModal(false);
-                // setItemDelete("");
               }}
             >
               No

@@ -17,3 +17,12 @@ export const UPDATE_ORDER = gql`
     }
   }
 `;
+
+export const CREATE_ORDER = gql`
+  mutation createListProducts($input: [ListProductInput]!) {
+    createListProducts(input: $input) {
+      message
+      success
+    }
+  }
+`;
