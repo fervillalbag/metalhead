@@ -3,15 +3,16 @@ import Link from "next/link";
 import toast from "react-hot-toast";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { useMutation } from "@apollo/client";
+import { useRouter } from "next/router";
 
 import { LOGIN } from "@/graphql/mutation/login";
 import useAuth from "@/hooks/useAuth";
 import { isAuth } from "utils/actions";
 import { getToken } from "utils/helpers";
-import { useRouter } from "next/router";
 
 const Login: React.FC = () => {
   const router = useRouter();
+  const { user } = useAuth();
 
   const [userValue, setUserValue] = useState({
     email: "",
@@ -31,6 +32,14 @@ const Login: React.FC = () => {
       isAuth();
     }
   }, []);
+
+  useEffect(() => {
+    (async () => {
+      if (user) {
+        router.push("/");
+      }
+    })();
+  }, [user]);
 
   const handleLogin = async () => {
     try {

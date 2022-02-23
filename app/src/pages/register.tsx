@@ -1,14 +1,19 @@
-import { CREATE_USER } from "@/graphql/mutation/register";
-import { useMutation } from "@apollo/client";
-import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 import toast from "react-hot-toast";
+import { useRouter } from "next/router";
+import { useMutation } from "@apollo/client";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+
+import useAuth from "@/hooks/useAuth";
+import { CREATE_USER } from "@/graphql/mutation/register";
 import { isAuth, isUserNotFound } from "utils/actions";
 import { getToken } from "utils/helpers";
 
 const Register: React.FC = () => {
   const [createUser] = useMutation(CREATE_USER);
+  const router = useRouter();
+  const { user } = useAuth();
   isUserNotFound();
 
   const [userValue, setUserValue] = useState({
@@ -29,6 +34,14 @@ const Register: React.FC = () => {
       isAuth();
     }
   }, []);
+
+  useEffect(() => {
+    (async () => {
+      if (user) {
+        router.push("/");
+      }
+    })();
+  }, [user]);
 
   const handleCreateUser = async () => {
     try {
