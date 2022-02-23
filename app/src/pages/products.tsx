@@ -17,7 +17,7 @@ interface ProductsIprops {
   dataProducts: any;
 }
 
-export const getServerSideProps = async () => {
+export const getStaticProps = async () => {
   const { data: dataProducts } = await client.query({
     query: GET_PRODUCTS,
     fetchPolicy: "network-only",
@@ -27,6 +27,7 @@ export const getServerSideProps = async () => {
     props: {
       dataProducts,
     },
+    revalidate: 30,
   };
 };
 

@@ -4,7 +4,7 @@ import { RiShoppingCartFill } from "react-icons/ri";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { motion } from "framer-motion";
 
-import { GET_PRODUCT } from "@/graphql/queries/products";
+import { GET_PRODUCT, GET_PRODUCTS } from "@/graphql/queries/products";
 import Layout from "@/layout";
 import Skeleton from "@/components/Skeleton";
 import { useCart } from "@/hooks/useCart";
@@ -17,11 +17,28 @@ interface ProductIprops {
   dataProduct: any;
 }
 
-export const getServerSideProps = async ({ params }: { params: any }) => {
+export const getStaticPaths = async () => {
+  const { data: dataProducts } = await client.query({
+    query: GET_PRODUCTS,
+  });
+
+  const paths = dataProducts.getProducts.map((product: any) => ({
+    params: { id: product.id.toString() },
+  }));
+
+  return {
+    paths,
+    fallback: true,
+  };
+};
+
+export const getStaticProps = async ({ params }: { params: any }) => {
+  const { id } = params;
+
   const { data: dataProduct } = await client.query({
     query: GET_PRODUCT,
     variables: {
-      id: params.id,
+      id,
     },
   });
 
@@ -29,6 +46,7 @@ export const getServerSideProps = async ({ params }: { params: any }) => {
     props: {
       dataProduct,
     },
+    revalidate: 30,
   };
 };
 
