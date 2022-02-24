@@ -205,6 +205,11 @@ const Cart: React.FC = () => {
               <button
                 className="block p-2 text-white rounded-md bg-slate-400"
                 onClick={() => {
+                  if (!user) {
+                    toast.error("You need an account to buy");
+                    setShowModal(false);
+                    return;
+                  }
                   handleCreateOrder();
                   setShowModal(false);
                 }}
