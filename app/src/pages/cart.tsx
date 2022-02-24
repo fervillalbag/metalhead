@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import { CartContext } from "@/context/CartContext";
 import useAuth from "@/hooks/useAuth";
 import Modal from "@/components/Modal";
+import { motion } from "framer-motion";
 
 // import useAuth from "@/hooks/useAuth";
 
@@ -74,7 +75,14 @@ const Cart = () => {
 
   return (
     <Layout>
-      <div className="max-w-3xl mx-auto w-11/12">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{
+          opacity: 1,
+          transition: { delay: 0.3, duration: 0.3 },
+        }}
+        className="max-w-3xl mx-auto w-11/12"
+      >
         {cart.length !== 0 && (
           <div className="grid grid-cols-[60px_1fr_60px_80px] md:grid-cols-[70px_1fr_100px_80px] gap-x-6 mb-4 mt-10">
             <span className="font-semibold text-slate-700 block text-center"></span>
@@ -206,7 +214,7 @@ const Cart = () => {
             </div>
           </div>
         </Modal>
-      </div>
+      </motion.div>
     </Layout>
   );
 };
