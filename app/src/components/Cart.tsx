@@ -7,6 +7,7 @@ import { BsFillTrashFill } from "react-icons/bs";
 import { useCart } from "@/hooks/useCart";
 import { CartContextModal } from "@/context/CartContextModal";
 import toast from "react-hot-toast";
+import { Products } from "@/types/product";
 
 const Cart: React.FC = () => {
   const router = useRouter();
@@ -41,7 +42,13 @@ const Cart: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex flex-col justify-between px-6 h-[calc(100vh_-_76px_-_112px_-_28px)] overflow-y-scroll">
+        <div
+          className={`flex flex-col justify-between px-6 ${
+            cart.length === 0
+              ? "h-[calc(100vh_-_76px_-_112px)]"
+              : "h-[calc(100vh_-_76px_-_112px_-_52px)]"
+          } overflow-y-scroll`}
+        >
           <div>
             {!cart ? (
               <span className="block">Loading..</span>
@@ -70,7 +77,7 @@ const Cart: React.FC = () => {
                   >
                     <img
                       src={product.image}
-                      className="w-full object-contain"
+                      className="w-full h-full object-cover"
                       alt=""
                     />
                   </div>
@@ -109,15 +116,19 @@ const Cart: React.FC = () => {
         </div>
 
         {cart.length !== 0 && (
-          <div className="px-6 flex justify-between w-full">
+          <div className="px-6 pt-6 flex justify-between w-full">
             <span className="block font-bold text-DarkBlue text-lg">Total</span>
             <span className="block text-DarkBlue">
               $
               {cart.length === 1
                 ? cart.map((a: any) => a.price * a.qty)
-                : cart.reduce(
-                    (a: any, b: any) => a.price * a.qty + b.price * b.qty
-                  )}
+                : cart.length > 1
+                ? cart.reduce(
+                    (a: Products, b: Products) =>
+                      Number(a) + Number(b.price) * Number(b.qty),
+                    0
+                  )
+                : null}
             </span>
           </div>
         )}

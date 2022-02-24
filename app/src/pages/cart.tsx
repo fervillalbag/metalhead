@@ -12,10 +12,11 @@ import { CartContext } from "@/context/CartContext";
 import useAuth from "@/hooks/useAuth";
 import Modal from "@/components/Modal";
 import { motion } from "framer-motion";
+import { Products } from "@/types/product";
 
 // import useAuth from "@/hooks/useAuth";
 
-const Cart = () => {
+const Cart: React.FC = () => {
   isUserNotFound();
 
   const { user } = useAuth();
@@ -54,6 +55,11 @@ const Cart = () => {
       quantity: product.quantity,
     };
   });
+
+  const totalPrice =
+    cart.length >= 1 &&
+    cart.reduce((a: any, b: any) => a.price * a.qty + b.price * b.qty);
+  console.log(totalPrice);
 
   const handleCreateOrder = async () => {
     try {
@@ -147,7 +153,7 @@ const Cart = () => {
           ))
         )}
 
-        {cart.length !== 0 && (
+        {cart.length > 0 && (
           <div className="grid grid-cols-[60px_1fr_60px_80px] md:grid-cols-[70px_1fr_100px_80px] gap-x-6 items-center">
             <span className="block text-xl font-semibold text-slate-700 uppercase">
               Total
@@ -157,10 +163,12 @@ const Cart = () => {
             <span className="block text-lg font-semibold text-slate-700 text-center">
               $
               {cart.length === 1
-                ? cart.map((a: any) => a.price * a.qty)
-                : cart.reduce(
-                    (a: any, b: any) => a.price * a.qty + b.price * b.qty
-                  )}
+                ? cart.map((a: any) => Number(a.price) * Number(a.qty))
+                : cart.length > 1
+                ? cart.reduce((a: Products, b: Products) => {
+                    return Number(a) + Number(b.price) * Number(b.qty);
+                  }, 0)
+                : null}
             </span>
           </div>
         )}

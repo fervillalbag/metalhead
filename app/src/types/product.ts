@@ -9,6 +9,7 @@ export type Products = {
   price: number;
   createdAt?: string;
   description?: Description;
+  qty?: number | undefined;
 };
 
 export type ProductInfo = {
