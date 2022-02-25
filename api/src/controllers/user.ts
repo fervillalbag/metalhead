@@ -35,6 +35,7 @@ const createUser = async (input: any) => {
 
   newUser.email = newUser.email.toLowerCase();
   newUser.username = newUser.username.toLowerCase();
+  newUser.role = "user";
 
   const { password } = newUser;
 

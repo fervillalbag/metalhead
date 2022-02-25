@@ -169,6 +169,7 @@ const typeDefs = gql`
     password: String
     email: String
     username: String
+    role: String
   }
 
   input DescriptionInput {

@@ -66,7 +66,7 @@ const Login: React.FC = () => {
     <div className="sm:grid sm:grid-cols-2 lg:grid-cols-3 h-screen sm:overflow-y-hidden">
       <div className="lg:col-start-1 lg:col-end-3 h-24 sm:h-screen">
         <LazyLoadImage
-          src="/auth-image.jpeg"
+          src="/login-image.jpeg"
           alt=""
           className="w-screen h-24 sm:h-screen object-cover"
           effect="blur"
@@ -78,9 +78,7 @@ const Login: React.FC = () => {
             <img src="/logo.svg" alt="" />
           </div>
         </div>
-        <span className="block text-2xl text-center text-DarkGrayishBlue">
-          Login
-        </span>
+        <span className="block text-2xl text-center text-BrightRed">Admin</span>
         <span className="block text-center mt-2 text-DarkGrayishBlue text-sm">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur a
           metus eu libero tristique sodales.

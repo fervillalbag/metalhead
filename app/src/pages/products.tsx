@@ -59,7 +59,7 @@ const Products: React.FC<ProductsIprops> = ({ dataProducts }) => {
                 animate={{
                   opacity: 1,
                   y: 0,
-                  transition: { delay: index * 0.3, duration: 0.5 },
+                  transition: { delay: index * 0.15, duration: 0.5 },
                 }}
                 key={item.id}
               >

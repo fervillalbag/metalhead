@@ -63,6 +63,7 @@ const Register: React.FC = () => {
       }
 
       toast.success(response?.data?.createUser?.message);
+      router.push("/login");
     } catch (error) {
       console.log(error);
     }
