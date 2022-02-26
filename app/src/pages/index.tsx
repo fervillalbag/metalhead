@@ -17,10 +17,6 @@ import client from "@/config/apollo";
 import { HeaderInfo } from "@/types/header";
 import { GrowthData, GrowthInfo } from "@/types/growth";
 import { ReviewData, ReviewInfo } from "@/types/review";
-import useAuth from "@/hooks/useAuth";
-import { useQuery } from "@apollo/client";
-import { GET_USER } from "@/graphql/queries/user";
-import { useRouter } from "next/router";
 
 interface HomeIprops {
   headerData: {
@@ -71,15 +67,6 @@ const Home: React.FC<HomeIprops> = ({
 }) => {
   isUserNotFound();
 
-  const { user } = useAuth();
-  const router = useRouter();
-
-  const { data: userAPI, loading } = useQuery(GET_USER, {
-    variables: {
-      id: user?.id,
-    },
-  });
-
   const headerHomeData = headerData?.getHeaderHome;
   const growthHomeData = growthData?.getGrowthInfoHome;
   const reviewHomeData = reviewData?.getReviewHome;
@@ -98,19 +85,6 @@ const Home: React.FC<HomeIprops> = ({
 
   return (
     <>
-      {!loading && userAPI?.getUser?.role === "admin" && (
-        <div className="sticky top-0 bg-orange-200 py-2">
-          <div className="max-w-6xl w-11/12 mx-auto flex justify-end">
-            <button
-              className="text-sm bg-white rounded-md py-1 px-3"
-              onClick={() => router.push("/admin")}
-            >
-              Go to dashboard
-            </button>
-          </div>
-        </div>
-      )}
-
       <Layout>
         <motion.div
           initial={{ opacity: 0 }}

@@ -5,7 +5,21 @@ import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import Cart from "@/components/Cart";
 
+import useAuth from "@/hooks/useAuth";
+import { useQuery } from "@apollo/client";
+import { GET_USER } from "@/graphql/queries/user";
+import { useRouter } from "next/router";
+
 const Layout: React.FC = ({ children }) => {
+  const { user } = useAuth();
+  const router = useRouter();
+
+  const { data: userAPI, loading } = useQuery(GET_USER, {
+    variables: {
+      id: user?.id,
+    },
+  });
+
   return (
     <>
       <Head>
@@ -15,6 +29,19 @@ const Layout: React.FC = ({ children }) => {
       </Head>
 
       <Cart />
+
+      {!loading && userAPI?.getUser?.role === "admin" && (
+        <div className="sticky top-0 bg-orange-200 py-2">
+          <div className="max-w-6xl w-11/12 mx-auto flex justify-end">
+            <button
+              className="text-sm bg-white rounded-md py-1 px-3"
+              onClick={() => router.push("/admin")}
+            >
+              Go to dashboard
+            </button>
+          </div>
+        </div>
+      )}
 
       <Navbar />
       {children}
