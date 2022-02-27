@@ -24,7 +24,7 @@ const Cart: React.FC = () => {
         onClick={() => setIsShowModalCart(false)}
       ></div>
       <div
-        className={`fixed w-full md:w-80 h-screen bg-white shadow-xl z-[3100] ${
+        className={`fixed top-0 w-full md:w-80 h-screen bg-white shadow-xl z-[3100] ${
           isShowModalCart ? "block" : "hidden"
         }`}
       >
