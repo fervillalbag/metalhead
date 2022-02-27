@@ -43,11 +43,7 @@ const Cart: React.FC = () => {
         </div>
 
         <div
-          className={`flex flex-col justify-between px-6 ${
-            cart.length === 0
-              ? "h-[calc(100vh_-_76px_-_112px)]"
-              : "h-[calc(100vh_-_76px_-_112px_-_52px)]"
-          } overflow-y-scroll`}
+          className={`flex flex-col justify-between px-6 h-[calc(100vh_-_76px_-_112px_-_52px)] overflow-y-scroll`}
         >
           <div>
             {!cart ? (
@@ -115,23 +111,21 @@ const Cart: React.FC = () => {
           </div>
         </div>
 
-        {cart.length !== 0 && (
-          <div className="px-6 pt-6 flex justify-between w-full">
-            <span className="block font-bold text-DarkBlue text-lg">Total</span>
-            <span className="block text-DarkBlue">
-              $
-              {cart.length === 1
-                ? cart.map((a: any) => a.price * a.qty)
-                : cart.length > 1
-                ? cart.reduce(
-                    (a: Products, b: Products) =>
-                      Number(a) + Number(b.price) * Number(b.qty),
-                    0
-                  )
-                : null}
-            </span>
-          </div>
-        )}
+        <div className="px-6 pt-6 flex justify-between w-full">
+          <span className="block font-bold text-DarkBlue text-lg">Total</span>
+          <span className="block text-DarkBlue">
+            $
+            {cart.length === 1
+              ? cart.map((a: any) => a.price * a.qty)
+              : cart.length > 1
+              ? cart.reduce(
+                  (a: Products, b: Products) =>
+                    Number(a) + Number(b.price) * Number(b.qty),
+                  0
+                )
+              : null}
+          </span>
+        </div>
 
         <div className="h-28 flex items-center px-6">
           <button

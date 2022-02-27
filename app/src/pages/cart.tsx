@@ -27,6 +27,8 @@ const Cart: React.FC = () => {
   const { cart, handleAddCart, handleDeleteCart } = useCart();
   const [createListProducts] = useMutation(CREATE_ORDER);
 
+  console.log(cart);
+
   useEffect(() => {
     const token = getToken();
 
@@ -56,11 +58,6 @@ const Cart: React.FC = () => {
     };
   });
 
-  const totalPrice =
-    cart.length >= 1 &&
-    cart.reduce((a: any, b: any) => a.price * a.qty + b.price * b.qty);
-  console.log(totalPrice);
-
   const handleCreateOrder = async () => {
     try {
       await createListProducts({
@@ -89,23 +86,19 @@ const Cart: React.FC = () => {
         }}
         className="max-w-3xl mx-auto w-11/12"
       >
-        {cart.length !== 0 && (
-          <div className="grid grid-cols-[60px_1fr_60px_80px] md:grid-cols-[70px_1fr_100px_80px] gap-x-6 mb-4 mt-10">
-            <span className="font-semibold text-slate-700 block text-center"></span>
-            <span className="font-semibold text-slate-700 block">Name</span>
-            <span className="font-semibold text-slate-700 block text-center">
-              Quantity
-            </span>
-            <span className="font-semibold text-slate-700 block text-center">
-              Price
-            </span>
-          </div>
-        )}
+        <div className="grid grid-cols-[60px_1fr_60px_80px] md:grid-cols-[70px_1fr_100px_80px] gap-x-6 mb-4 mt-10">
+          <span className="font-semibold text-slate-700 block text-center"></span>
+          <span className="font-semibold text-slate-700 block">Name</span>
+          <span className="font-semibold text-slate-700 block text-center">
+            Quantity
+          </span>
+          <span className="font-semibold text-slate-700 block text-center">
+            Price
+          </span>
+        </div>
 
-        {cart.length === 0 ? (
-          <span className="block py-56 text-center">There are no products</span>
-        ) : (
-          cart.map((product: any) => (
+        <div>
+          {cart.map((product: any) => (
             <div
               key={product.id}
               className="grid grid-cols-[60px_1fr_60px_80px] md:grid-cols-[70px_1fr_100px_80px] gap-x-6 mb-6 items-center border-b border-slate-200 pb-6"
@@ -150,10 +143,10 @@ const Cart: React.FC = () => {
                 </span>
               </div>
             </div>
-          ))
-        )}
+          ))}
+        </div>
 
-        {cart.length > 0 && (
+        <div>
           <div className="grid grid-cols-[60px_1fr_60px_80px] md:grid-cols-[70px_1fr_100px_80px] gap-x-6 items-center">
             <span className="block text-xl font-semibold text-slate-700 uppercase">
               Total
@@ -171,9 +164,7 @@ const Cart: React.FC = () => {
                 : null}
             </span>
           </div>
-        )}
 
-        {cart.length !== 0 && (
           <div className="flex justify-end py-20">
             <button
               className="bg-BrightRed text-white py-2 px-6 rounded"
@@ -182,7 +173,7 @@ const Cart: React.FC = () => {
               Make a purchase
             </button>
           </div>
-        )}
+        </div>
 
         <Modal
           handleCloseModal={() => setShowModal(false)}
