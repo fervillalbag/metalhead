@@ -5,7 +5,6 @@ import { useMutation, useQuery } from "@apollo/client";
 import dayjs from "dayjs";
 
 import { GET_ORDERS } from "@/graphql/queries/orders";
-import useAuth from "@/hooks/useAuth";
 import { GET_USER } from "@/graphql/queries/user";
 import { DELETE_ORDER } from "@/graphql/mutation/orders";
 import Modal from "@/components/Modal";
@@ -113,16 +112,12 @@ const OrderItem = ({ order, refetch }: any) => {
 
 const Orders: React.FC = () => {
   const router = useRouter();
-  const { user } = useAuth();
 
   const {
     data: orders,
     loading,
     refetch,
   } = useQuery(GET_ORDERS, {
-    variables: {
-      idUser: user?.id,
-    },
     fetchPolicy: "network-only",
   });
 
